@@ -231,7 +231,7 @@ export default nextConfig;
 
 ---
 
-## 5. Master DENEB UI Component Catalog (All 40 Components with Props & Real Code)
+## 5. Master DENEB UI Component Catalog (All 43 Components with Props & Real Code)
 
 Every single component below is imported directly from `@deneb-ui/ui`:
 
@@ -1464,6 +1464,125 @@ export function ThemeInjector() {
 }
 ```
 
+
+---
+
+
+#### 41. `GoogleFeedback`
+
+**Import**: `import { GoogleFeedback } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Official Google Customer Review card section with verified platform badge, aggregate rating pill, live 1–5 star DOM synchronization, and responsive review cards.
+
+##### Props Table
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `basePath` | `string` | `'feedback'` | JSON schema root key in site-data.json for Fivora visual editing. |
+| `badgeIcon` | `string` | `Google "G" SVG` | URL or SVG data URI for the review platform badge. |
+| `badgeTitle` | `string` | `'Google'` | Review platform name shown alongside the badge icon. |
+| `badgeRating` | `string | number` | `'4.9'` | Aggregate rating number displayed in the section header. |
+| `badgeReviewsCount` | `string | number` | `'128 reviews'` | Total review count label. |
+| `heading` | `string` | `required` | Section primary headline. |
+| `subheading` | `string` | `''` | Section introductory description paragraph. |
+| `feedbacks` | `FeedbackItem[]` | `[]` | Array of customer review items with name, avatar, rating (1-5), and comment. |
+| `maxStars` | `number` | `5` | Maximum rating star count. |
+| `className` | `string` | `''` | Custom CSS / Tailwind classes for section container. |
+| `cardClassName` | `string` | `''` | Custom CSS / Tailwind classes for individual review cards. |
+
+##### Copy-Paste Usage Example
+```tsx
+import { GoogleFeedback, useSiteData } from "@deneb-ui/ui";
+
+export function ReviewsSection() {
+  const siteData = useSiteData();
+  const feedback = siteData?.feedback ?? {};
+
+  return (
+    <GoogleFeedback
+      basePath="feedback"
+      badgeIcon={feedback.badgeIcon}
+      badgeTitle={feedback.badgeTitle}
+      badgeRating={feedback.badgeRating}
+      badgeReviewsCount={feedback.badgeReviewsCount}
+      heading={feedback.heading ?? "Loved by Coffee Lovers Worldwide"}
+      subheading={feedback.subheading ?? "Real reviews verified on Google."}
+      feedbacks={feedback.feedbacks ?? []}
+    />
+  );
+}
+```
+
+#### 42. `TestimonialSection`
+
+**Import**: `import { TestimonialSection } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Editorial critic and connoisseur review showcase featuring large quotation typography, author credentials, accreditation tags, and synchronized star ratings.
+
+##### Props Table
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `basePath` | `string` | `'testimonials'` | Root key in site-data.json for Fivora visual editing. |
+| `badge` | `string` | `'Critic Acclaim'` | Uppercase pill badge text displayed above heading. |
+| `heading` | `string` | `required` | Main section title. |
+| `subheading` | `string` | `''` | Subheading description text. |
+| `testimonials` | `TestimonialSectionItem[]` | `[]` | Array of critic reviews containing quote, author, role, avatar, tag, and rating. |
+| `maxStars` | `number` | `5` | Maximum star rating per testimonial. |
+| `className` | `string` | `''` | CSS / Tailwind classes for section wrapper. |
+| `cardClassName` | `string` | `''` | CSS / Tailwind classes for testimonial cards. |
+
+##### Copy-Paste Usage Example
+```tsx
+import { TestimonialSection, useSiteData } from "@deneb-ui/ui";
+
+export function ConnoisseurReviews() {
+  const siteData = useSiteData();
+  const testimonials = siteData?.testimonials ?? {};
+
+  return (
+    <TestimonialSection
+      basePath="testimonials"
+      badge={testimonials.badge ?? "Critic Acclaim"}
+      heading={testimonials.heading ?? "What Connoisseurs Say"}
+      subheading={testimonials.subheading ?? "Unfiltered sensory impressions and reviews."}
+      testimonials={testimonials.testimonials ?? []}
+    />
+  );
+}
+```
+
+#### 43. `Map`
+
+**Import**: `import { Map } from "@deneb-ui/ui";`  
+**Category**: `Location & Navigation`  
+**Description**: Universal Google Maps responsive iframe embed with intelligent URL parsing for full iframe snippets, @lat,lng coordinates, place URLs, short links, and search queries.
+
+##### Props Table
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `mapUrl` | `string` | `''` | Google Maps URL, share link, coordinate URL (@lat,lng), place URL, or full <iframe> embed tag. |
+| `address` | `string` | `'Sri Lanka'` | Physical address fallback query string when mapUrl is empty or unparseable. |
+| `defaultLocation` | `string` | `''` | Secondary location fallback query string. |
+| `data-preview-field-path` | `string` | `''` | Fivora visual editing binding annotation. |
+| `className` | `string` | `'w-full h-full border-0'` | CSS / Tailwind styling for iframe. |
+| `title` | `string` | `'Google Map Location'` | Accessibility title attribute for the iframe. |
+
+##### Copy-Paste Usage Example
+```tsx
+import { Map, useSiteData } from "@deneb-ui/ui";
+
+export function StoreMap() {
+  const siteData = useSiteData();
+  return (
+    <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-xl">
+      <Map
+        data-preview-field-path="contact.mapUrl"
+        mapUrl={siteData?.contact?.mapUrl}
+        address={siteData?.shop?.address}
+      />
+    </div>
+  );
+}
+```
 
 ---
 

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { EditableText } from '@deneb-ui/ui';
-import { EditableImage } from '@deneb-ui/ui';
+import { EditableText } from './components/deneb-ui';
+import { EditableImage } from './components/deneb-ui';
 
 export interface TestimonialItem {
   id?: string | number;

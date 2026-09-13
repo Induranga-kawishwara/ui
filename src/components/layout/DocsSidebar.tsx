@@ -33,7 +33,7 @@ export const SIDEBAR_NAV: NavSection[] = [
     items: [
       { title: 'Introduction', href: '/docs/introduction' },
       { title: 'Installation', href: '/docs/installation' },
-      { title: 'Set Up Fivora', href: '/docs/setup-fivora', badge: 'Guide', isNew: true },
+      { title: 'Set Up Fivora & Master Guide', href: '/docs/setup-fivora', badge: '40 Comps', isNew: true },
       { title: 'Theming & Tokens', href: '/docs/theming' },
       { title: 'Responsive Design', href: '/docs/responsive-design', badge: 'New', isNew: true },
       { title: 'CLI Reference', href: '/docs/cli' },

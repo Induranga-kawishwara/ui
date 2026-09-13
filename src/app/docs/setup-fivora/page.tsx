@@ -16,10 +16,12 @@ import {
   HelpCircle,
   Copy,
   Check,
+  ExternalLink,
 } from 'lucide-react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
+import { COMPONENT_DOCS } from '@/components/docs/component-registry';
 
 export default function SetupFivoraPage() {
   const [activePathway, setActivePathway] = useState<'convert' | 'scratch'>('convert');
@@ -57,6 +59,8 @@ export default function SetupFivoraPage() {
     { id: 'pathways', title: 'Choose Setup Pathway' },
     { id: 'conversion-steps', title: 'Convert Existing Frontend' },
     { id: 'visual-markers', title: 'Visual Marker Rules' },
+    { id: 'component-catalog', title: 'All 40 Components & Props' },
+    { id: 'full-templates', title: 'Complete Storefront Example' },
     { id: 'standard-vs-premium', title: 'Standard vs. Premium' },
     { id: 'testing-lab', title: 'Local Visual Lab & Validation' },
     { id: 'packaging', title: 'Packaging & Upload' },
@@ -477,6 +481,354 @@ export default function SetupFivoraPage() {
                 Mark non-editable background icons or dividers with <code className="text-white font-mono bg-black/40 px-1 py-0.5 rounded">data-preview-static</code>. Never put editable children inside static ancestors:
               </p>
               <CodeBlock code={`<span data-preview-static="footer-divider" className="border-t" />`} language="tsx" />
+            </div>
+          </div>
+        </section>
+
+
+        {/* Master Component Catalog & Usage Guide (All 40 Components) */}
+        <section id="component-catalog" className="space-y-8 pt-8 border-t border-[#23283B]">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#818CF8] uppercase tracking-wider">
+              <Cpu className="w-4 h-4" />
+              <span>Exhaustive Component Reference</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Master Component Catalog (All 40 Components)
+            </h2>
+            <p className="text-sm text-[#94A3B8] leading-relaxed max-w-3xl">
+              Complete reference for every component in <code className="text-white font-mono">@deneb-ui/ui</code>. Each component is fully instrumented for Fivora visual click-to-edit synchronization, includes full props definitions, and copy-pasteable JSX usage code.
+            </p>
+          </div>
+
+          <div className="space-y-12">
+            {[
+              'Core Primitives',
+              'Smart Commerce Actions',
+              'Location & Navigation',
+              'Social & Business',
+              'Storefront Sections',
+              'Data & Theme Engine',
+            ].map((catName) => {
+              const catComponents = Object.entries(COMPONENT_DOCS).filter(
+                ([_, doc]) => doc.category === catName
+              );
+              if (catComponents.length === 0) return null;
+
+              return (
+                <div key={catName} className="space-y-6">
+                  <div className="flex items-center gap-3 pb-3 border-b border-[#23283B]">
+                    <h3 className="text-xl font-bold text-white tracking-tight">
+                      {catName}
+                    </h3>
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-[#818CF8]/10 text-[#818CF8] border border-[#818CF8]/20 font-semibold">
+                      {catComponents.length} components
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6">
+                    {catComponents.map(([slug, comp]) => (
+                      <div
+                        key={slug}
+                        id={`comp-${slug}`}
+                        className="p-5 sm:p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4 shadow-xl hover:border-[#818CF8]/40 transition-all"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <Link
+                              href={`/docs/components/${slug}`}
+                              className="text-lg font-bold text-white hover:text-[#818CF8] transition-colors flex items-center gap-2 group"
+                            >
+                              <span>{comp.title}</span>
+                              <ExternalLink className="w-3.5 h-3.5 text-[#818CF8] opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                            </Link>
+                            {comp.badge && (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#6366F1]/15 text-[#A5B4FC] border border-[#6366F1]/30">
+                                {comp.badge}
+                              </span>
+                            )}
+                          </div>
+                          <code className="text-xs font-mono text-[#818CF8] bg-[#818CF8]/10 px-2 py-1 rounded border border-[#818CF8]/20">
+                            import &#123; {comp.title} &#125; from &quot;@deneb-ui/ui&quot;
+                          </code>
+                        </div>
+
+                        <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                          {comp.description}
+                        </p>
+
+                        {/* Props Reference Table */}
+                        {comp.props && comp.props.length > 0 && (
+                          <div className="space-y-2 pt-2">
+                            <div className="text-xs font-bold uppercase tracking-wider text-[#CBD5E1] flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#818CF8]" />
+                              <span>Props Reference</span>
+                            </div>
+                            <div className="overflow-x-auto rounded-xl border border-[#23283B] bg-[#0E1220]/60">
+                              <table className="w-full text-left text-xs">
+                                <thead className="border-b border-[#23283B] bg-[#0E1220] text-[#CBD5E1] uppercase font-mono tracking-wider text-[11px]">
+                                  <tr>
+                                    <th className="px-3.5 py-2.5">Prop</th>
+                                    <th className="px-3.5 py-2.5">Type</th>
+                                    <th className="px-3.5 py-2.5">Default</th>
+                                    <th className="px-3.5 py-2.5">Description</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5 text-[#94A3B8]">
+                                  {comp.props.map((p) => (
+                                    <tr key={p.name} className="hover:bg-white/[0.02] transition-colors">
+                                      <td className="px-3.5 py-2 font-mono font-semibold text-[#818CF8]">
+                                        {p.name}
+                                      </td>
+                                      <td className="px-3.5 py-2 font-mono text-[#CBD5E1]">{p.type}</td>
+                                      <td className="px-3.5 py-2 font-mono text-[#64748B]">
+                                        {p.defaultValue || '—'}
+                                      </td>
+                                      <td className="px-3.5 py-2 leading-relaxed">{p.description}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Copyable Usage Code */}
+                        <div className="space-y-2 pt-2">
+                          <div className="text-xs font-bold uppercase tracking-wider text-[#CBD5E1] flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                            <span>Copy-Paste Usage Example</span>
+                          </div>
+                          <CodeBlock code={comp.usageCode} language="tsx" filename={`${slug}.tsx`} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Complete Storefront Architecture Examples */}
+        <section id="full-templates" className="space-y-8 pt-8 border-t border-[#23283B]">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 uppercase tracking-wider">
+              <Sparkles className="w-4 h-4" />
+              <span>Full Production Architecture</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Complete Storefront Code Examples
+            </h2>
+            <p className="text-sm text-[#94A3B8] leading-relaxed max-w-3xl">
+              Copy-pasteable full page code integrating all components with Fivora visual markers, static export routes, and live state.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-base font-bold text-white">1. Root Layout (src/app/layout.tsx)</h3>
+              <CodeBlock
+                language="tsx"
+                filename="src/app/layout.tsx"
+                code={`import "./globals.css";
+import { SiteDataProvider, ThemeStyles, ResponsiveBaseStyles, CartProvider } from "@deneb-ui/ui";
+import initialSiteData from "@/data/site-data.json";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className="scroll-smooth">
+      <head>
+        <ThemeStyles theme={initialSiteData.theme} />
+        <ResponsiveBaseStyles />
+      </head>
+      <body className="bg-[#090D1A] text-slate-100 antialiased min-h-screen">
+        <SiteDataProvider initialSiteData={initialSiteData}>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </SiteDataProvider>
+      </body>
+    </html>
+  );
+}`}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-base font-bold text-white">2. Main Storefront Page (src/app/page.tsx)</h3>
+              <CodeBlock
+                language="tsx"
+                filename="src/app/page.tsx"
+                code={`"use client";
+
+import {
+  useSiteData,
+  useProducts,
+  Navbar,
+  Footer,
+  Hero,
+  ProductGrid,
+  ProductCard,
+  CartDrawer,
+  FilterSidebar,
+  CustomerReviews,
+  TrustBadges,
+  StickyMobileBar,
+  BusinessHours,
+  ContactActions,
+  AnnouncementBar
+} from "@deneb-ui/ui";
+import { useState } from "react";
+
+export default function HomePage() {
+  const siteData = useSiteData();
+  const products = useProducts();
+  const content = siteData?.content ?? {};
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredProducts = activeCategory === "All"
+    ? products
+    : products.filter(p => p.category === activeCategory);
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      {/* Top Announcement */}
+      <AnnouncementBar
+        message="Free express delivery on all orders over $100"
+        linkText="Shop Now"
+        href="#products"
+      />
+
+      {/* Header Navigation */}
+      <Navbar
+        brandName={siteData?.shop?.name ?? "Artisan Store"}
+        links={[
+          { label: "Home", href: "/" },
+          { label: "Products", href: "#products" },
+          { label: "Reviews", href: "#reviews" },
+          { label: "Contact", href: "#contact" }
+        ]}
+      />
+
+      {/* Hero Showcase */}
+      <Hero
+        layout="split"
+        title={content?.hero?.title ?? "Bespoke Footwear Engineered for Distinction"}
+        description={content?.hero?.subtitle ?? "Handcrafted micro-batch leather shoes."}
+        image={content?.hero?.image ?? "https://images.unsplash.com/photo-1542291026-7eec264c27ff"}
+      />
+
+      {/* Trust & Guarantee Strip */}
+      <div className="max-w-7xl mx-auto px-4 py-8 w-full">
+        <TrustBadges />
+      </div>
+
+      {/* Commerce Catalog with Filter Sidebar */}
+      <section id="products" className="max-w-7xl mx-auto px-4 py-16 w-full space-y-8">
+        <div className="text-center space-y-3">
+          <h2 className="text-3xl font-bold text-white tracking-tight">Curated Collection</h2>
+          <p className="text-sm text-slate-400">Discover handpicked styles designed to last.</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+          <FilterSidebar
+            categories={["All", "Running", "Lifestyle", "Formal"]}
+            onFilterChange={(f) => setActiveCategory(f.selectedCategories[0] || "All")}
+          />
+
+          <div className="lg:col-span-3">
+            <ProductGrid cols={3} gap="lg">
+              {filteredProducts.map((product, idx) => (
+                <ProductCard
+                  key={product.id || idx}
+                  title={product.title}
+                  price={product.price}
+                  compareAtPrice={product.compareAtPrice}
+                  currency={product.currency ?? "$"}
+                  image={product.image}
+                  whatsappNumber={siteData?.shop?.whatsapp}
+                />
+              ))}
+            </ProductGrid>
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews & Social Proof */}
+      <section id="reviews" className="bg-[#0C0F1A] py-16 border-y border-slate-800/60">
+        <div className="max-w-7xl mx-auto px-4">
+          <CustomerReviews />
+        </div>
+      </section>
+
+      {/* Business Hours & Support */}
+      <section id="contact" className="max-w-7xl mx-auto px-4 py-16 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+        <BusinessHours schedule={content?.businessHours} />
+        <div className="p-8 rounded-2xl border border-slate-800 bg-[#0E1220] flex flex-col justify-center space-y-4">
+          <h3 className="text-xl font-bold text-white">Instant Concierge Support</h3>
+          <p className="text-sm text-slate-400">Order directly with our personal shoppers via WhatsApp or phone.</p>
+          <ContactActions
+            whatsapp={siteData?.shop?.whatsapp}
+            phone={siteData?.shop?.phone}
+            email={siteData?.shop?.email}
+          />
+        </div>
+      </section>
+
+      {/* Cart Drawer */}
+      <CartDrawer
+        whatsappNumber={siteData?.shop?.whatsapp ?? "15550192834"}
+        storeName={siteData?.shop?.name ?? "Artisan Store"}
+      />
+
+      {/* Sticky Mobile Bar */}
+      <StickyMobileBar
+        whatsappNumber={siteData?.shop?.whatsapp}
+        phone={siteData?.shop?.phone}
+      />
+
+      {/* Footer */}
+      <Footer
+        brandName={siteData?.shop?.name ?? "Artisan Store"}
+        copyright="(c) 2026 Artisan Store. All rights reserved."
+      />
+    </div>
+  );
+}`}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-base font-bold text-white">3. Static Product Route (src/app/products/[id]/page.tsx)</h3>
+              <CodeBlock
+                language="tsx"
+                filename="src/app/products/[id]/page.tsx"
+                code={`import initialSiteData from "@/data/site-data.json";
+import { ProductDetail } from "@deneb-ui/ui";
+
+// REQUIRED FOR NEXT.JS STATIC EXPORT:
+export function generateStaticParams() {
+  const products = initialSiteData.content?.products || [];
+  return products.map((p) => ({ id: p.id }));
+}
+
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const products = initialSiteData.content?.products || [];
+  const product = products.find((p) => p.id === id) || products[0];
+
+  return (
+    <main className="max-w-6xl mx-auto px-4 py-12">
+      <ProductDetail product={product} />
+    </main>
+  );
+}`}
+              />
             </div>
           </div>
         </section>

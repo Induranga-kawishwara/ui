@@ -12,6 +12,7 @@ import {
   LayoutGrid,
   ChevronRight,
   Flame,
+  Palette,
 } from 'lucide-react';
 
 export interface NavSection {
@@ -95,6 +96,14 @@ export const SIDEBAR_NAV: NavSection[] = [
       { title: 'ContactForm', href: '/docs/components/contact-form' },
       { title: 'Navbar', href: '/docs/components/navbar' },
       { title: 'Footer', href: '/docs/components/footer' },
+    ],
+  },
+  {
+    title: "Data & Theme Engine",
+    icon: <Palette className="w-4 h-4 text-[#818CF8]" />,
+    items: [
+      { title: "SiteDataProvider", href: "/docs/components/site-data-provider", badge: "State" },
+      { title: "ThemeStyles", href: "/docs/components/theme-styles", badge: "Tokens" },
     ],
   },
 ];

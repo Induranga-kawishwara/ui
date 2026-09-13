@@ -1,3 +1,5 @@
+# DENEB UI 🌟
+
 <p align="center">
   <a href="https://deneb.fivora.site">
     <img src="https://img.shields.io/badge/DENEB_UI-Documentation_Site-6366F1?style=for-the-badge&labelColor=0f172a" alt="DENEB UI Docs" />
@@ -26,7 +28,33 @@
 
 ---
 
-## About
+## Table of Contents
+
+1. [About DENEB UI](#about-deneb-ui)
+2. [Core Packages](#core-packages)
+3. [Installation & Setup](#installation--setup)
+4. [Core Architecture & Mandatory Files](#core-architecture--mandatory-files)
+   - [`package.json`](#41-packagejson)
+   - [`next.config.ts` (Static Export)](#42-nextconfigts-static-export-configuration)
+   - [`fivora-template.json` (Template Manifest v2)](#43-fivora-templatejson-template-manifest-v2)
+   - [`src/data/site-data.json` (Single Source of Truth)](#44-srcdatasite-datajson-single-source-of-truth)
+   - [`src/app/layout.tsx` (Root Layout)](#45-root-layout-setupsrcapplayouttsx)
+5. [Visual Editing Engine (`data-preview-*`)](#visual-editing-engine-data-preview-)
+6. [Master Component Catalog (All 40 Components)](#master-component-catalog-all-40-components)
+   - [Core Primitives (7)](#core-primitives)
+   - [Smart Commerce Actions (5)](#smart-commerce-actions)
+   - [Location & Navigation (4)](#location--navigation)
+   - [Social & Business (3)](#social--business)
+   - [Storefront Sections & Catalog (19)](#storefront-sections--catalog)
+   - [Data & Theme Engine (2)](#data--theme-engine)
+7. [Complete Storefront Implementation Examples](#complete-storefront-implementation-examples)
+   - [Main Storefront Page (`src/app/page.tsx`)](#71-main-storefront-page-srcapppagetsx)
+   - [Static Dynamic Product Route (`src/app/products/[id]/page.tsx`)](#72-static-dynamic-product-route-srcappproductsidpagetsx)
+8. [CLI Tooling & Validation Workflow](#cli-tooling--validation-workflow)
+9. [Local Development](#local-development)
+10. [Authors & License](#authors--license)
+
+---
 
 This repository powers **[deneb.fivora.site](https://deneb.fivora.site)** — the developer documentation portal and live component playground for:
 

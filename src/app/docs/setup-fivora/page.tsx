@@ -80,26 +80,7 @@ export default function SetupFivoraPage() {
             <span className="text-[#818CF8] font-semibold">Set Up Fivora</span>
           </div>
 
-          <div data-no-copy className="shrink-0">
-            <button
-              onClick={handleCopyPage}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-[#23283B] bg-[#0E1220]/80 hover:bg-[#161B2E] text-[#94A3B8] hover:text-white hover:border-[#818CF8]/40 transition-all text-xs font-medium shadow-sm hover:shadow-md active:scale-95 group cursor-pointer"
-              title="Copy AI Prompt & Guide"
-              aria-label="Copy AI Prompt & Guide"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-[#4ADE80]" />
-                  <span className="text-[#4ADE80] font-medium">Copied AI Guide!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5 text-[#818CF8] group-hover:text-white transition-colors" />
-                  <span>Copy AI Prompt & Guide</span>
-                </>
-              )}
-            </button>
-          </div>
+
         </div>
 
         {/* Page Header */}

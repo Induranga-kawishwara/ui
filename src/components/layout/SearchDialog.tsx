@@ -37,6 +37,7 @@ export const SEARCH_INDEX: SearchItem[] = [
   { title: 'FloatingContactWidget', category: 'Components', slug: '/docs/components/floating-contact-widget', description: 'Sticky bottom-corner conversion widget.' },
 
   // Location & Navigation
+  { title: 'Map', category: 'Components', slug: '/docs/components/map', description: 'Universal Google Maps responsive iframe embed with intelligent URL and coordinate parsing.' },
   { title: 'LocationCard', category: 'Components', slug: '/docs/components/location-card', description: 'Storefront location card with map directions button.' },
   { title: 'LocationLink', category: 'Components', slug: '/docs/components/location-link', description: 'Interactive map address trigger with directions.' },
   { title: 'MapEmbed', category: 'Components', slug: '/docs/components/map-embed', description: 'Responsive Google Maps iframe embed with fallback.' },
@@ -48,6 +49,8 @@ export const SEARCH_INDEX: SearchItem[] = [
   { title: 'SocialButton', category: 'Components', slug: '/docs/components/social-button', description: 'Individual branded social media buttons.' },
 
   // Storefront Sections
+  { title: 'GoogleFeedback', category: 'Components', slug: '/docs/components/google-feedback', description: 'Official Google Customer Review card section with verified badge and live 1-5 star DOM sync.' },
+  { title: 'TestimonialSection', category: 'Components', slug: '/docs/components/testimonial-section', description: 'Editorial critic and connoisseur review showcase with large quotation typography.' },
   { title: 'CartDrawer', category: 'Components', slug: '/docs/components/cart-drawer', description: 'Slide-over shopping cart drawer with quantity steppers, free shipping progress bar, and WhatsApp checkout.' },
   { title: 'FilterSidebar', category: 'Components', slug: '/docs/components/filter-sidebar', description: 'Faceted catalog filtering sidebar with category chips, price range slider, and size swatches.' },
   { title: 'ProductDetail', category: 'Components', slug: '/docs/components/product-detail', description: 'Complete single product view with multi-image gallery, size/color selector, WhatsApp CTA, and policy tabs.' },

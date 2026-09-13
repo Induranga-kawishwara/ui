@@ -3,8 +3,10 @@
  * Created by Chamika Gayashan & Induranga Kawishwara
  */
 
+export * from './PreviewField';
 export * from './EditableText';
 export * from './EditableImage';
+export * from './EditableMap';
 export * from './EditableList';
 export * from './EditableBox';
 export * from './EditableGrid';
@@ -13,10 +15,12 @@ export * from './EditableProductCard';
 export * from './EditableProductGrid';
 export * from './EditableProductDetail';
 export * from './EditableCustomerReviews';
+export * from './EditableGoogleFeedback';
 export * from './EditableServiceCard';
 export * from './EditableCard';
 export * from './EditablePricingCard';
 export * from './EditableTestimonialCard';
+export * from './EditableTestimonialSection';
 export * from './EditableFAQAccordion';
 export * from './EditableContactForm';
 export * from './EditableNavbar';
@@ -35,6 +39,32 @@ export * from './EditableFilterSidebar';
 export * from './SiteDataProvider';
 export * from './ThemeStyles';
 export { ResponsiveBaseStyles } from './ResponsiveBaseStyles';
+export { DenebComponentStyles } from './DenebComponentStyles';
+export { FontLoader, DENEB_FONTS_LINK_ID } from './fonts/FontLoader';
+export { useDenebFonts } from './fonts/useDenebFonts';
+export * from './hooks/useComponentStyle';
+export {
+  DENEB_FONT_REGISTRY,
+  DENEB_GOOGLE_FONT_COUNT,
+  buildGoogleFontsStylesheetUrl,
+  collectFontIdsFromSiteData,
+  listFontsByCategory,
+  lookupFontDefinition,
+  normalizeFontId,
+  resolveInstallableFont,
+  formatResponsiveFontSize,
+} from '@deneb-ui/core';
+export {
+  STYLE_PATCH_MESSAGE,
+  DENEB_STYLE_PATCH_MESSAGE,
+  STYLE_TARGET_ATTRIBUTE,
+  STYLE_TYPE_ATTRIBUTE,
+  patchElementStyle,
+  patchStyleByPath,
+  styleToCssVariables,
+  validateStyleTree,
+  collectStyleTargetsFromHtml,
+} from '@deneb-ui/core';
 
 // Smart template components & actions
 export * from './utils';
@@ -54,6 +84,7 @@ export { EditableParagraph as Paragraph } from './EditableText';
 export { EditableBadge as Badge } from './EditableText';
 export { EditableQuote as Quote } from './EditableText';
 export { EditableImage as Image } from './EditableImage';
+export { EditableMap as Map } from './EditableMap';
 export { EditableGrid as Grid } from './EditableGrid';
 export { EditableSection as Section } from './EditableSection';
 export { EditableBox as Box } from './EditableBox';
@@ -62,9 +93,11 @@ export { EditableProductCard as ProductCard } from './EditableProductCard';
 export { EditableProductGrid as ProductGrid } from './EditableProductGrid';
 export { EditableProductDetail as ProductDetail } from './EditableProductDetail';
 export { EditableCustomerReviews as CustomerReviews } from './EditableCustomerReviews';
+export { EditableGoogleFeedback as GoogleFeedback } from './EditableGoogleFeedback';
 export { EditableServiceCard as ServiceCard } from './EditableServiceCard';
 export { EditablePricingCard as PricingCard } from './EditablePricingCard';
 export { EditableTestimonialCard as TestimonialCard } from './EditableTestimonialCard';
+export { EditableTestimonialSection as TestimonialSection, EditableTestimonialSection as Testimonials } from './EditableTestimonialSection';
 export { EditableFAQAccordion as Accordion, EditableFAQAccordion as FAQ } from './EditableFAQAccordion';
 export { EditableContactForm as ContactForm } from './EditableContactForm';
 export { EditableNavbar as Navbar, EditableNavbar as Header } from './EditableNavbar';
@@ -72,11 +105,6 @@ export { EditableFooter as Footer } from './EditableFooter';
 export { EditableHeroCentered as Hero, EditableHeroSplit as HeroSplit } from './EditableHero';
 export { EditableAnnouncementBar as AnnouncementBar } from './EditableAnnouncementBar';
 export { EditableCategoryPills as CategoryPills } from './EditableCategoryPills';
-export { StickyMobileBar } from './StickyMobileBar';
-export { TrustBadges } from './TrustBadges';
-export { ProductQuickView } from './ProductQuickView';
-export { CookieConsentBanner } from './CookieConsentBanner';
-export { FloatingContactWidget } from './contact/FloatingContactWidget';
 export { EditableCartDrawer as CartDrawer } from './EditableCartDrawer';
 export { EditableFilterSidebar as FilterSidebar } from './EditableFilterSidebar';
 

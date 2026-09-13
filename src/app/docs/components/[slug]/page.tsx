@@ -45,7 +45,49 @@ export const COMPONENT_SLUGS = [
 ];
 
 export function generateStaticParams() {
-  return COMPONENT_SLUGS.map((slug) => ({ slug }));
+  return [
+    { slug: 'button' },
+    { slug: 'card' },
+    { slug: 'badge' },
+    { slug: 'contact-actions' },
+    { slug: 'whatsapp-button' },
+    { slug: 'phone-button' },
+    { slug: 'email-button' },
+    { slug: 'floating-contact-widget' },
+    { slug: 'business-hours' },
+    { slug: 'location-card' },
+    { slug: 'location-link' },
+    { slug: 'map-embed' },
+    { slug: 'address' },
+    { slug: 'social-links' },
+    { slug: 'social-button' },
+    { slug: 'hero' },
+    { slug: 'cart-drawer' },
+    { slug: 'filter-sidebar' },
+    { slug: 'product-detail' },
+    { slug: 'product-quickview' },
+    { slug: 'product-grid' },
+    { slug: 'product-card' },
+    { slug: 'customer-reviews' },
+    { slug: 'trust-badges' },
+    { slug: 'sticky-mobile-bar' },
+    { slug: 'announcement-bar' },
+    { slug: 'category-pills' },
+    { slug: 'pricing-card' },
+    { slug: 'testimonial-card' },
+    { slug: 'service-card' },
+    { slug: 'faq-accordion' },
+    { slug: 'contact-form' },
+    { slug: 'navbar' },
+    { slug: 'footer' },
+    { slug: 'dialog' },
+    { slug: 'typography' },
+    { slug: 'grid' },
+    { slug: 'image' },
+    { slug: 'google-feedback' },
+    { slug: 'testimonial-section' },
+    { slug: 'map' },
+  ];
 }
 
 export default async function ComponentPage({

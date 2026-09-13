@@ -94,8 +94,8 @@ async function sync() {
   const registryPath = path.join(uiRoot, 'src', 'components', 'docs', 'component-registry.tsx');
   if (fs.existsSync(registryPath)) {
     let registryCode = fs.readFileSync(registryPath, 'utf8');
-    let registeredCount = (registryCode.match(/slug:\s*['"]/g) || []).length;
-    console.log(`✔ Component registry verified (${registeredCount} components currently registered).`);
+    let registeredCount = (registryCode.match(/title:\s*['"][^'"]+['"]/g) || []).length;
+    console.log(`✔ Component registry verified (${registeredCount} components documented and ready).`);
   }
 
   // 3. Inspect and verify CLI command documentation

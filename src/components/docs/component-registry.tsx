@@ -35,16 +35,9 @@ import {
   FilterSidebar,
   CartProvider,
   useCart,
-  EditableHeroCentered,
-  EditableHeroSplit,
-  EditableDialog,
-  EditableGrid,
-  EditableBox,
-  EditableImage,
-  EditableText,
-  EditableNavbar,
-  EditableFooter,
-  THEME_PRESETS,
+  GoogleFeedback,
+  TestimonialSection,
+  Map as DenebMap,
 } from '@/components/deneb-ui';
 import { ComponentDocPageProps } from './ComponentDocPage';
 import {
@@ -617,6 +610,49 @@ function InteractiveFilterSidebarDemo() {
             inStockOnly: Boolean(f.inStockOnly),
           })
         }
+      />
+    </div>
+  );
+}
+
+function InteractiveGoogleFeedbackDemo() {
+  return (
+    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+      <GoogleFeedback
+        basePath="feedback"
+        badgeTitle="Google"
+        badgeRating="4.9"
+        badgeReviewsCount="128 verified reviews"
+        heading="Loved by Coffee Lovers Worldwide"
+        subheading="Real stories and reviews from our global community of coffee purists and daily ritualists."
+        cardClassName="!bg-[#121625] !border-[#23283B] !text-white"
+      />
+    </div>
+  );
+}
+
+function InteractiveTestimonialSectionDemo() {
+  return (
+    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+      <TestimonialSection
+        basePath="testimonials"
+        badge="Critic Acclaim"
+        heading="What Connoisseurs Say"
+        subheading="Unfiltered sensory impressions and reviews from sommeliers, culinary critics, and world sensory judges."
+        cardClassName="!bg-[#121625] !border-[#23283B] !text-white"
+      />
+    </div>
+  );
+}
+
+function InteractiveMapDemo() {
+  return (
+    <div className="w-full max-w-3xl mx-auto h-[360px] rounded-2xl border border-[#23283B] overflow-hidden shadow-2xl bg-[#0A0D17]">
+      <DenebMap
+        data-preview-field-path="contact.mapUrl"
+        mapUrl="https://maps.google.com/maps?q=San+Francisco,+CA&output=embed"
+        address="742 Evergreen Celestial Way, San Francisco, CA"
+        className="w-full h-full border-0"
       />
     </div>
   );
@@ -2228,7 +2264,124 @@ export default function Catalog() {
       { name: 'onFilterChange', type: '(filters) => void', description: 'Callback fired on any filter adjustment.' },
     ],
     prevPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
-  }
+    nextPage: { title: 'GoogleFeedback', href: '/docs/components/google-feedback' },
+  },
+
+  'google-feedback': {
+    title: 'GoogleFeedback',
+    description: 'Official Google Customer Review card section with verified platform badge, aggregate star pill, live 1–5 star DOM synchronization, and responsive review cards.',
+    category: 'Storefront Sections',
+    badge: 'Social / Google',
+    previewComponent: <InteractiveGoogleFeedbackDemo />,
+    previewCode: `import { GoogleFeedback, useSiteData } from "@deneb-ui/ui";
+
+export default function ReviewsSection() {
+  const { siteData } = useSiteData();
+  const feedback = siteData?.content?.feedback || {};
+
+  return (
+    <GoogleFeedback
+      basePath="feedback"
+      badgeIcon={feedback.badgeIcon}
+      badgeTitle={feedback.badgeTitle}
+      badgeRating={feedback.badgeRating}
+      badgeReviewsCount={feedback.badgeReviewsCount}
+      heading={feedback.heading}
+      subheading={feedback.subheading}
+      feedbacks={feedback.feedbacks}
+    />
+  );
+}`,
+    usageCode: `import { GoogleFeedback } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add google-feedback`,
+    props: [
+      { name: 'basePath', type: 'string', defaultValue: '"feedback"', description: 'JSON schema root key in site-data.json for Fivora visual editing.' },
+      { name: 'badgeIcon', type: 'string', defaultValue: 'Google "G" SVG', description: 'URL or SVG data URI for the review platform badge.' },
+      { name: 'badgeTitle', type: 'string', defaultValue: '"Google"', description: 'Review platform name shown alongside the badge icon.' },
+      { name: 'badgeRating', type: 'string | number', defaultValue: '"4.9"', description: 'Aggregate rating number displayed in the section header.' },
+      { name: 'badgeReviewsCount', type: 'string | number', defaultValue: '"128 reviews"', description: 'Total review count label.' },
+      { name: 'heading', type: 'string', defaultValue: '"Loved by Coffee Lovers..."', description: 'Section primary headline.' },
+      { name: 'subheading', type: 'string', description: 'Section introductory description paragraph.' },
+      { name: 'feedbacks', type: 'FeedbackItem[]', description: 'Array of customer review items with name, avatar, rating (1-5), and comment.' },
+      { name: 'maxStars', type: 'number', defaultValue: '5', description: 'Maximum rating star count.' },
+      { name: 'className', type: 'string', description: 'Custom CSS / Tailwind classes for section container.' },
+      { name: 'cardClassName', type: 'string', description: 'Custom CSS / Tailwind classes for individual review cards.' },
+    ],
+    prevPage: { title: 'FilterSidebar', href: '/docs/components/filter-sidebar' },
+    nextPage: { title: 'TestimonialSection', href: '/docs/components/testimonial-section' },
+  },
+
+  'testimonial-section': {
+    title: 'TestimonialSection',
+    description: 'Editorial critic and connoisseur review showcase featuring large quotation typography, author credentials, accreditation tags, and synchronized star ratings.',
+    category: 'Storefront Sections',
+    badge: 'Editorial',
+    previewComponent: <InteractiveTestimonialSectionDemo />,
+    previewCode: `import { TestimonialSection, useSiteData } from "@deneb-ui/ui";
+
+export default function ConnoisseurReviews() {
+  const { siteData } = useSiteData();
+  const data = siteData?.content?.testimonials || {};
+
+  return (
+    <TestimonialSection
+      basePath="testimonials"
+      badge={data.badge}
+      heading={data.heading}
+      subheading={data.subheading}
+      testimonials={data.testimonials}
+    />
+  );
+}`,
+    usageCode: `import { TestimonialSection } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add testimonial-section`,
+    props: [
+      { name: 'basePath', type: 'string', defaultValue: '"testimonials"', description: 'Root key in site-data.json for Fivora visual editing.' },
+      { name: 'badge', type: 'string', defaultValue: '"Critic Acclaim"', description: 'Uppercase pill badge text displayed above heading.' },
+      { name: 'heading', type: 'string', defaultValue: '"What Connoisseurs Say"', description: 'Main section title.' },
+      { name: 'subheading', type: 'string', description: 'Subheading description text.' },
+      { name: 'testimonials', type: 'TestimonialSectionItem[]', description: 'Array of critic reviews containing quote, author, role, avatar, tag, and rating.' },
+      { name: 'maxStars', type: 'number', defaultValue: '5', description: 'Maximum star rating per testimonial.' },
+      { name: 'className', type: 'string', description: 'CSS / Tailwind classes for section wrapper.' },
+      { name: 'cardClassName', type: 'string', description: 'CSS / Tailwind classes for testimonial cards.' },
+    ],
+    prevPage: { title: 'GoogleFeedback', href: '/docs/components/google-feedback' },
+    nextPage: { title: 'Map', href: '/docs/components/map' },
+  },
+
+  map: {
+    title: 'Map',
+    description: 'Universal Google Maps responsive iframe embed with intelligent URL parsing for full iframe snippets, @lat,lng coordinates, place URLs, short links, and search queries.',
+    category: 'Location & Navigation',
+    badge: 'Universal Embed',
+    previewComponent: <InteractiveMapDemo />,
+    previewCode: `import { Map } from "@deneb-ui/ui";
+
+export default function LocationMap({ mapUrl, address }: { mapUrl?: string; address?: string }) {
+  return (
+    <div className="w-full h-96 rounded-2xl overflow-hidden shadow-xl">
+      <Map
+        data-preview-field-path="contact.mapUrl"
+        mapUrl={mapUrl}
+        address={address}
+        className="w-full h-full border-0"
+      />
+    </div>
+  );
+}`,
+    usageCode: `import { Map } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add map`,
+    props: [
+      { name: 'mapUrl', type: 'string', description: 'Google Maps URL, share link, coordinate URL (@lat,lng), place URL, or full <iframe> embed tag.' },
+      { name: 'address', type: 'string', defaultValue: '"Sri Lanka"', description: 'Physical address fallback query string when mapUrl is empty or unparseable.' },
+      { name: 'defaultLocation', type: 'string', description: 'Secondary location fallback query string.' },
+      { name: 'data-preview-field-path', type: 'string', description: 'Fivora visual editing binding annotation.' },
+      { name: 'className', type: 'string', defaultValue: '"w-full h-full border-0"', description: 'CSS / Tailwind styling for iframe.' },
+      { name: 'title', type: 'string', defaultValue: '"Google Map Location"', description: 'Accessibility title attribute for the iframe.' },
+    ],
+    prevPage: { title: 'TestimonialSection', href: '/docs/components/testimonial-section' },
+    nextPage: { title: 'CustomerReviews', href: '/docs/components/customer-reviews' },
+  },
 };
 
 export const COMPONENT_SLUGS = Object.keys(COMPONENT_DOCS);

@@ -2,6 +2,7 @@ import React from 'react';
 import { EditableText } from './EditableText';
 import { EditableImage } from './EditableImage';
 import { BoxAspectRatio, BoxRadius, BoxShadow, BoxSpacing } from './EditableBox';
+import { useComponentStyle } from './hooks/useComponentStyle';
 
 export interface CardItem {
   id?: string | number;
@@ -136,14 +137,17 @@ export function EditableCard({
       ? border
       : undefined;
 
+  const stylePath = `${itemPath}.card`;
+  const { cssVars: styleVars } = useComponentStyle(stylePath, 'card');
+
   const cardStyle: React.CSSProperties = {
-    ...(width !== undefined ? { width } : {}),
-    ...(minWidth !== undefined ? { minWidth } : {}),
-    ...(maxWidth !== undefined ? { maxWidth } : {}),
-    ...(height !== undefined ? { height } : {}),
-    ...(minHeight !== undefined ? { minHeight } : {}),
-    ...(maxHeight !== undefined ? { maxHeight } : {}),
-    ...(resolvedAspect ? { aspectRatio: resolvedAspect } : {}),
+    width: width !== undefined ? `var(--deneb-card-width, ${width})` : 'var(--deneb-card-width, inherit)',
+    minWidth: minWidth !== undefined ? `var(--deneb-card-min-width, ${minWidth})` : undefined,
+    maxWidth: maxWidth !== undefined ? `var(--deneb-card-max-width, ${maxWidth})` : undefined,
+    height: height !== undefined ? `var(--deneb-card-height, ${height})` : undefined,
+    minHeight: minHeight !== undefined ? `var(--deneb-card-min-height, ${minHeight})` : undefined,
+    maxHeight: maxHeight !== undefined ? `var(--deneb-card-max-height, ${maxHeight})` : undefined,
+    ...(resolvedAspect ? { aspectRatio: `var(--deneb-card-aspect-ratio, ${resolvedAspect})` } : {}),
     ...(balance
       ? {
           display: 'flex',
@@ -152,19 +156,22 @@ export function EditableCard({
           flex: '1 1 0%',
         }
       : {}),
-    ...(bg ? { background: bg } : {}),
-    ...(resolvedRadius ? { borderRadius: resolvedRadius } : {}),
-    ...(resolvedShadow ? { boxShadow: resolvedShadow } : {}),
-    ...(resolvedBorder ? { border: resolvedBorder } : {}),
-    ...(resolvedPadding ? { padding: resolvedPadding } : {}),
-    ...(align ? { textAlign: align } : {}),
+    background: bg ? `var(--deneb-card-bg, ${bg})` : 'var(--deneb-card-bg, inherit)',
+    borderRadius: resolvedRadius ? `var(--deneb-card-radius, ${resolvedRadius})` : 'var(--deneb-card-radius, inherit)',
+    boxShadow: resolvedShadow ? `var(--deneb-card-shadow, ${resolvedShadow})` : 'var(--deneb-card-shadow, inherit)',
+    ...(resolvedBorder ? { border: `var(--deneb-card-border, ${resolvedBorder})` } : {}),
+    padding: resolvedPadding ? `var(--deneb-card-pt, ${resolvedPadding})` : 'var(--deneb-card-pt, inherit)',
+    textAlign: (align ? `var(--deneb-card-align, ${align})` : 'var(--deneb-card-align, inherit)') as any,
+    ...styleVars,
     ...style,
   };
 
   return (
     <Component
       data-preview-item-path={itemPath}
-      className={`editable-card ${className}`.trim()}
+      data-preview-style-target={stylePath}
+      data-preview-style-type="card"
+      className={`deneb-card editable-card ${balance ? 'deneb-card-balance' : ''} ${className}`.trim()}
       style={cardStyle}
       {...(props as any)}
     >

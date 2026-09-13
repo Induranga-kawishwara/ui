@@ -4,10 +4,27 @@
  */
 
 export interface MapLocationInput {
+  /** Location or branch name, e.g. "Main Roastery", "Downtown Cafe". */
+  name?: string | null;
+  /** Alternative title property. */
+  title?: string | null;
+  /** Explicit Google Maps or destination URL. */
   mapUrl?: string | null;
+  /** Fivora-paired sibling of `address` (`addressUrl` shares the `address` inspector stem). */
+  addressUrl?: string | null;
+  /** Generic external or map URL. */
+  url?: string | null;
+  /** Link URL alias. */
+  linkUrl?: string | null;
+  /** Street address. */
   address?: string | null;
   city?: string | null;
+  state?: string | null;
   country?: string | null;
+  postalCode?: string | null;
+  zipCode?: string | null;
+  /** Permissive index signature so custom or template-specific keys never trigger TS2561. */
+  [key: string]: any;
 }
 
 /**
@@ -71,19 +88,55 @@ export function createMapUrl(location?: MapLocationInput | string | null): strin
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
   }
 
-  if (location.mapUrl && location.mapUrl.trim()) {
-    return location.mapUrl.trim();
+  const explicitUrl = (
+    location.addressUrl ||
+    location.mapUrl ||
+    location.url ||
+    location.linkUrl ||
+    ''
+  ).trim();
+  if (explicitUrl) {
+    return explicitUrl;
   }
 
-  const queryParts = [location.address, location.city, location.country]
-    .filter((part): part is string => Boolean(part && part.trim()))
-    .map((part) => part.trim());
+  const queryParts = [
+    location.name || location.title,
+    location.address,
+    location.city,
+    location.state,
+    location.country,
+    location.postalCode || location.zipCode,
+  ]
+    .filter((part): part is string => Boolean(part && String(part).trim()))
+    .map((part) => String(part).trim());
 
   if (queryParts.length > 0) {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryParts.join(', '))}`;
   }
 
   return '';
+}
+
+/**
+ * Resolves a merchant-entered action URL for CTAs (WhatsApp, tel, mailto, or external http(s)).
+ * Phone-like values without a scheme become WhatsApp links when `mode` is `auto`.
+ */
+export function resolveActionUrl(
+  raw?: string | null,
+  mode: 'auto' | 'external' = 'auto'
+): string {
+  const value = raw?.trim() ?? '';
+  if (!value) return '';
+  if (mode === 'external') {
+    return isSafeExternalLink(value) ? value : '';
+  }
+  if (/^https?:\/\//i.test(value) || /^tel:/i.test(value) || /^mailto:/i.test(value)) {
+    return value;
+  }
+  if (/^\+?[\d\s().-]+$/.test(value)) {
+    return createWhatsAppUrl(value);
+  }
+  return isSafeExternalLink(value) ? value : '';
 }
 
 /**
@@ -120,6 +173,7 @@ export function withBasePath(value?: string | null): string {
 /**
  * Resolves standard page route from pageKey.
  */
-export function pageRoute(pageKey: string): string {
-  return pageKey === 'home' ? '/' : `/${pageKey}`;
+export function resolvePageRoute(pageKey: string, pages?: Array<{ id: string; route: string }>): string {
+  const match = pages?.find((page) => page.id === pageKey);
+  return match?.route ?? `/${pageKey.replace(/_/g, '/')}`;
 }

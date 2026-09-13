@@ -68,6 +68,7 @@ export const SIDEBAR_NAV: NavSection[] = [
     title: 'Location & Navigation',
     icon: <MapPin className="w-4 h-4 text-[#818CF8]" />,
     items: [
+      { title: 'Map', href: '/docs/components/map', badge: 'Smart', isNew: true },
       { title: 'LocationCard', href: '/docs/components/location-card' },
       { title: 'LocationLink', href: '/docs/components/location-link' },
       { title: 'MapEmbed', href: '/docs/components/map-embed' },
@@ -87,6 +88,8 @@ export const SIDEBAR_NAV: NavSection[] = [
     title: 'Storefront Sections',
     icon: <LayoutGrid className="w-4 h-4 text-[#818CF8]" />,
     items: [
+      { title: 'GoogleFeedback', href: '/docs/components/google-feedback', badge: 'Google', isNew: true },
+      { title: 'TestimonialSection', href: '/docs/components/testimonial-section', badge: 'Editorial', isNew: true },
       { title: 'CartDrawer', href: '/docs/components/cart-drawer', badge: 'Hot', isNew: true },
       { title: 'FilterSidebar', href: '/docs/components/filter-sidebar', isNew: true },
       { title: 'ProductDetail', href: '/docs/components/product-detail', badge: 'Hot', isNew: true },

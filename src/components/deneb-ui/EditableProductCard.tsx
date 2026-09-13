@@ -99,6 +99,7 @@ export function EditableProductCard({
   ...props
 }: EditableProductCardProps) {
   const name = String(product?.name || product?.title || '');
+  const hasPrice = showPrice && product?.price !== undefined && product?.price !== null && String(product.price).trim() !== '';
   const price = product?.price !== undefined ? String(product.price) : '';
   const originalPrice = product?.originalPrice !== undefined ? String(product.originalPrice) : '';
   const description = String(product?.description || '');
@@ -165,6 +166,7 @@ export function EditableProductCard({
       >
         <EditableImage
           id={`${itemPath}.imageUrl`}
+          data-preview-field-path={`${itemPath}.imageUrl`}
           src={imageUrl}
           fallbackSrc={imageFallback}
           alt={name}
@@ -179,6 +181,7 @@ export function EditableProductCard({
           <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 10 }}>
             <EditableBadge
               id={`${itemPath}.badge`}
+              data-preview-field-path={`${itemPath}.badge`}
               defaultValue={badge}
               badgeVariant="primary"
             />
@@ -202,6 +205,7 @@ export function EditableProductCard({
             <EditableText
               as="span"
               id={`${itemPath}.category`}
+              data-preview-field-path={`${itemPath}.category`}
               defaultValue={category}
               style={{
                 fontSize: '0.75rem',
@@ -219,6 +223,7 @@ export function EditableProductCard({
           <EditableText
             as="h3"
             id={`${itemPath}.name`}
+            data-preview-field-path={`${itemPath}.name`}
             defaultValue={name}
             style={{
               fontSize: '1.125rem',
@@ -234,6 +239,7 @@ export function EditableProductCard({
             <EditableText
               as="p"
               id={`${itemPath}.description`}
+              data-preview-field-path={`${itemPath}.description`}
               defaultValue={description}
               style={{
                 fontSize: '0.875rem',
@@ -257,11 +263,12 @@ export function EditableProductCard({
             gap: '0.5rem',
           }}
         >
-          {showPrice && (
+          {hasPrice ? (
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.375rem' }}>
               <EditableText
                 as="span"
                 id={`${itemPath}.price`}
+                data-preview-field-path={`${itemPath}.price`}
                 defaultValue={price}
                 style={{
                   fontSize: '1.25rem',
@@ -273,6 +280,7 @@ export function EditableProductCard({
                 <EditableText
                   as="span"
                   id={`${itemPath}.originalPrice`}
+                  data-preview-field-path={`${itemPath}.originalPrice`}
                   defaultValue={originalPrice}
                   style={{
                     fontSize: '0.875rem',
@@ -282,7 +290,7 @@ export function EditableProductCard({
                 />
               ) : null}
             </div>
-          )}
+          ) : null}
 
           {actionSlot ? (
             <div>{actionSlot}</div>
@@ -304,6 +312,7 @@ export function EditableProductCard({
               <EditableText
                 as="span"
                 id={actionLabelPath || `${itemPath}.buttonText`}
+                data-preview-field-path={actionLabelPath || `${itemPath}.buttonText`}
                 defaultValue={actionLabel || (product as any)?.buttonText || 'Buy Now'}
                 style={{ color: '#ffffff', fontWeight: 600 }}
               />

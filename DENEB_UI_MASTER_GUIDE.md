@@ -1,960 +1,561 @@
-# DENEB UI — Complete Architecture & Component Master Guide
+# SYSTEM PROMPT FOR AI TEMPLATE CONVERTER & DEVELOPER MASTER SPECIFICATION
+# FIVORA DENEB v2.0 COMPLETE STOREFRONT ENGINE
 
-> **Official Documentation Portal**: [deneb.fivora.site](https://deneb.fivora.site)  
-> **Source Repository**: `/mnt/GAMES/GitHub/deneb-ui/`  
-> **Packages**: `@deneb-ui/core`, `@deneb-ui/ui`, `create-template`  
-> **Ecosystem**: Fivora Cloud E-Commerce & Micro-Storefront Engine  
+This is the complete, definitive technical specification for authoring and converting e-commerce templates for the **Fivora** platform using **DENEB UI** (`@deneb-ui/ui` & `@deneb-ui/cli`).
 
 ---
 
-## Table of Contents
+## 1. System Architecture & Fundamental Rules
 
-1. [System Overview & Architecture](#1-system-overview--architecture)
-2. [Documentation Portal & Deployment (`deneb.fivora.site`)](#2-documentation-portal--deployment-denebfivorasite)
-3. [The Three Architectural Pillars](#3-the-three-architectural-pillars)
-   - [3.1 Visual Editing Engine (`data-deneb-*`)](#31-visual-editing-engine-data-deneb-)
-   - [3.2 Dynamic Data & State Engine (`SiteDataProvider`)](#32-dynamic-data--state-engine-sitedataprovider)
-   - [3.3 Design System & Token Resolver (`ThemeStyles`)](#33-design-system--token-resolver-themestyles)
-4. [Comprehensive Component Catalog (All 31 Components)](#4-comprehensive-component-catalog-all-31-components)
-   - [Core Primitives (7 Components)](#core-primitives)
-     - `Button`, `Card`, `Badge`, `Typography`, `Dialog`, `Grid`, `Image`
-   - [Smart Commerce Actions (5 Components)](#smart-commerce-actions)
-     - `ContactActions`, `WhatsAppButton`, `PhoneButton`, `EmailButton`, `FloatingContactWidget`
-   - [Location & Navigation (4 Components)](#location--navigation)
-     - `LocationCard`, `LocationLink`, `MapEmbed`, `Address`
-   - [Social & Business (3 Components)](#social--business)
-     - `BusinessHours`, `SocialLinks`, `SocialButton`
-   - [Storefront Sections (10 Components)](#storefront-sections)
-     - `Hero`, `ProductCard`, `ServiceCard`, `PricingCard`, `TestimonialCard`, `FAQAccordion`, `AnnouncementBar`, `CategoryPills`, `ContactForm`, `Navbar`, `Footer`
-   - [Data & Theme Engine (2 Components)](#data--theme-engine)
-     - `SiteDataProvider`, `ThemeStyles`
-5. [Building Custom Templates for Fivora](#5-building-custom-templates-for-fivora)
-6. [Static Export Validation Rules for Fivora Workspaces](#6-static-export-validation-rules-for-fivora-workspaces)
-7. [Troubleshooting & Best Practices](#7-troubleshooting--best-practices)
+Fivora templates are modern Next.js static storefronts hosted inside an interactive visual preview iframe. When merchants customize their site, Fivora's visual builder coordinates bi-directional synchronization via `window.postMessage`.
+
+### 1.1 Fundamental Template Principles
+1. **Single Source of Truth**: ALL customizable text, images, products, contact information, social links, and business hours must be sourced from `src/data/site-data.json`.
+2. **Defensive Nullish Reads**: Always access nested fields using nullish coalescing (`??`) rather than logical OR (`||`):
+   ```tsx
+   const title = content?.hero?.title ?? "Handcrafted Footwear";
+   const products = content?.products ?? [];
+   ```
+   *Never access `.map()` directly on an undefined property.*
+3. **Visual Editing Marker Attributes**:
+   - Single values: `data-preview-field-path="content.hero.title"`
+   - Array / list containers: `data-preview-list-path="content.products"`
+   - Array loop items: `data-preview-item-path={`content.products.${index}`}`
+   - Item leaf fields: `data-preview-field-path={`content.products.${index}.title`}`
+4. **Static Export Requirement**: The template must build statically via `next build` with `output: 'export'` in `next.config.ts`.
+5. **No External Fetching**: Do not call `fetch()` to external URLs during render or build. Dynamic data is provided by `SiteDataProvider` at runtime.
 
 ---
 
-## 1. System Overview & Architecture
+## 2. Project Setup & Configuration
 
-**DENEB UI** is an enterprise-grade, design-system and component library tailored for high-converting localized storefronts, merchant websites, and visual-first headless commerce on the **Fivora** platform.
-
-### Architecture Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                       Fivora Visual Builder / Studio                        │
-│                   (Iframe container & PostMessage Bridge)                   │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │ postMessage ({ type: 'DENEB_UPDATE' })
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                 Merchant Storefront / Template (Next.js)                     │
-│                                                                             │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │                          <SiteDataProvider>                           │  │
-│  │   - Holds state: siteData (identity, products, services, contact, etc.)│  │
-│  │   - Syncs with Live API when online; falls back to static JSON        │  │
-│  │   - In visual builder mode, listens to postMessage for live preview   │  │
-│  └───────────────────────────────────┬───────────────────────────────────┘  │
-│                                      │ Context Provider                     │
-│                                      ▼                                      │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │                           <ThemeStyles>                               │  │
-│  │   - Resolves TemplateTheme tokens into CSS variables (--deneb-*)      │  │
-│  │   - Dynamically injects colors, font families, radius, gradients      │  │
-│  └───────────────────────────────────┬───────────────────────────────────┘  │
-│                                      │ Cascading CSS Variables              │
-│                                      ▼                                      │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │                        DENEB UI Component Tree                        │  │
-│  │                                                                       │  │
-│  │  [Core Primitives]   [Smart Actions]   [Storefront Sections]         │  │
-│  │  - Button            - WhatsAppButton  - Hero (Split & Centered)      │  │
-│  │  - Card              - ContactActions  - ProductCard / ServiceCard    │  │
-│  │  - Badge             - FloatingWidget  - Navbar & Footer              │  │
-│  │  - Typography        - LocationCard    - FAQAccordion / Testimonials  │  │
-│  │                                                                       │  │
-│  │  Every element annotated with data-deneb-* attributes for 1-click     │  │
-│  │  visual editing inside Fivora dashboard                               │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
+### 2.1 Installation
+Install DENEB UI core and CLI packages:
+```bash
+npm install @deneb-ui/ui @deneb-ui/cli lucide-react clsx tailwind-merge
+npm install -D tailwindcss @tailwindcss/postcss postcss
 ```
 
----
+### 2.2 `next.config.ts` (Static Export Configuration)
+```typescript
+import type { NextConfig } from "next";
 
-## 2. Documentation Portal & Deployment (`deneb.fivora.site`)
+const nextConfig: NextConfig = {
+  output: "export",
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
+};
 
-The official documentation website located in `/mnt/GAMES/GitHub/deneb-ui/` is a Next.js App Router application providing:
-- Interactive live component showcases with runtime controls.
-- Copy-paste ready TypeScript / JSX code snippets.
-- Interactive props tables detailing all parameters, types, defaults, and descriptions.
-- Responsive mobile / tablet preview toggles.
-
-### Hosting & Deployment Architecture
-
-```
-Internet Request ──► CapRover Reverse Proxy (Nginx + SSL Certbot)
-                                  │
-                                  ▼ Host: deneb.fivora.site
-                       ┌──────────────────────┐
-                       │  CapRover Container  │
-                       │   (Node.js 20/22)    │
-                       │                      │
-                       │   next start (3000)  │
-                       │ (Standalone Server)  │
-                       └──────────────────────┘
+export default nextConfig;
 ```
 
-### Deployment Configuration
-
-1. **`captain-definition`**:
+### 2.3 `fivora-template.json` (Template Manifest v2)
+Every template must include this file in the root directory:
 ```json
 {
-  "schemaVersion": 2,
-  "dockerfilePath": "./Dockerfile"
+  "id": "bespoke-artisan-store",
+  "name": "Bespoke Artisan Store",
+  "version": "2.0.0",
+  "description": "High-converting artisanal commerce template with responsive catalog and WhatsApp checkout.",
+  "engine": "deneb-v2",
+  "category": "fashion",
+  "tags": ["shoes", "leather", "craft", "commerce"],
+  "author": "Fivora Verified Developer",
+  "previewUrl": "https://artisan-demo.fivora.site",
+  "supportedCurrencies": ["LKR", "USD", "EUR", "GBP"],
+  "features": [
+    "cart-drawer",
+    "whatsapp-checkout",
+    "faceted-filters",
+    "live-hours",
+    "visual-click-to-edit"
+  ]
 }
 ```
 
-2. **`Dockerfile`**:
-```dockerfile
-FROM node:20-alpine AS base
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
-
-RUN npm run build
-
-FROM node:20-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-ENV PORT=3000
-
-COPY --from=base /app/public ./public
-COPY --from=base /app/.next/standalone ./
-COPY --from=base /app/.next/static ./.next/static
-
-EXPOSE 3000
-CMD ["node", "server.js"]
+### 2.4 `src/data/site-data.json` (Standard Seed Data Structure)
+```json
+{
+  "shop": {
+    "name": "Artisan Footwear & Leather",
+    "tagline": "Handcrafted micro-batch leather goods",
+    "whatsapp": "94771234567",
+    "phone": "+94 11 234 5678",
+    "email": "concierge@artisan.fivora.site",
+    "address": {
+      "street": "42 Heritage Boulevard",
+      "city": "Colombo",
+      "region": "Western Province",
+      "postalCode": "00700",
+      "country": "Sri Lanka"
+    },
+    "currency": "LKR",
+    "logo": "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+  },
+  "theme": {
+    "primary": "#6366F1",
+    "primaryGlow": "rgba(99, 102, 241, 0.4)",
+    "background": "#090D1A",
+    "cardBackground": "#0E1220",
+    "border": "#1E2438",
+    "text": "#F8FAFC",
+    "textMuted": "#94A3B8"
+  },
+  "content": {
+    "hero": {
+      "title": "Bespoke Footwear Engineered for Distinction",
+      "subtitle": "Micro-batch leather shoes crafted by fourth-generation artisans.",
+      "primaryCtaText": "Shop Collection",
+      "primaryCtaLink": "#products",
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+    },
+    "products": [
+      {
+        "id": "shoe-vanta-1",
+        "title": "Vanta Obsidian Oxford",
+        "price": 28500,
+        "compareAtPrice": 34000,
+        "currency": "Rs.",
+        "category": "Formal",
+        "rating": 4.9,
+        "reviewCount": 38,
+        "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+        "badge": "Bestseller"
+      }
+    ],
+    "businessHours": [
+      { "day": "Monday - Friday", "open": "09:00 AM", "close": "07:00 PM" },
+      { "day": "Saturday - Sunday", "open": "10:00 AM", "close": "05:00 PM" }
+    ]
+  }
+}
 ```
-
-3. **Domain Assignment**:
-- In CapRover Dashboard, attach domain `deneb.fivora.site`.
-- Enable HTTPS with Let's Encrypt (1-click SSL).
-- Set container port to `3000`.
 
 ---
 
-## 3. The Three Architectural Pillars
+## 3. Visual Editing Engine & Attribute Rules
 
-### 3.1 Visual Editing Engine (`data-deneb-*`)
+The Fivora parent dashboard attaches visual selection boxes and enables in-line content editing using three simple DOM attributes:
 
-Every DENEB UI component renders deterministic `data-deneb-*` attributes into the DOM. When loaded inside the Fivora Visual Builder:
-1. Hovering over a component renders an intuitive selection outline.
-2. Clicking fires an event into the parent builder.
-3. The merchant edits text, price, image URL, or hours in the sidebar modal.
-4. The builder sends a `postMessage` with the new data:
-   ```ts
-   window.parent.postMessage({
-     type: 'DENEB_FIELD_UPDATE',
-     payload: { path: 'products.0.price', value: 89.99 }
-   }, '*');
+1. **Leaf Field Attribute (`data-preview-field-path`)**:
+   Attaches to any editable text, link, or image URL.
+   ```tsx
+   <h1 data-preview-field-path="content.hero.title">
+     {content?.hero?.title ?? "Default Title"}
+   </h1>
+   ```
+2. **List Container Attribute (`data-preview-list-path`)**:
+   Attaches to the outer `<div>` or grid containing dynamic list items.
+   ```tsx
+   <div data-preview-list-path="content.products" className="grid grid-cols-3 gap-6">
+     ...
+   </div>
+   ```
+3. **Item Container Attribute (`data-preview-item-path`)**:
+   Attaches to the root card or item wrapper inside a `.map()` loop.
+   ```tsx
+   {products.map((product, idx) => (
+     <div key={product.id || idx} data-preview-item-path={`content.products.${idx}`}>
+       <h3 data-preview-field-path={`content.products.${idx}.title`}>{product.title}</h3>
+     </div>
+   ))}
    ```
 
-#### Recognized Attributes
-
-| Attribute | Value Example | Description |
-| :--- | :--- | :--- |
-| `data-deneb-component` | `"product-card"` | Identifies the component type for component-level configuration. |
-| `data-deneb-field` | `"product.title"` | Directly binds a text node to a keypath in `siteData`. |
-| `data-deneb-image` | `"product.imageUrl"` | Triggers image picker / asset upload modal on click. |
-| `data-deneb-action` | `"whatsapp" \| "call"` | Configures phone numbers, pre-filled messages, and links. |
-| `data-deneb-section` | `"hero" \| "features"` | Designates draggable / re-orderable page sections. |
-
 ---
 
-### 3.2 Dynamic Data & State Engine (`SiteDataProvider`)
+## 4. Master DENEB UI Component Catalog (All 40 Components)
 
-DENEB UI features a fully decoupled state layer. Storefronts can run in two modes:
-1. **Static Jamstack Mode**: Pulls from `site.json` or fallback props (0ms cold start, SSG).
-2. **Dynamic Live Sync Mode**: `SiteDataProvider` polls or fetches from Fivora REST API (`api.productsUrl`, `api.servicesUrl`), keeping prices, inventory, and business hours live in real-time.
+Import all components directly from `@deneb-ui/ui`:
 
-```tsx
-import { SiteDataProvider, useProducts, useSiteData } from "@deneb-ui/ui";
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <SiteDataProvider 
-      initialData={siteJsonData}
-      api={{
-        baseUrl: "https://api.fivora.com/v1",
-        projectId: "store-4921",
-        productsUrl: "/catalog/shop-products"
-      }}
-    >
-      {children}
-    </SiteDataProvider>
-  );
-}
-```
-
-#### Available Headless Hooks
-
-- `useSiteData()`: Returns `{ data, isLive, updateField, reload }`.
-- `useProducts(fallback?: ProductItem[])`: Returns array of products, reactive to live additions and price edits.
-- `useServices(fallback?: ServiceItem[])`: Returns array of services offered with durations and rates.
-- `useBusinessStatus(schedule)`: Calculates whether the business is currently open or closed based on browser or merchant timezone.
-
----
-
-### 3.3 Design System & Token Resolver (`ThemeStyles`)
-
-Rather than locking merchants into rigid CSS or Tailwind classes, DENEB uses semantic CSS custom properties:
-- `--deneb-color-primary`
-- `--deneb-color-accent`
-- `--deneb-color-bg`
-- `--deneb-color-card`
-- `--deneb-radius-base`
-- `--deneb-font-heading`
-- `--deneb-font-body`
-
-```tsx
-import { ThemeStyles, THEME_PRESETS } from "@deneb-ui/ui";
-
-// Inside layout or page
-<ThemeStyles 
-  preset="luxury" 
-  theme={{
-    colors: {
-      primary: '#0F172A',
-      accent: '#E11D48',
-    },
-    radius: '1rem',
-  }} 
-/>
-```
-
----
-
-## 4. Comprehensive Component Catalog (All 31 Components)
-
----
 
 ### Core Primitives
 
-#### 1. Button (`/docs/components/button`)
-Highly customizable tactile button supporting primary, secondary, outline, ghost, danger, and luxury variants. Built with accessible keyboard navigation and loading state indicators.
+#### 1. Button (`@deneb-ui/ui`)
+
+An interactive button primitive with celestial glows, glassmorphic variants, and visual editing support.
 
 ```tsx
 import { Button } from "@deneb-ui/ui";
-import { ArrowRight, ShoppingBag } from "lucide-react";
 
-export function ButtonShowcase() {
+export default function Page() {
   return (
-    <div className="flex flex-wrap gap-4 items-center">
-      <Button variant="primary" size="md">
-        Explore Collection <ArrowRight className="w-4 h-4 ml-2" />
-      </Button>
-
-      <Button variant="outline" size="md">
-        Secondary Action
-      </Button>
-
-      <Button variant="whatsapp" size="md">
-        Chat with Us
-      </Button>
-
-      <Button variant="primary" size="lg" isLoading>
-        Processing...
-      </Button>
-    </div>
+    <Button 
+      variant="glow" 
+      size="md" 
+      onClick={() => console.log('Clicked!')}
+    >
+      Launch Storefront
+    </Button>
   );
 }
 ```
-**Props Table**:
-- `variant`: `'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'whatsapp' | 'subtle'` (default: `'primary'`)
-- `size`: `'sm' | 'md' | 'lg'` (default: `'md'`)
-- `isLoading`: `boolean` (default: `false`)
-- `disabled`: `boolean` (default: `false`)
-- `href`: `string` (renders as accessible HTML anchor or Next.js Link)
 
----
+#### 2. Card (`@deneb-ui/ui`)
 
-#### 2. Card (`/docs/components/card`)
-Modular surface container featuring customizable elevated borders, subtle hover lighting, glassmorphism, and padding options.
+A versatile container card with obsidian glass styling, luminous borders, and structured content slots.
 
 ```tsx
-import { Card } from "@deneb-ui/ui";
-
-export function CardShowcase() {
-  return (
-    <Card 
-      variant="interactive" 
-      padding="lg" 
-      className="max-w-md border-indigo-500/20 bg-slate-900/80"
-    >
-      <h3 className="text-xl font-bold text-white mb-2">Artisan Coffee Roasters</h3>
-      <p className="text-slate-400 text-sm leading-relaxed">
-        Single-origin Ethiopian Yirgacheffe roasted weekly in micro batches.
-      </p>
-    </Card>
-  );
-}
+import { Card } from "@deneb-ui/ui";\n\n<Card className="p-6">\n  <h2>Hello World</h2>\n</Card>
 ```
-**Props Table**:
-- `variant`: `'default' | 'flat' | 'outline' | 'interactive' | 'glass'` (default: `'default'`)
-- `padding`: `'none' | 'sm' | 'md' | 'lg' | 'xl'` (default: `'md'`)
-- `hoverEffect`: `boolean` (adds micro-lift and shadow glow)
 
----
+#### 3. Badge (`@deneb-ui/ui`)
 
-#### 3. Badge (`/docs/components/badge`)
-Visual metadata tag with color variants, size choices, and optional pulse dot for live indicators.
+Status pills and indicator tags with celestial starlight glows.
 
 ```tsx
 import { Badge } from "@deneb-ui/ui";
-
-export function BadgeShowcase() {
-  return (
-    <div className="flex gap-3">
-      <Badge variant="success" dot>Open Now</Badge>
-      <Badge variant="warning">Best Seller</Badge>
-      <Badge variant="indigo" size="sm">New Arrival</Badge>
-      <Badge variant="danger">-35% Off</Badge>
-    </div>
-  );
-}
 ```
-**Props Table**:
-- `variant`: `'default' | 'primary' | 'success' | 'warning' | 'danger' | 'indigo' | 'outline'`
-- `size`: `'sm' | 'md'`
-- `dot`: `boolean` (renders an animated pulsing dot)
 
----
+#### 4. Typography (`@deneb-ui/ui`)
 
-#### 4. Typography (`/docs/components/typography`)
-Semantic typography suite (`Heading`, `Text`, `Title`, `Lead`) with integrated font-scaling tokens.
+Semantic text primitives (Heading, Paragraph, Text, Quote) linked directly to Fivora theme font tokens.
 
 ```tsx
-import { Heading, Text } from "@deneb-ui/ui";
-
-export function TypographyShowcase() {
-  return (
-    <div>
-      <Heading level={1} size="4xl" gradient="indigo-to-pink">
-        Elevate Your Brand
-      </Heading>
-      <Text variant="lead" className="mt-3 text-slate-300">
-        High-performance storefront components tailored for dynamic commerce.
-      </Text>
-    </div>
-  );
-}
+import { Heading, Paragraph } from "@deneb-ui/ui";
 ```
 
----
+#### 5. Dialog (`@deneb-ui/ui`)
 
-#### 5. Dialog (`/docs/components/dialog`)
-Accessible modal dialog and lightbox primitive with focus trap, backdrop blur, escape-to-close, and keyboard navigation.
+Accessible modal dialog with backdrop blur, keyboard ESC dismissal, sizing tiers, and live visual editing.
 
 ```tsx
-import { Dialog, Button } from "@deneb-ui/ui";
-import { useState } from "react";
-
-export function DialogShowcase() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <>
-      <Button onClick={() => setIsOpen(true)}>Open Quick View</Button>
-      <Dialog 
-        isOpen={isOpen} 
-        onClose={() => setIsOpen(false)}
-        title="Product Details"
-      >
-        <p className="text-slate-300">Detailed product description and gallery.</p>
-      </Dialog>
-    </>
-  );
-}
+import { Dialog } from "@deneb-ui/ui";
 ```
 
----
+#### 6. Grid & Box (`@deneb-ui/ui`)
 
-#### 6. Grid (`/docs/components/grid`)
-Adaptive CSS grid layout wrapper supporting standard column counts, dynamic auto-fit repeats, and responsive breakpoints.
+Layout containers featuring auto-balancing columns (minCardWidth), custom spacing tokens, and flex alignment.
 
 ```tsx
-import { Grid } from "@deneb-ui/ui";
-
-export function GridShowcase() {
-  return (
-    <Grid cols={3} gap="lg" className="w-full">
-      <div className="p-4 bg-slate-800 rounded-lg">Column 1</div>
-      <div className="p-4 bg-slate-800 rounded-lg">Column 2</div>
-      <div className="p-4 bg-slate-800 rounded-lg">Column 3</div>
-    </Grid>
-  );
-}
+import { Grid, Box } from "@deneb-ui/ui";
 ```
 
----
+#### 7. Image (`@deneb-ui/ui`)
 
-#### 7. Image (`/docs/components/image`)
-Smart responsive image primitive with automatic WebP/AVIF fallback, skeleton shimmer placeholder, and zoom hover effects.
+Responsive storefront image component supporting preset aspect ratios, border radii, and visual editing upload triggers.
 
 ```tsx
 import { Image } from "@deneb-ui/ui";
-
-export function ImageShowcase() {
-  return (
-    <Image 
-      src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" 
-      alt="Nike Air Sneaker"
-      width={400}
-      height={300}
-      aspectRatio="4/3"
-      rounded="xl"
-      hoverEffect="zoom"
-    />
-  );
-}
 ```
 
----
 
 ### Smart Commerce Actions
 
-#### 8. ContactActions (`/docs/components/contact-actions`)
-Multi-channel customer contact bar uniting WhatsApp, Direct Phone Calling, Email, and Location directions into a unified conversion bar.
+#### 8. ContactActions (`@deneb-ui/ui`)
+
+Smart multi-channel container that automatically inspects merchant phone, WhatsApp, and email, rendering active triggers with zero template changes.
 
 ```tsx
 import { ContactActions } from "@deneb-ui/ui";
 
-export function ContactActionsShowcase() {
+export default function Page() {
   return (
-    <ContactActions 
-      whatsapp="+1234567890"
-      phone="+1234567890"
-      email="hello@artisanstore.com"
-      locationUrl="https://maps.google.com"
-      variant="pills"
+    <ContactActions
+      phone="+1 (555) 349-2810"
+      whatsapp="15553492810"
+      email="support@denebstore.com"
+      labels={{ phone: 'Call Support', whatsapp: 'WhatsApp Inquiry' }}
+      layout="row"
     />
   );
 }
 ```
 
----
+#### 9. WhatsAppButton (`@deneb-ui/ui`)
 
-#### 9. WhatsAppButton (`/docs/components/whatsapp-button`)
-Specialized high-conversion action button launching WhatsApp Web or mobile app with pre-filled message templates.
+One-click WhatsApp click-to-chat button with built-in official SVG icon and direct link resolution.
 
 ```tsx
-import { WhatsAppButton } from "@deneb-ui/ui";
-
-export function WhatsAppButtonShowcase() {
-  return (
-    <WhatsAppButton 
-      phone="+94712345678"
-      message="Hi! I am interested in purchasing the Classic Leather Shoes."
-      label="Order via WhatsApp"
-    />
-  );
-}
+import { WhatsAppButton } from "@deneb-ui/ui";\n\n<WhatsAppButton value="15550192834" label="Chat on WhatsApp" />
 ```
 
----
+#### 10. PhoneButton (`@deneb-ui/ui`)
 
-#### 10. PhoneButton (`/docs/components/phone-button`)
-One-tap telephone launcher with formatted visual display and direct `tel:` URI execution.
+Direct telephone dialing trigger (tel:) with formatted phone display and official telephone icon.
 
 ```tsx
 import { PhoneButton } from "@deneb-ui/ui";
-
-export function PhoneButtonShowcase() {
-  return (
-    <PhoneButton phone="+1 (555) 019-2834" label="Call Concierge" />
-  );
-}
 ```
 
----
+#### 11. EmailButton (`@deneb-ui/ui`)
 
-#### 11. EmailButton (`/docs/components/email-button`)
-Mailto launcher with pre-configured recipient, subject line, and inquiry template.
+Direct mailto: action button with optional prefilled subject line and envelope icon.
 
 ```tsx
 import { EmailButton } from "@deneb-ui/ui";
-
-export function EmailButtonShowcase() {
-  return (
-    <EmailButton 
-      email="concierge@luxurygoods.com" 
-      subject="VIP Bespoke Order Request"
-      label="Send Email Inquiry"
-    />
-  );
-}
 ```
 
----
+#### 12. FloatingContactWidget (`@deneb-ui/ui`)
 
-#### 12. FloatingContactWidget (`/docs/components/floating-contact-widget`)
-Fixed floating bottom-corner contact badge expanding into a high-converting drawer with WhatsApp, phone, email, and business status.
+Sticky corner floating action button that expands into a speed-dial menu for WhatsApp, phone, and email inquiries.
 
 ```tsx
 import { FloatingContactWidget } from "@deneb-ui/ui";
-
-export function FloatingWidgetShowcase() {
-  return (
-    <FloatingContactWidget 
-      whatsapp="+1234567890"
-      phone="+1234567890"
-      email="support@brand.com"
-      position="bottom-right"
-    />
-  );
-}
 ```
 
----
 
 ### Location & Navigation
 
-#### 13. LocationCard (`/docs/components/location-card`)
-Showcases merchant physical store address, city, directions launcher, and opening hours status.
+#### 13. LocationCard (`@deneb-ui/ui`)
+
+Storefront location card with formatted address, map pin, and direct Google Maps directions trigger.
 
 ```tsx
 import { LocationCard } from "@deneb-ui/ui";
-
-export function LocationCardShowcase() {
-  return (
-    <LocationCard 
-      name="Downtown Flagship Boutique"
-      address="452 Broadway Avenue, Suite 400"
-      city="New York, NY 10013"
-      mapsUrl="https://maps.google.com"
-    />
-  );
-}
 ```
 
----
+#### 14. LocationLink (`@deneb-ui/ui`)
 
-#### 14. LocationLink (`/docs/components/location-link`)
-Inline hyperlinked directions badge opening Google Maps or Apple Maps with GPS coordinates.
+Inline clickable text link opening the physical business address in Google Maps or Apple Maps.
 
 ```tsx
 import { LocationLink } from "@deneb-ui/ui";
-
-export function LocationLinkShowcase() {
-  return (
-    <LocationLink 
-      destination="742 Evergreen Terrace, Springfield"
-      label="Get Driving Directions"
-    />
-  );
-}
 ```
 
----
+#### 15. MapEmbed (`@deneb-ui/ui`)
 
-#### 15. MapEmbed (`/docs/components/map-embed`)
-Responsive iframe container rendering interactive Google Maps or OpenStreetMap pin with zero layout shift.
+Safe responsive Google Maps embed iframe with automatic fallback link when embed URL is not yet configured.
 
 ```tsx
 import { MapEmbed } from "@deneb-ui/ui";
-
-export function MapEmbedShowcase() {
-  return (
-    <MapEmbed 
-      query="Central Park, New York, NY"
-      height={320}
-      aspectRatio="16/9"
-      rounded="xl"
-    />
-  );
-}
 ```
 
----
+#### 16. Address (`@deneb-ui/ui`)
 
-#### 16. Address (`/docs/components/address`)
-Semantic `<address>` microdata element formatting street, postal code, and country for local SEO.
+Semantic, formatted HTML address block with microdata schema readiness and visual editing attributes.
 
 ```tsx
 import { Address } from "@deneb-ui/ui";
-
-export function AddressShowcase() {
-  return (
-    <Address 
-      street="1200 Grand Avenue"
-      city="Los Angeles"
-      state="CA"
-      zip="90015"
-      country="United States"
-    />
-  );
-}
 ```
 
----
 
 ### Social & Business
 
-#### 17. BusinessHours (`/docs/components/business-hours`)
-Dynamic weekly timetable displaying open and closing hours with an automatic "Open Now" or "Closed" badge based on local time.
+#### 17. BusinessHours (`@deneb-ui/ui`)
+
+Weekly schedule renderer featuring live dynamic calculation of Open Now and Closed status badges based on visitor local time.
 
 ```tsx
-import { BusinessHours } from "@deneb-ui/ui";
-
-export function BusinessHoursShowcase() {
-  return (
-    <BusinessHours 
-      schedule={[
-        { day: 'Monday - Friday', hours: '9:00 AM - 7:00 PM', isOpen: true },
-        { day: 'Saturday', hours: '10:00 AM - 5:00 PM', isOpen: true },
-        { day: 'Sunday', hours: 'Closed', isOpen: false },
-      ]}
-    />
-  );
-}
+import { BusinessHours } from "@deneb-ui/ui";\n\n<BusinessHours schedule={schedule} />
 ```
 
----
+#### 18. SocialLinks (`@deneb-ui/ui`)
 
-#### 18. SocialLinks (`/docs/components/social-links`)
-Row of branded SVG social network icons (Instagram, Facebook, TikTok, YouTube, X, WhatsApp).
+Smart social media channel container with branded icons (Instagram, Facebook, TikTok, YouTube, X, GitHub).
 
 ```tsx
 import { SocialLinks } from "@deneb-ui/ui";
-
-export function SocialLinksShowcase() {
-  return (
-    <SocialLinks 
-      instagram="https://instagram.com/fivora"
-      facebook="https://facebook.com/fivora"
-      tiktok="https://tiktok.com/@fivora"
-      youtube="https://youtube.com/@fivora"
-    />
-  );
-}
 ```
 
----
+#### 19. SocialButton (`@deneb-ui/ui`)
 
-#### 19. SocialButton (`/docs/components/social-button`)
-Single branded social channel button with follower counts or action labels.
+Individual branded social button with official network colors and icons.
 
 ```tsx
 import { SocialButton } from "@deneb-ui/ui";
-
-export function SocialButtonShowcase() {
-  return (
-    <SocialButton 
-      platform="instagram" 
-      href="https://instagram.com/mybrand" 
-      label="Follow on Instagram" 
-    />
-  );
-}
 ```
 
----
 
 ### Storefront Sections
 
-#### 20. Hero (`/docs/components/hero`)
-High-impact hero banner supporting centered or split layouts, background media, CTA buttons, and badge highlights.
+#### 20. Hero (`@deneb-ui/ui`)
+
+Centered and split hero banner sections with high-impact headline, glowing CTAs, and commerce actions.
 
 ```tsx
-import { Hero, Button } from "@deneb-ui/ui";
-
-export function HeroShowcase() {
-  return (
-    <Hero 
-      layout="split"
-      badge="Spring 2026 Collection"
-      title="Precision Crafted Artisan Goods"
-      description="Handmade everyday carry goods built to endure decades of exploration."
-      image="https://images.unsplash.com/photo-1542291026-7eec264c27ff"
-      actions={
-        <>
-          <Button variant="primary" size="lg">Shop New Arrivals</Button>
-          <Button variant="outline" size="lg">View Lookbook</Button>
-        </>
-      }
-    />
-  );
-}
+import { Hero } from "@deneb-ui/ui";
 ```
 
----
+#### 21. ProductCard (`@deneb-ui/ui`)
 
-#### 21. ProductCard (`/docs/components/product-card`)
-Commerce card with product imagery, discount badge, currency-formatted pricing, rating stars, and one-click WhatsApp order.
+High-converting commerce product card with responsive image, pricing, badge, and quick add-to-cart action.
 
 ```tsx
 import { ProductCard } from "@deneb-ui/ui";
-
-export function ProductCardShowcase() {
-  return (
-    <ProductCard 
-      title="Air Velocity Running Shoes"
-      price={129.99}
-      compareAtPrice={169.99}
-      currency="$"
-      image="https://images.unsplash.com/photo-1542291026-7eec264c27ff"
-      rating={4.9}
-      whatsappNumber="+1234567890"
-      category="Footwear"
-    />
-  );
-}
 ```
 
----
+#### 22. ProductDetail (`@deneb-ui/ui`)
 
-#### 22. ServiceCard (`/docs/components/service-card`)
-Showcases bookable service offerings, consultation durations, rates, and booking inquiry triggers.
+An elite single product showcase with multi-angle gallery, live size & color selectors, direct WhatsApp order CTA, and Fivora visual editing synchronization.
+
+```tsx
+import { ProductDetail } from "@deneb-ui/ui";
+```
+
+#### 23. ProductQuickView (`@deneb-ui/ui`)
+
+Instant lightbox inspection modal for products with thumbnail switcher, bounds-protected quantity counter, and live visual editing.
+
+```tsx
+import { ProductQuickView } from "@deneb-ui/ui";
+```
+
+#### 24. ProductGrid (`@deneb-ui/ui`)
+
+Responsive commerce catalog grid with category filter tabs and configurable columns per device (mobile / tablet / desktop). Includes quick-view hook.
+
+```tsx
+import { ProductGrid } from "@deneb-ui/ui";
+```
+
+#### 25. CustomerReviews (`@deneb-ui/ui`)
+
+High-converting social proof showcase with aggregate star score, verified buyer authentication tags, and rating filters.
+
+```tsx
+import { CustomerReviews } from "@deneb-ui/ui";
+```
+
+#### 26. TrustBadges (`@deneb-ui/ui`)
+
+Conversion-boosting security and guarantee strip featuring free shipping, SSL checkout, warranty, and returns badges.
+
+```tsx
+import { TrustBadges } from "@deneb-ui/ui";
+```
+
+#### 27. StickyMobileBar (`@deneb-ui/ui`)
+
+Sticky bottom checkout and WhatsApp action bar for mobile devices, boosting mobile conversion rates.
+
+```tsx
+import { StickyMobileBar } from "@deneb-ui/ui";
+```
+
+#### 28. ServiceCard (`@deneb-ui/ui`)
+
+Service package card with rate label, feature checkmark list, image thumbnail, and quote action.
 
 ```tsx
 import { ServiceCard } from "@deneb-ui/ui";
-
-export function ServiceCardShowcase() {
-  return (
-    <ServiceCard 
-      title="Executive Haircut & Beard Trim"
-      description="Full tailored haircut, straight-razor shave, hot towel treatment, and styling."
-      price={65.00}
-      duration="45 Mins"
-      currency="$"
-      image="https://images.unsplash.com/photo-1503951914875-452162b0f3f1"
-    />
-  );
-}
 ```
 
----
+#### 29. PricingCard (`@deneb-ui/ui`)
 
-#### 23. PricingCard (`/docs/components/pricing-card`)
-Plan tier card featuring feature checklists, highlight ribbons, and checkout triggers.
+Tiered subscription and pricing plan card with feature checkmarks and highlight badges.
 
 ```tsx
 import { PricingCard } from "@deneb-ui/ui";
-
-export function PricingCardShowcase() {
-  return (
-    <PricingCard 
-      name="Professional Storefront"
-      price={49}
-      period="month"
-      currency="$"
-      isPopular={true}
-      features={[
-        "Unlimited live products",
-        "WhatsApp checkout integration",
-        "Custom domain support",
-        "Instant SEO indexing"
-      ]}
-      ctaText="Start 14-Day Trial"
-    />
-  );
-}
 ```
 
----
+#### 30. TestimonialCard (`@deneb-ui/ui`)
 
-#### 24. TestimonialCard (`/docs/components/testimonial-card`)
-Customer trust card with quote text, star ratings, verified buyer tag, and customer portrait.
+Customer review card with 5-star ratings, avatar, customer name, and purchased product note.
 
 ```tsx
 import { TestimonialCard } from "@deneb-ui/ui";
-
-export function TestimonialCardShowcase() {
-  return (
-    <TestimonialCard 
-      quote="The checkout experience via WhatsApp increased our customer response rate by 300% in the first week."
-      author="Sarah Jenkins"
-      role="Founder, Botanica Organics"
-      avatar="https://images.unsplash.com/photo-1494790108377-be9c29b29330"
-      rating={5}
-    />
-  );
-}
 ```
 
----
+#### 31. FAQAccordion (`@deneb-ui/ui`)
 
-#### 25. FAQAccordion (`/docs/components/faq-accordion`)
-Accessible collapsible question & answer accordion with animated height transitions.
+Smooth animated expandable accordion for FAQs, policies, and storefront documentation.
 
 ```tsx
-import { FAQAccordion } from "@deneb-ui/ui";
-
-export function FAQAccordionShowcase() {
-  return (
-    <FAQAccordion 
-      items={[
-        {
-          question: "How does WhatsApp checkout work?",
-          answer: "When a customer clicks Order on WhatsApp, a pre-formatted message containing the item name, SKU, price, and selected size is instantly sent to your business WhatsApp number."
-        },
-        {
-          question: "Can I use my own custom domain?",
-          answer: "Yes, you can easily connect any custom domain (e.g. www.yourshop.com) via standard CNAME or A-records."
-        }
-      ]}
-    />
-  );
-}
+import { Accordion } from "@deneb-ui/ui";
 ```
 
----
+#### 32. AnnouncementBar (`@deneb-ui/ui`)
 
-#### 26. AnnouncementBar (`/docs/components/announcement-bar`)
-Top header announcement strip for flash sales, free shipping notices, and store announcements.
+Top promotional ribbon for store announcements, flash sales, coupon codes, and free shipping thresholds.
 
 ```tsx
 import { AnnouncementBar } from "@deneb-ui/ui";
-
-export function AnnouncementBarShowcase() {
-  return (
-    <AnnouncementBar 
-      message="Free express worldwide shipping on all orders over $75"
-      linkText="Claim Now"
-      href="#shop"
-      dismissible
-    />
-  );
-}
 ```
 
----
+#### 33. CategoryPills (`@deneb-ui/ui`)
 
-#### 27. CategoryPills (`/docs/components/category-pills`)
-Scrollable horizontal filter pills for catalog categorization (e.g. "All", "Sneakers", "Apparel").
+Horizontal scrollable category filter pills with active indicator states for e-commerce catalogs.
 
 ```tsx
 import { CategoryPills } from "@deneb-ui/ui";
-import { useState } from "react";
-
-export function CategoryPillsShowcase() {
-  const [selected, setSelected] = useState("All");
-
-  return (
-    <CategoryPills 
-      categories={["All", "Footwear", "Apparel", "Accessories", "Sale"]}
-      activeCategory={selected}
-      onSelect={setSelected}
-    />
-  );
-}
 ```
 
----
+#### 34. ContactForm (`@deneb-ui/ui`)
 
-#### 28. ContactForm (`/docs/components/contact-form`)
-Customer inquiry form with input validation, accessible form fields, and direct submission handler.
+Lead generation and customer inquiry form with validated fields, accessible inputs, and visual editing bindings.
 
 ```tsx
 import { ContactForm } from "@deneb-ui/ui";
-
-export function ContactFormShowcase() {
-  return (
-    <ContactForm 
-      onSubmit={async (values) => {
-        console.log("Form Submitted:", values);
-      }}
-      title="Send an Inquiry"
-      showPhoneField
-    />
-  );
-}
 ```
 
----
+#### 35. Navbar (`@deneb-ui/ui`)
 
-#### 29. Navbar (`/docs/components/navbar`)
-Navigation header with brand logo, desktop navigation links, social icons, mobile drawer menu, and call-to-action button.
+Glassmorphism storefront header with logo, desktop links, mobile drawer sheet, search, and cart triggers.
 
 ```tsx
-import { Navbar, Button } from "@deneb-ui/ui";
-
-export function NavbarShowcase() {
-  return (
-    <Navbar 
-      brandName="Lumina Studio"
-      links={[
-        { label: "Home", href: "/" },
-        { label: "Products", href: "#products" },
-        { label: "About", href: "#about" },
-        { label: "Contact", href: "#contact" },
-      ]}
-      action={<Button size="sm">Get Started</Button>}
-    />
-  );
-}
+import { Navbar } from "@deneb-ui/ui";
 ```
 
----
+#### 36. Footer (`@deneb-ui/ui`)
 
-#### 30. Footer (`/docs/components/footer`)
-Multi-column footer including company biography, category navigation, contact information, social links, and copyright text.
+Multi-column storefront footer with brand description, navigation links, policy links, and trust badges.
 
 ```tsx
 import { Footer } from "@deneb-ui/ui";
+```
 
-export function FooterShowcase() {
-  return (
-    <Footer 
-      brandName="Fivora Storefronts"
-      description="Next-generation headless commerce engine for modern local commerce."
-      copyrightYear={2026}
-      columns={[
-        {
-          title: "Explore",
-          links: [
-            { label: "New In", href: "/new" },
-            { label: "Best Sellers", href: "/best-sellers" },
-          ]
-        },
-        {
-          title: "Company",
-          links: [
-            { label: "About Us", href: "/about" },
-            { label: "Contact", href: "/contact" },
-          ]
-        }
-      ]}
-    />
-  );
-}
+
+### E-Commerce
+
+#### 37. CartDrawer (`@deneb-ui/ui`)
+
+High-converting slide-over shopping cart drawer with quantity steppers, free shipping progress bar, direct WhatsApp checkout, and visual editing bindings.
+
+```tsx
+import { CartProvider, useCart, CartDrawer } from "@deneb-ui/ui";
+```
+
+#### 38. FilterSidebar (`@deneb-ui/ui`)
+
+Faceted catalog filtering sidebar with category chips, price slider, and size swatches. Collapses behind a mobile toggle below 768px; always visible on tablet and desktop.
+
+```tsx
+import { FilterSidebar } from "@deneb-ui/ui";
+```
+
+
+### Data & State Engine
+
+#### 39. SiteDataProvider (`@deneb-ui/ui`)
+
+Headless state engine connecting Fivora API and live window postMessage updates to storefront components without page reloads.
+
+```tsx
+import { SiteDataProvider, useProducts } from "@deneb-ui/ui";
+```
+
+#### 40. ThemeStyles (`@deneb-ui/ui`)
+
+Runtime CSS custom properties injector for dynamic color palettes, typography, and border radii with pre-configured industry presets.
+
+```tsx
+import { ThemeStyles } from "@deneb-ui/ui";
 ```
 
 ---
 
-### Data & Theme Engine
+## 5. Complete Storefront Architecture Examples
 
-#### 31. SiteDataProvider & ThemeStyles (`/docs/components/site-data-provider` & `/docs/components/theme-styles`)
-The foundational provider pair wrapping your Next.js application.
-
+### 5.1 Root Layout Setup (`src/app/layout.tsx`)
 ```tsx
-import { SiteDataProvider, ThemeStyles } from "@deneb-ui/ui";
-import initialData from "./data/site.json";
+import "./globals.css";
+import { SiteDataProvider, ThemeStyles, ResponsiveBaseStyles, CartProvider } from "@deneb-ui/ui";
+import initialSiteData from "@/data/site-data.json";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
-        <ThemeStyles theme={initialData.theme} />
+        <ThemeStyles theme={initialSiteData.theme} />
+        <ResponsiveBaseStyles />
       </head>
-      <body>
-        <SiteDataProvider initialData={initialData}>
-          {children}
+      <body className="bg-[#090D1A] text-slate-100 antialiased min-h-screen">
+        <SiteDataProvider initialSiteData={initialSiteData}>
+          <CartProvider>
+            {children}
+          </CartProvider>
         </SiteDataProvider>
       </body>
     </html>
@@ -962,72 +563,193 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
+### 5.2 Main Storefront Page (`src/app/page.tsx`)
+```tsx
+"use client";
+
+import {
+  useSiteData,
+  useProducts,
+  Navbar,
+  Footer,
+  Hero,
+  ProductGrid,
+  ProductCard,
+  CartDrawer,
+  FilterSidebar,
+  CustomerReviews,
+  TrustBadges,
+  StickyMobileBar,
+  BusinessHours,
+  ContactActions,
+  FAQAccordion,
+  AnnouncementBar
+} from "@deneb-ui/ui";
+import { useState } from "react";
+
+export default function HomePage() {
+  const siteData = useSiteData();
+  const products = useProducts();
+  const content = siteData?.content ?? {};
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredProducts = activeCategory === "All"
+    ? products
+    : products.filter(p => p.category === activeCategory);
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      {/* Top Announcement */}
+      <AnnouncementBar
+        message="Free express delivery on all orders over $100"
+        linkText="Shop Now"
+        href="#products"
+      />
+
+      {/* Header Navigation */}
+      <Navbar
+        brandName={siteData?.shop?.name ?? "Artisan Store"}
+        links={[
+          { label: "Home", href: "/" },
+          { label: "Products", href: "#products" },
+          { label: "Reviews", href: "#reviews" },
+          { label: "Contact", href: "#contact" }
+        ]}
+      />
+
+      {/* Hero Showcase */}
+      <Hero
+        layout="split"
+        title={content?.hero?.title ?? "Bespoke Footwear Engineered for Distinction"}
+        description={content?.hero?.subtitle ?? "Handcrafted micro-batch leather shoes."}
+        image={content?.hero?.image ?? "https://images.unsplash.com/photo-1542291026-7eec264c27ff"}
+      />
+
+      {/* Trust & Guarantee Strip */}
+      <div className="max-w-7xl mx-auto px-4 py-8 w-full">
+        <TrustBadges />
+      </div>
+
+      {/* Commerce Catalog with Filter Sidebar */}
+      <section id="products" className="max-w-7xl mx-auto px-4 py-16 w-full space-y-8">
+        <div className="text-center space-y-3">
+          <h2 className="text-3xl font-bold text-white tracking-tight">Curated Collection</h2>
+          <p className="text-sm text-slate-400">Discover handpicked styles designed to last.</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+          <FilterSidebar
+            categories={["All", "Running", "Lifestyle", "Formal"]}
+            onFilterChange={(f) => setActiveCategory(f.selectedCategories[0] || "All")}
+          />
+
+          <div className="lg:col-span-3">
+            <ProductGrid cols={3} gap="lg">
+              {filteredProducts.map((product, idx) => (
+                <ProductCard
+                  key={product.id || idx}
+                  title={product.title}
+                  price={product.price}
+                  compareAtPrice={product.compareAtPrice}
+                  currency={product.currency ?? "$"}
+                  image={product.image}
+                  whatsappNumber={siteData?.shop?.whatsapp}
+                />
+              ))}
+            </ProductGrid>
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews & Social Proof */}
+      <section id="reviews" className="bg-[#0C0F1A] py-16 border-y border-slate-800/60">
+        <div className="max-w-7xl mx-auto px-4">
+          <CustomerReviews />
+        </div>
+      </section>
+
+      {/* Business Hours & Support */}
+      <section id="contact" className="max-w-7xl mx-auto px-4 py-16 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+        <BusinessHours schedule={content?.businessHours} />
+        <div className="p-8 rounded-2xl border border-slate-800 bg-[#0E1220] flex flex-col justify-center space-y-4">
+          <h3 className="text-xl font-bold text-white">Instant Concierge Support</h3>
+          <p className="text-sm text-slate-400">Order directly with our personal shoppers via WhatsApp or phone.</p>
+          <ContactActions
+            whatsapp={siteData?.shop?.whatsapp}
+            phone={siteData?.shop?.phone}
+            email={siteData?.shop?.email}
+          />
+        </div>
+      </section>
+
+      {/* Cart Drawer */}
+      <CartDrawer
+        whatsappNumber={siteData?.shop?.whatsapp ?? "15550192834"}
+        storeName={siteData?.shop?.name ?? "Artisan Store"}
+      />
+
+      {/* Sticky Mobile Bar */}
+      <StickyMobileBar
+        whatsappNumber={siteData?.shop?.whatsapp}
+        phone={siteData?.shop?.phone}
+      />
+
+      {/* Footer */}
+      <Footer
+        brandName={siteData?.shop?.name ?? "Artisan Store"}
+        copyright={`© ${new Date().getFullYear()} ${siteData?.shop?.name ?? "Artisan Store"}. All rights reserved.`}
+      />
+    </div>
+  );
+}
+```
+
+### 5.3 Static Route for Dynamic Product Pages (`src/app/products/[id]/page.tsx`)
+```tsx
+import initialSiteData from "@/data/site-data.json";
+import { ProductDetail } from "@deneb-ui/ui";
+
+// REQUIRED FOR STATIC EXPORT:
+export function generateStaticParams() {
+  const products = initialSiteData.content?.products || [];
+  return products.map((p) => ({ id: p.id }));
+}
+
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const products = initialSiteData.content?.products || [];
+  const product = products.find((p) => p.id === id) || products[0];
+
+  return (
+    <main className="max-w-6xl mx-auto px-4 py-12">
+      <ProductDetail product={product} />
+    </main>
+  );
+}
+```
+
 ---
 
-## 5. Building Custom Templates for Fivora
+## 6. Step-by-Step AI Conversion Workflow
 
-When creating a new merchant template using DENEB UI:
-1. Initialize using `@deneb-ui/create-template` or Next.js 14+:
+When using an AI assistant (ChatGPT, Claude, Cursor, Antigravity) to convert an existing storefront into a Fivora template:
+
+1. **Step 1: Content Extraction**:
+   Extract all static store text, photos, categories, and products into `src/data/site-data.json`.
+2. **Step 2: Component Replacement**:
+   Replace custom buttons, cards, headers, grids, drawers, reviews, and filters with the corresponding `@deneb-ui/ui` components from the Master Catalog above.
+3. **Step 3: Attach Visual Markers**:
+   Add `data-preview-field-path`, `data-preview-list-path`, and `data-preview-item-path` to all editable text and lists.
+4. **Step 4: Dynamic State Binding**:
+   Replace static hardcoded data with `useProducts()`, `useSiteData()`, or `siteData.content.*`.
+5. **Step 5: Static Export Validation**:
+   Ensure `output: 'export'` in `next.config.ts`, `generateStaticParams()` on all dynamic `[id]` pages, and no server-side secrets.
+6. **Step 6: Preflight & Package**:
    ```bash
-   npx @deneb-ui/create-template my-shoes-template
+   npx @deneb-ui/cli validate
+   npx @deneb-ui/cli package
    ```
-2. Required Folder Structure:
-   ```
-   my-shoes-template/
-   ├── site.json             # Default mock content & theme schema
-   ├── template.json         # Metadata (name, category, preview image)
-   ├── next.config.ts        # Next.js configuration
-   └── src/
-       ├── app/
-       │   ├── layout.tsx    # SiteDataProvider + ThemeStyles
-       │   ├── page.tsx      # Main storefront
-       │   └── products/
-       │       └── [id]/
-       │           └── page.tsx # Product detail page
-       └── components/
-   ```
-
-3. Ensure Visual Editing Tags:
-   Every editable heading, image, or price must include:
-   ```tsx
-   <h1 data-deneb-field="hero.title">{hero.title}</h1>
-   <img data-deneb-image="hero.image" src={hero.image} alt={hero.title} />
-   ```
-
----
-
-## 6. Static Export Validation Rules for Fivora Workspaces
-
-When publishing or exporting templates into Fivora static hosting:
-- Configure `next.config.ts`:
-  ```ts
-  import type { NextConfig } from "next";
-
-  const nextConfig: NextConfig = {
-    output: "export",
-    trailingSlash: true,
-    images: {
-      unoptimized: true,
-    },
-    basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
-    assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || "",
-  };
-
-  export default nextConfig;
-  ```
-- Dynamic routes (like `products/[id]/page.tsx`) must implement `generateStaticParams()` returning all mock product IDs from `site.json`, preventing missing chunk 404s during static site asset validation.
-
----
-
-## 7. Troubleshooting & Best Practices
-
-| Symptom | Cause | Solution |
-| :--- | :--- | :--- |
-| Dynamic route returns 404 in static export | Missing `generateStaticParams` | Add `export function generateStaticParams()` returning mock IDs from `site.json`. |
-| CSS variables not applying | `<ThemeStyles>` omitted | Place `<ThemeStyles />` in `app/layout.tsx` inside `<head>`. |
-| Click in builder does not open sidebar | Missing `data-deneb-*` attribute | Add `data-deneb-field="item.name"` to the element. |
-| Live products not showing in preview | `SiteDataProvider` missing `initialData` or `api` | Provide fallback `ProductItem[]` or check API network response. |
-
----
-
-*Authored by the Fivora Core Engineering Team & DENEB UI Authors.*

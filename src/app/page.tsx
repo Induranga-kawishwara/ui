@@ -72,7 +72,7 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="max-w-2xl mx-auto text-base sm:text-lg text-[#94A3B8] leading-relaxed">
-              Unopinionated shadcn-style primitives enhanced with smart commerce actions — 1-click WhatsApp chat, dynamic operating hours, location routing, and storefront sections.
+              Unopinionated shadcn-style primitives enhanced with smart commerce actions 1 click WhatsApp chat, dynamic operating hours, location routing, and storefront sections.
             </p>
           </div>
 
@@ -134,41 +134,37 @@ export default function HomePage() {
             <div className="flex items-center gap-1 p-1 rounded-xl bg-[#08090E] border border-[#23283B]">
               <button
                 onClick={() => setActiveTab('contact')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
-                  activeTab === 'contact'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTab === 'contact'
                     ? 'bg-[#818CF8] text-white shadow-[0_0_12px_rgba(129,140,248,0.3)]'
                     : 'text-[#94A3B8] hover:text-white'
-                }`}
+                  }`}
               >
                 Smart Actions
               </button>
               <button
                 onClick={() => setActiveTab('product')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
-                  activeTab === 'product'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTab === 'product'
                     ? 'bg-[#818CF8] text-white shadow-[0_0_12px_rgba(129,140,248,0.3)]'
                     : 'text-[#94A3B8] hover:text-white'
-                }`}
+                  }`}
               >
                 Storefront Cards
               </button>
               <button
                 onClick={() => setActiveTab('hours')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
-                  activeTab === 'hours'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTab === 'hours'
                     ? 'bg-[#818CF8] text-white shadow-[0_0_12px_rgba(129,140,248,0.3)]'
                     : 'text-[#94A3B8] hover:text-white'
-                }`}
+                  }`}
               >
                 Business Hours
               </button>
               <button
                 onClick={() => setActiveTab('primitives')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
-                  activeTab === 'primitives'
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTab === 'primitives'
                     ? 'bg-[#818CF8] text-white shadow-[0_0_12px_rgba(129,140,248,0.3)]'
                     : 'text-[#94A3B8] hover:text-white'
-                }`}
+                  }`}
               >
                 Glow Primitives
               </button>
@@ -340,7 +336,7 @@ export default function HomePage() {
               CLI
             </Link>
             <a
-              href="https://github.com/chamikathereal"
+              href="https://github.com/deneb-ui/ui"
               target="_blank"
               rel="noreferrer"
               className="hover:text-white transition-colors"

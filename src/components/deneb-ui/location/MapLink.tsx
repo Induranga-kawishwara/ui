@@ -63,27 +63,25 @@ export function MapLink({
 
   const variantStyles: Record<'primary' | 'secondary' | 'outline' | 'ghost' | 'link', React.CSSProperties> = {
     primary: {
-      backgroundColor: '#818CF8',
+      backgroundColor: 'var(--color-primary, #0f172a)',
       color: '#ffffff',
-      boxShadow: '0 2px 8px rgba(129, 140, 248, 0.25)',
     },
     secondary: {
-      backgroundColor: 'var(--color-secondary, #141827)',
-      color: 'var(--color-text, #F1F5F9)',
-      border: '1px solid var(--color-border, #23283B)',
+      backgroundColor: 'var(--color-secondary, #f1f5f9)',
+      color: 'var(--color-text, #0f172a)',
     },
     outline: {
       backgroundColor: 'transparent',
-      border: '1px solid var(--color-border, #23283B)',
-      color: 'var(--color-text, #F1F5F9)',
+      border: '1px solid var(--color-border, #e2e8f0)',
+      color: 'var(--color-text, #0f172a)',
     },
     ghost: {
       backgroundColor: 'transparent',
-      color: 'var(--color-text, #F1F5F9)',
+      color: 'var(--color-text, #0f172a)',
     },
     link: {
       backgroundColor: 'transparent',
-      color: '#818CF8',
+      color: 'var(--color-primary, #2563eb)',
       padding: 0,
       textDecoration: 'underline',
       borderRadius: 0,
@@ -102,7 +100,7 @@ export function MapLink({
       data-preview-field-path={fieldPath}
       target={finalHref !== '#' ? '_blank' : undefined}
       rel={finalHref !== '#' ? 'noopener noreferrer' : undefined}
-      className={`deneb-map-link hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] ${className}`.trim()}
+      className={`deneb-map-link ${className}`.trim()}
       style={mergedStyles}
       {...rest}
     >

@@ -1,0 +1,55 @@
+name: Sync with DENEB Core Release
+
+on:
+  repository_dispatch:
+    types: [core_package_published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Specific core package version to sync (leave blank for latest)'
+        required: false
+        default: 'latest'
+
+jobs:
+  sync:
+    name: Sync Components, Docs & Rebuild
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Update DENEB Packages to Latest
+        run: |
+          TARGET_VERSION="${{ github.event.client_payload.version || github.event.inputs.version || 'latest' }}"
+          echo "Updating DENEB packages to: $TARGET_VERSION"
+          npm install @deneb-ui/ui@$TARGET_VERSION @deneb-ui/cli@$TARGET_VERSION --save || echo "Installed latest available."
+
+      - name: Run DENEB Synchronization Engine
+        run: node scripts/sync-deneb-core.mjs
+
+      - name: Verify Build
+        run: npm run build
+
+      - name: Commit & Push Synchronized Docs & Components
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          VERSION_TAG="${{ github.event.client_payload.version || github.event.inputs.version || 'latest' }}"
+          git commit -m "chore(sync): update to @deneb-ui release v${VERSION_TAG} [skip ci]" || echo "No changes to commit"
+          git push origin HEAD:main || echo "Push skipped or branch up to date"

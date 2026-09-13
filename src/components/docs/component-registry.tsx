@@ -13,13 +13,17 @@ import {
   SocialButton,
   BusinessHours,
   FloatingContactWidget,
-} from '@/components/deneb-ui';
-import {
   Button as DenebButton,
   Card as DenebCard,
   Badge as DenebBadge,
   Heading as DenebHeading,
   ProductCard,
+  ProductDetail,
+  ProductGrid,
+  ProductQuickView,
+  CustomerReviews,
+  TrustBadges,
+  StickyMobileBar,
   PricingCard,
   TestimonialCard,
   ServiceCard,
@@ -27,6 +31,12 @@ import {
   AnnouncementBar,
   CategoryPills,
   ContactForm,
+  CartDrawer,
+  FilterSidebar,
+  CartProvider,
+  useCart,
+  EditableHeroCentered,
+  EditableHeroSplit,
   EditableDialog,
   EditableGrid,
   EditableBox,
@@ -34,10 +44,6 @@ import {
   EditableText,
   EditableNavbar,
   EditableFooter,
-  EditableHeroCentered,
-  EditableHeroSplit,
-  SiteDataProvider,
-  ThemeStyles,
   THEME_PRESETS,
 } from '@/components/deneb-ui';
 import { ComponentDocPageProps } from './ComponentDocPage';
@@ -50,25 +56,19 @@ import {
   Star,
   ShoppingBag,
   ShieldCheck,
-  Mail,
-  ExternalLink,
   ChevronRight,
-  SlidersHorizontal,
-  Layers,
-  LayoutGrid,
-  Maximize2,
   CheckCircle2,
-  Heart,
-  Palette,
+  Maximize2,
+  Mail,
   Database,
-  ArrowRight,
-  Zap,
+  Palette,
 } from 'lucide-react';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
 
-/* ==========================================================================
-   Interactive Showcase Demo Components
-   ========================================================================== */
+
+// ==========================================
+// Interactive Component Showcase Demos
+// ==========================================
 
 function InteractiveButtonDemo() {
   const [clicked, setClicked] = useState(false);
@@ -92,6 +92,537 @@ function InteractiveButtonDemo() {
     </div>
   );
 }
+
+function InteractiveContactActionsDemo() {
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 p-4">
+      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md flex items-center gap-2 border-0 cursor-pointer">
+        <MessageSquare className="w-3.5 h-3.5" />
+        <span>WhatsApp (1-Click)</span>
+      </button>
+      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] hover:bg-[#1E233D] text-white border border-[#23283B] flex items-center gap-2 cursor-pointer">
+        <Phone className="w-3.5 h-3.5 text-[#818CF8]" />
+        <span>Call: +1 (555) 019-2834</span>
+      </button>
+      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] hover:bg-[#1E233D] text-white border border-[#23283B] flex items-center gap-2 cursor-pointer">
+        <Mail className="w-3.5 h-3.5 text-[#818CF8]" />
+        <span>Email Us</span>
+      </button>
+    </div>
+  );
+}
+
+function InteractiveWhatsAppDemo() {
+  return (
+    <div className="flex items-center justify-center p-4">
+      <button
+        onClick={() => alert('Opens https://wa.me/15550192834 with your template inquiry text!')}
+        className="px-6 py-3 rounded-2xl font-bold text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_4px_20px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 border-0 cursor-pointer"
+      >
+        <MessageSquare className="w-4 h-4" />
+        <span>Order Directly on WhatsApp</span>
+      </button>
+    </div>
+  );
+}
+
+function InteractiveLocationCardDemo() {
+  return (
+    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
+      <div className="flex items-center gap-2 text-xs font-semibold text-[#818CF8]">
+        <MapPin className="w-4 h-4 text-[#818CF8]" />
+        <span>Flagship Storefront</span>
+      </div>
+      <p className="text-xs text-white/90">742 Evergreen Celestial Way, Suite 100, San Francisco, CA</p>
+      <div className="pt-2 flex items-center justify-between border-t border-[#23283B] text-xs">
+        <span className="text-emerald-400 font-medium">Open Today until 8 PM</span>
+        <button
+          onClick={() => alert('Opens Google Maps directions!')}
+          className="text-[#818CF8] font-bold hover:underline bg-transparent border-0 cursor-pointer"
+        >
+          Get Directions ↗
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function InteractiveBusinessHoursDemo() {
+  return (
+    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-[#818CF8]" />
+          <span className="text-xs font-bold text-white">Business Hours</span>
+        </div>
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+          ● Open Now
+        </span>
+      </div>
+      <div className="space-y-1.5 text-xs">
+        <div className="flex justify-between text-white font-medium">
+          <span>Monday – Friday</span>
+          <span className="text-[#94A3B8]">09:00 AM – 08:00 PM</span>
+        </div>
+        <div className="flex justify-between text-white font-medium">
+          <span>Saturday</span>
+          <span className="text-[#94A3B8]">10:00 AM – 06:00 PM</span>
+        </div>
+        <div className="flex justify-between text-white font-medium">
+          <span>Sunday</span>
+          <span className="text-amber-400">Closed</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InteractiveSocialDemo() {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-3 p-4">
+      {['Instagram', 'WhatsApp', 'Facebook', 'YouTube', 'TikTok', 'X'].map((plat) => (
+        <button
+          key={plat}
+          className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-[#141829] text-white border border-[#23283B] hover:border-[#818CF8] hover:text-[#818CF8] transition-all cursor-pointer"
+        >
+          {plat}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function InteractiveProductCardDemo() {
+  return (
+    <div className="w-full max-w-xs mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] hover:border-[#818CF8]/50 shadow-xl space-y-3 text-left">
+      <div className="relative aspect-square rounded-xl overflow-hidden bg-[#141829]">
+        <img
+          src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80"
+          alt="Product"
+          className="w-full h-full object-cover"
+        />
+        <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#818CF8] text-white">
+          BESTSELLER
+        </span>
+      </div>
+      <div className="flex items-center justify-between text-xs">
+        <span className="text-[#818CF8] font-bold uppercase tracking-wider text-[10px]">Footwear</span>
+        <div className="flex items-center gap-1 text-amber-400 font-semibold text-[11px]">
+          <Star className="w-3.5 h-3.5 fill-amber-400" />
+          <span>4.9 (128)</span>
+        </div>
+      </div>
+      <h4 className="font-bold text-white text-sm">Classic Oxford Runner</h4>
+      <div className="flex items-baseline gap-2">
+        <span className="text-base font-extrabold text-white">LKR 4,500</span>
+        <span className="text-xs line-through text-[#94A3B8]">LKR 5,900</span>
+      </div>
+      <button className="w-full py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-1.5 border-0 cursor-pointer shadow-md">
+        <MessageSquare className="w-3.5 h-3.5" /> Order via WhatsApp
+      </button>
+    </div>
+  );
+}
+
+function InteractivePricingCardDemo() {
+  return (
+    <div className="w-full max-w-xs mx-auto p-6 rounded-2xl bg-[#0F1424] border-2 border-[#818CF8] shadow-[0_0_30px_rgba(129,140,248,0.2)] space-y-4 text-left">
+      <div className="flex justify-between items-center">
+        <h4 className="font-bold text-white text-base">Storefront Pro</h4>
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#818CF8] text-white">
+          POPULAR
+        </span>
+      </div>
+      <div className="flex items-baseline gap-1">
+        <span className="text-3xl font-black text-white">$49</span>
+        <span className="text-xs text-[#94A3B8]">/ month</span>
+      </div>
+      <ul className="text-xs text-[#CBD5E1] space-y-2">
+        <li className="flex items-center gap-2">
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Full DENEB UI Primitives
+        </li>
+        <li className="flex items-center gap-2">
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Live WhatsApp Checkout
+        </li>
+        <li className="flex items-center gap-2">
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Instant Visual Editor Sync
+        </li>
+      </ul>
+      <button className="w-full py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white border-0 cursor-pointer shadow-md">
+        Get Started Today
+      </button>
+    </div>
+  );
+}
+
+function InteractiveFAQDemo() {
+  const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const faqs = [
+    { q: 'How does WhatsApp checkout work?', a: 'Customers click the button, which automatically opens WhatsApp with product details, size, and pricing prefilled for personal concierge checkout.' },
+    { q: 'Can I customize store themes dynamically?', a: 'Yes! ThemeStyles resolves your chosen color tokens and fonts instantly on runtime.' },
+  ];
+
+  return (
+    <div className="w-full max-w-md mx-auto space-y-2 text-left">
+      {faqs.map((f, idx) => (
+        <div key={idx} className="rounded-xl bg-[#0F1424] border border-[#23283B] overflow-hidden">
+          <button
+            onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
+            className="w-full p-3.5 text-xs font-semibold text-white flex justify-between items-center bg-transparent border-0 cursor-pointer text-left"
+          >
+            <span>{f.q}</span>
+            <span className="text-[#818CF8]">{openIdx === idx ? '−' : '+'}</span>
+          </button>
+          {openIdx === idx && (
+            <div className="px-3.5 pb-3.5 text-xs text-[#94A3B8] leading-relaxed border-t border-[#23283B]/50 pt-2">
+              {f.a}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function InteractiveProductDetailDemo() {
+  const sampleProduct = {
+    id: 'vanta-aero-x',
+    name: 'VANTA Aero X',
+    price: 'LKR 32,500',
+    originalPrice: 'LKR 38,000',
+    description: 'Lightweight performance runner with responsive dual-density foam midsole and breathable engineered mesh.',
+    badge: 'BESTSELLER',
+    featuredImage: '/products/vanta-aero-x.jpg',
+    addToSelectionLabel: 'Add to Selection',
+    specsTitle: 'Specifications',
+    shippingTitle: 'Shipping & Returns',
+    shippingSummary: 'Free Islandwide Delivery within 2-3 business days. Cash on delivery available.',
+    shippingReturns: '14-day hassle-free exchanges for unworn footwear in original condition.',
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden shadow-2xl">
+      <ProductDetail
+        product={sampleProduct}
+        sectionPath="demo-product"
+        onAddToSelection={(p, size, color) => alert(`Selected ${p.name} - Size: ${size}, Color: ${color}`)}
+      />
+    </div>
+  );
+}
+
+function InteractiveProductQuickViewDemo() {
+  const [isOpen, setIsOpen] = useState(false);
+  const sampleProduct = {
+    id: 'quick-1',
+    title: 'VANTA Flux 01',
+    price: '28,900',
+    originalPrice: '34,000',
+    currency: 'LKR ',
+    badge: 'TRENDING',
+    description: 'Retro silhouette engineered with modern comfort stack and shock-absorbing midsole.',
+    imageUrl: '/products/vanta-flux-01.jpg',
+    inStock: true,
+    rating: 4.9,
+    reviewCount: 48,
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center p-8 space-y-4">
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="px-6 py-3 rounded-xl font-bold text-sm bg-lime-400 text-slate-950 hover:bg-lime-300 shadow-lg transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
+      >
+        <ShoppingBag className="w-4 h-4" />
+        <span>Open Product Quick View Modal</span>
+      </button>
+      <span className="text-xs text-[#94A3B8]">Click to trigger the instant lightbox modal with live visual editing</span>
+      <ProductQuickView
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        product={sampleProduct}
+        itemPath="home.product1"
+        onAddToCart={(p, qty) => {
+          alert(`Added ${qty}x ${p.title} to selection!`);
+          setIsOpen(false);
+        }}
+      />
+    </div>
+  );
+}
+
+function InteractiveProductGridDemo() {
+  const [selectedQuickView, setSelectedQuickView] = useState<any>(null);
+  const sampleProducts = [
+    {
+      id: 1,
+      name: 'VANTA Aero X',
+      category: 'Performance',
+      price: 'LKR 32,500',
+      badge: 'NEW',
+      imageUrl: '/products/vanta-aero-x.jpg',
+    },
+    {
+      id: 2,
+      name: 'VANTA Flux 01',
+      category: 'Sneakers',
+      price: 'LKR 28,900',
+      badge: 'EXCLUSIVE',
+      imageUrl: '/products/vanta-flux-01.jpg',
+    },
+    {
+      id: 3,
+      name: 'VANTA Stealth Pro',
+      category: 'Performance',
+      price: 'LKR 21,200',
+      badge: 'SALE',
+      imageUrl: '/products/vanta-stealth-pro.jpg',
+    },
+    {
+      id: 4,
+      name: 'VANTA Edge Carbon',
+      category: 'Lifestyle',
+      price: 'LKR 24,800',
+      badge: 'TRENDING',
+      imageUrl: '/products/vanta-edge-carbon.jpg',
+    },
+  ];
+
+  return (
+    <div className="w-full max-w-5xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+      <ProductGrid
+        title="New Arrivals"
+        subtitle="Just Dropped"
+        products={sampleProducts}
+        categories={['All', 'Performance', 'Sneakers', 'Lifestyle']}
+        sectionPath="demo-grid"
+        columns={{ mobile: 1, tablet: 2, desktop: 4 }}
+        onQuickView={(p) => setSelectedQuickView(p)}
+      />
+      {selectedQuickView && (
+        <ProductQuickView
+          isOpen={Boolean(selectedQuickView)}
+          onClose={() => setSelectedQuickView(null)}
+          product={{
+            id: String(selectedQuickView.id),
+            title: selectedQuickView.name,
+            price: selectedQuickView.price,
+            imageUrl: selectedQuickView.imageUrl,
+            badge: selectedQuickView.badge,
+            description: 'Precision-engineered storefront product ready for high conversion.',
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function InteractiveCustomerReviewsDemo() {
+  return (
+    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+      <CustomerReviews
+        title="Runner Verified Feedback"
+        subtitle="Authentic Athlete Reviews"
+        averageRating="4.9"
+        totalReviews="1,420+"
+        sectionPath="demo-reviews"
+      />
+    </div>
+  );
+}
+
+function InteractiveTrustBadgesDemo() {
+  return (
+    <div className="w-full max-w-2xl mx-auto p-4">
+      <TrustBadges />
+    </div>
+  );
+}
+
+function InteractiveStickyMobileBarDemo() {
+  return (
+    <div className="w-full max-w-sm mx-auto p-4 rounded-2xl border border-[#23283B] bg-[#0E111C]">
+      <span className="text-[11px] text-[#94A3B8] block mb-3 text-center">Mobile bottom floating checkout & WhatsApp trigger:</span>
+      <StickyMobileBar
+        whatsapp="15550192834"
+        primaryActionLabel="Order via WhatsApp"
+        phone="+15550192834"
+      />
+    </div>
+  );
+}
+
+function InteractiveAnnouncementBarDemo() {
+  return (
+    <div className="w-full p-2.5 rounded-xl bg-gradient-to-r from-amber-600 via-[#818CF8] to-purple-600 text-white text-xs font-semibold flex items-center justify-between shadow-md">
+      <div className="flex items-center gap-2">
+        <Sparkles className="w-3.5 h-3.5" />
+        <span>Summer Flash Drop: Get 20% off all sneakers with code <strong>SOLE20</strong></span>
+      </div>
+      <button className="text-[10px] px-2 py-0.5 rounded bg-black/40 hover:bg-black/60 text-white border-0 cursor-pointer">
+        Claim Now
+      </button>
+    </div>
+  );
+}
+
+function InteractiveCategoryPillsDemo() {
+  const [active, setActive] = useState('All');
+  const cats = ['All', 'Running', 'Casual', 'Formal', 'Boots'];
+
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-2 p-3">
+      {cats.map((c) => (
+        <button
+          key={c}
+          onClick={() => setActive(c)}
+          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border cursor-pointer ${
+            active === c
+              ? 'bg-[#818CF8] text-white border-[#818CF8] shadow-md font-bold'
+              : 'bg-[#121625] text-[#94A3B8] border-[#23283B] hover:text-white'
+          }`}
+        >
+          {c}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function InteractiveContactFormDemo() {
+  const [sent, setSent] = useState(false);
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        setSent(true);
+      }}
+      className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left"
+    >
+      <h4 className="font-bold text-white text-sm">Send us a Message</h4>
+      <input
+        placeholder="Your Full Name"
+        required
+        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
+      />
+      <input
+        type="email"
+        placeholder="email@example.com"
+        required
+        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
+      />
+      <textarea
+        rows={2}
+        placeholder="How can we assist your order?"
+        required
+        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
+      />
+      <button
+        type="submit"
+        className="w-full py-2 rounded-xl text-xs font-bold bg-[#818CF8] hover:bg-[#6366F1] text-white border-0 cursor-pointer"
+      >
+        {sent ? 'Message Sent Successfully! ✓' : 'Send Message'}
+      </button>
+    </form>
+  );
+}
+
+function InteractiveCartDrawerDemoInner() {
+  const { openCart, addItem, totalCount } = useCart();
+
+  return (
+    <div className="flex flex-col items-center justify-center p-8 gap-4 w-full">
+      <div className="flex flex-wrap gap-3 justify-center">
+        <button
+          type="button"
+          onClick={() =>
+            addItem({
+              id: 'shoe-vanta-1',
+              name: 'Vanta Aero-X Runner',
+              price: 189.99,
+              size: 'US 10',
+              color: 'Phantom Black',
+              image: '/products/vanta-aero-x.png',
+            })
+          }
+          className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#1E2337] text-white hover:bg-[#282F49] border border-[#2D3552] transition-colors cursor-pointer"
+        >
+          + Add Vanta Runner ($189.99)
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            addItem({
+              id: 'shoe-hyper-2',
+              name: 'HyperPulse Knit',
+              price: 145.0,
+              size: 'US 9.5',
+              color: 'Sonic White',
+              image: '/products/hyperpulse-knit.png',
+            })
+          }
+          className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#1E2337] text-white hover:bg-[#282F49] border border-[#2D3552] transition-colors cursor-pointer"
+        >
+          + Add HyperPulse ($145.00)
+        </button>
+      </div>
+
+      <button
+        type="button"
+        onClick={openCart}
+        className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+      >
+        <ShoppingBag className="w-4 h-4" />
+        <span>Open Cart Drawer ({totalCount} items)</span>
+      </button>
+
+      <CartDrawer
+        whatsappNumber="94770000000"
+        storeName="DENEB Athletics"
+        freeShippingThreshold={200}
+      />
+    </div>
+  );
+}
+
+function InteractiveCartDrawerDemo() {
+  return (
+    <CartProvider>
+      <InteractiveCartDrawerDemoInner />
+    </CartProvider>
+  );
+}
+
+function InteractiveFilterSidebarDemo() {
+  const [filters, setFilters] = useState({
+    selectedCategories: ['Running'],
+    priceRange: [0, 220] as [number, number],
+    selectedSizes: ['US 10'],
+    inStockOnly: true,
+  });
+
+  return (
+    <div className="w-full max-w-sm mx-auto p-2">
+      <FilterSidebar
+        categories={['Running', 'Lifestyle', 'Basketball', 'Training']}
+        sizes={['US 8', 'US 9', 'US 10', 'US 11']}
+        maxPrice={250}
+        initialFilters={filters}
+        onFilterChange={(f) =>
+          setFilters({
+            selectedCategories: f.selectedCategories,
+            priceRange: f.priceRange,
+            selectedSizes: f.selectedSizes,
+            inStockOnly: Boolean(f.inStockOnly),
+          })
+        }
+      />
+    </div>
+  );
+}
+
+// Registry database mapping slug -> ComponentDocPageProps
 
 function InteractiveCardDemo() {
   return (
@@ -244,39 +775,6 @@ function InteractiveImageDemo() {
   );
 }
 
-function InteractiveContactActionsDemo() {
-  return (
-    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 p-4">
-      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md flex items-center gap-2 border-0 cursor-pointer">
-        <MessageSquare className="w-3.5 h-3.5" />
-        <span>WhatsApp (1-Click)</span>
-      </button>
-      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] hover:bg-[#1E233D] text-white border border-[#23283B] flex items-center gap-2 cursor-pointer">
-        <Phone className="w-3.5 h-3.5 text-[#818CF8]" />
-        <span>Call: +1 (555) 019-2834</span>
-      </button>
-      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] hover:bg-[#1E233D] text-white border border-[#23283B] flex items-center gap-2 cursor-pointer">
-        <Mail className="w-3.5 h-3.5 text-[#818CF8]" />
-        <span>Email Us</span>
-      </button>
-    </div>
-  );
-}
-
-function InteractiveWhatsAppDemo() {
-  return (
-    <div className="flex items-center justify-center p-4">
-      <button
-        onClick={() => alert('Opens https://wa.me/15550192834 with your template inquiry text!')}
-        className="px-6 py-3 rounded-2xl font-bold text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_4px_20px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 border-0 cursor-pointer"
-      >
-        <MessageSquare className="w-4 h-4" />
-        <span>Order Directly on WhatsApp</span>
-      </button>
-    </div>
-  );
-}
-
 function InteractivePhoneDemo() {
   return (
     <div className="flex items-center justify-center p-4">
@@ -317,27 +815,6 @@ function InteractiveFloatingWidgetDemo() {
           <Phone className="w-4 h-4" />
         </button>
         <span className="text-xs font-semibold text-white px-1">Need help?</span>
-      </div>
-    </div>
-  );
-}
-
-function InteractiveLocationCardDemo() {
-  return (
-    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
-      <div className="flex items-center gap-2 text-xs font-semibold text-[#818CF8]">
-        <MapPin className="w-4 h-4 text-[#818CF8]" />
-        <span>Flagship Storefront</span>
-      </div>
-      <p className="text-xs text-white/90">742 Evergreen Celestial Way, Suite 100, San Francisco, CA</p>
-      <div className="pt-2 flex items-center justify-between border-t border-[#23283B] text-xs">
-        <span className="text-emerald-400 font-medium">Open Today until 8 PM</span>
-        <button
-          onClick={() => alert('Opens Google Maps directions!')}
-          className="text-[#818CF8] font-bold hover:underline bg-transparent border-0 cursor-pointer"
-        >
-          Get Directions ↗
-        </button>
       </div>
     </div>
   );
@@ -384,51 +861,6 @@ function InteractiveAddressDemo() {
   );
 }
 
-function InteractiveBusinessHoursDemo() {
-  return (
-    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#818CF8]" />
-          <span className="text-xs font-bold text-white">Business Hours</span>
-        </div>
-        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-          ● Open Now
-        </span>
-      </div>
-      <div className="space-y-1.5 text-xs">
-        <div className="flex justify-between text-white font-medium">
-          <span>Monday – Friday</span>
-          <span className="text-[#94A3B8]">09:00 AM – 08:00 PM</span>
-        </div>
-        <div className="flex justify-between text-white font-medium">
-          <span>Saturday</span>
-          <span className="text-[#94A3B8]">10:00 AM – 06:00 PM</span>
-        </div>
-        <div className="flex justify-between text-white font-medium">
-          <span>Sunday</span>
-          <span className="text-amber-400">Closed</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function InteractiveSocialDemo() {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-3 p-4">
-      {['Instagram', 'WhatsApp', 'Facebook', 'YouTube', 'TikTok', 'X'].map((plat) => (
-        <button
-          key={plat}
-          className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-[#141829] text-white border border-[#23283B] hover:border-[#818CF8] hover:text-[#818CF8] transition-all cursor-pointer"
-        >
-          {plat}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 function InteractiveSocialButtonDemo() {
   return (
     <div className="flex items-center justify-center gap-3 p-4">
@@ -437,38 +869,6 @@ function InteractiveSocialButtonDemo() {
       </button>
       <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] text-white border border-[#23283B] flex items-center gap-1.5 cursor-pointer">
         Join on YouTube
-      </button>
-    </div>
-  );
-}
-
-function InteractiveProductCardDemo() {
-  return (
-    <div className="w-full max-w-xs mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] hover:border-[#818CF8]/50 shadow-xl space-y-3 text-left">
-      <div className="relative aspect-square rounded-xl overflow-hidden bg-[#141829]">
-        <img
-          src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80"
-          alt="Product"
-          className="w-full h-full object-cover"
-        />
-        <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#818CF8] text-white">
-          BESTSELLER
-        </span>
-      </div>
-      <div className="flex items-center justify-between text-xs">
-        <span className="text-[#818CF8] font-bold uppercase tracking-wider text-[10px]">Footwear</span>
-        <div className="flex items-center gap-1 text-amber-400 font-semibold text-[11px]">
-          <Star className="w-3.5 h-3.5 fill-amber-400" />
-          <span>4.9 (128)</span>
-        </div>
-      </div>
-      <h4 className="font-bold text-white text-sm">Classic Oxford Runner</h4>
-      <div className="flex items-baseline gap-2">
-        <span className="text-base font-extrabold text-white">LKR 4,500</span>
-        <span className="text-xs line-through text-[#94A3B8]">LKR 5,900</span>
-      </div>
-      <button className="w-full py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-1.5 border-0 cursor-pointer shadow-md">
-        <MessageSquare className="w-3.5 h-3.5" /> Order via WhatsApp
       </button>
     </div>
   );
@@ -499,37 +899,6 @@ function InteractiveServiceCardDemo() {
   );
 }
 
-function InteractivePricingCardDemo() {
-  return (
-    <div className="w-full max-w-xs mx-auto p-6 rounded-2xl bg-[#0F1424] border-2 border-[#818CF8] shadow-[0_0_30px_rgba(129,140,248,0.2)] space-y-4 text-left">
-      <div className="flex justify-between items-center">
-        <h4 className="font-bold text-white text-base">Storefront Pro</h4>
-        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#818CF8] text-white">
-          POPULAR
-        </span>
-      </div>
-      <div className="flex items-baseline gap-1">
-        <span className="text-3xl font-black text-white">$49</span>
-        <span className="text-xs text-[#94A3B8]">/ month</span>
-      </div>
-      <ul className="text-xs text-[#CBD5E1] space-y-2">
-        <li className="flex items-center gap-2">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Full DENEB UI Primitives
-        </li>
-        <li className="flex items-center gap-2">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Live WhatsApp Checkout
-        </li>
-        <li className="flex items-center gap-2">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Instant Visual Editor Sync
-        </li>
-      </ul>
-      <button className="w-full py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white border-0 cursor-pointer shadow-md">
-        Get Started Today
-      </button>
-    </div>
-  );
-}
-
 function InteractiveTestimonialCardDemo() {
   return (
     <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
@@ -551,110 +920,6 @@ function InteractiveTestimonialCardDemo() {
         </div>
       </div>
     </div>
-  );
-}
-
-function InteractiveFAQDemo() {
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
-  const faqs = [
-    { q: 'How does WhatsApp checkout work?', a: 'Customers click the button, which automatically opens WhatsApp with product details, size, and pricing prefilled for personal concierge checkout.' },
-    { q: 'Can I customize store themes dynamically?', a: 'Yes! ThemeStyles resolves your chosen color tokens and fonts instantly on runtime.' },
-  ];
-
-  return (
-    <div className="w-full max-w-md mx-auto space-y-2 text-left">
-      {faqs.map((f, idx) => (
-        <div key={idx} className="rounded-xl bg-[#0F1424] border border-[#23283B] overflow-hidden">
-          <button
-            onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
-            className="w-full p-3.5 text-xs font-semibold text-white flex justify-between items-center bg-transparent border-0 cursor-pointer text-left"
-          >
-            <span>{f.q}</span>
-            <span className="text-[#818CF8]">{openIdx === idx ? '−' : '+'}</span>
-          </button>
-          {openIdx === idx && (
-            <div className="px-3.5 pb-3.5 text-xs text-[#94A3B8] leading-relaxed border-t border-[#23283B]/50 pt-2">
-              {f.a}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function InteractiveAnnouncementBarDemo() {
-  return (
-    <div className="w-full p-2.5 rounded-xl bg-gradient-to-r from-amber-600 via-[#818CF8] to-purple-600 text-white text-xs font-semibold flex items-center justify-between shadow-md">
-      <div className="flex items-center gap-2">
-        <Sparkles className="w-3.5 h-3.5" />
-        <span>Summer Flash Drop: Get 20% off all sneakers with code <strong>SOLE20</strong></span>
-      </div>
-      <button className="text-[10px] px-2 py-0.5 rounded bg-black/40 hover:bg-black/60 text-white border-0 cursor-pointer">
-        Claim Now
-      </button>
-    </div>
-  );
-}
-
-function InteractiveCategoryPillsDemo() {
-  const [active, setActive] = useState('All');
-  const cats = ['All', 'Running', 'Casual', 'Formal', 'Boots'];
-
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-2 p-3">
-      {cats.map((c) => (
-        <button
-          key={c}
-          onClick={() => setActive(c)}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border cursor-pointer ${
-            active === c
-              ? 'bg-[#818CF8] text-white border-[#818CF8] shadow-md font-bold'
-              : 'bg-[#121625] text-[#94A3B8] border-[#23283B] hover:text-white'
-          }`}
-        >
-          {c}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function InteractiveContactFormDemo() {
-  const [sent, setSent] = useState(false);
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setSent(true);
-      }}
-      className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left"
-    >
-      <h4 className="font-bold text-white text-sm">Send us a Message</h4>
-      <input
-        placeholder="Your Full Name"
-        required
-        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
-      />
-      <input
-        type="email"
-        placeholder="email@example.com"
-        required
-        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
-      />
-      <textarea
-        rows={2}
-        placeholder="How can we assist your order?"
-        required
-        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
-      />
-      <button
-        type="submit"
-        className="w-full py-2 rounded-xl text-xs font-bold bg-[#818CF8] hover:bg-[#6366F1] text-white border-0 cursor-pointer"
-      >
-        {sent ? 'Message Sent Successfully! ✓' : 'Send Message'}
-      </button>
-    </form>
   );
 }
 
@@ -760,77 +1025,104 @@ function InteractiveThemeStylesDemo() {
    Complete Component Documentation Registry (All 31 Components)
    ========================================================================== */
 
+// ==========================================
+// Registry database mapping slug -> ComponentDocPageProps
+// ==========================================
 export const COMPONENT_DOCS: Record<string, ComponentDocPageProps> = {
-  // 1. Core Primitives
   button: {
     title: 'Button',
-    description: 'High-conversion button primitive supporting glowing gradients, loading spinners, icons, and visual editing paths.',
+    description: 'An interactive button primitive with celestial glows, glassmorphic variants, and visual editing support.',
     category: 'Core Primitives',
-    badge: 'Core Primitive',
+    badge: 'Core',
     previewComponent: <InteractiveButtonDemo />,
     previewCode: `import { Button } from "@deneb-ui/ui";
 
-export default function Demo() {
+export default function ButtonDemo() {
   return (
     <div className="flex gap-4">
-      <Button variant="primary" size="md">Primary Celestial</Button>
-      <Button variant="outline" size="md">Secondary Cosmic</Button>
+      <Button variant="glow">Celestial Glow</Button>
+      <Button variant="secondary">Secondary Cosmic</Button>
+      <Button variant="outline">Periwinkle Outline</Button>
     </div>
   );
 }`,
-    usageCode: `import { Button } from "@deneb-ui/ui";\n\n<Button variant="primary">Shop Collection</Button>`,
+    usageCode: `import { Button } from "@deneb-ui/ui";
+
+export default function Page() {
+  return (
+    <Button 
+      variant="glow" 
+      size="md" 
+      onClick={() => console.log('Clicked!')}
+    >
+      Launch Storefront
+    </Button>
+  );
+}`,
     props: [
-      { name: 'variant', type: '"primary" | "secondary" | "outline" | "ghost" | "destructive"', defaultValue: '"primary"', description: 'Visual style variant.' },
-      { name: 'size', type: '"sm" | "md" | "lg" | "xl"', defaultValue: '"md"', description: 'Button size tokens.' },
-      { name: 'isLoading', type: 'boolean', defaultValue: 'false', description: 'Shows animated loading spinner.' },
-      { name: 'contentField', type: 'string', description: 'Fivora visual editing path (e.g. "home.heroCta").' },
+      { name: 'variant', type: '"default" | "glow" | "secondary" | "outline" | "ghost"', defaultValue: '"default"', description: 'The visual styling variant of the button.' },
+      { name: 'size', type: '"sm" | "md" | "lg"', defaultValue: '"md"', description: 'Controls button padding, font size, and height.' },
+      { name: 'disabled', type: 'boolean', defaultValue: 'false', description: 'Whether the button is interactable.' },
+      { name: 'className', type: 'string', defaultValue: '""', description: 'Additional Tailwind or CSS class names.' },
     ],
     nextPage: { title: 'Card', href: '/docs/components/card' },
   },
 
   card: {
     title: 'Card',
-    description: 'Adaptive container card with rounded corners, responsive elevation, border glow, and glassmorphism styling.',
+    description: 'A versatile container card with obsidian glass styling, luminous borders, and structured content slots.',
     category: 'Core Primitives',
-    badge: 'Core Primitive',
-    previewComponent: <InteractiveCardDemo />,
+    badge: 'Core',
+    previewComponent: (
+      <div className="max-w-sm w-full p-6 rounded-2xl border border-[#23283B] bg-[#0E111C] space-y-3 shadow-xl hover:border-[#818CF8]/40 transition-all">
+        <div className="flex items-center gap-2 text-[#818CF8] font-bold text-xs uppercase tracking-wider">
+          <DenebStarIcon className="w-3.5 h-3.5" />
+          <span>Cosmic Card Container</span>
+        </div>
+        <h3 className="font-bold text-lg text-white">Starlight Glass Panel</h3>
+        <p className="text-xs text-[#94A3B8] leading-relaxed">
+          Pre-styled container with subtle inner gradients and backdrop blur for clean storefront composition.
+        </p>
+      </div>
+    ),
     previewCode: `import { Card } from "@deneb-ui/ui";
 
-export default function Demo() {
+export default function CardDemo() {
   return (
-    <Card hoverEffect className="p-6">
-      <h3 className="text-lg font-bold">Smart Architecture Card</h3>
-      <p className="text-xs text-muted">Clean container with elevation tokens.</p>
+    <Card className="p-6">
+      <h3>Starlight Glass Panel</h3>
+      <p>Pre-styled container with subtle inner gradients.</p>
     </Card>
   );
 }`,
-    usageCode: `import { Card } from "@deneb-ui/ui";\n\n<Card hoverEffect>...</Card>`,
-    props: [
-      { name: 'hoverEffect', type: 'boolean', defaultValue: 'false', description: 'Enables 3D elevation and border highlight on hover.' },
-      { name: 'as', type: 'React.ElementType', defaultValue: '"div"', description: 'Rendered HTML element tag.' },
-    ],
+    usageCode: `import { Card } from "@deneb-ui/ui";\n\n<Card className="p-6">\n  <h2>Hello World</h2>\n</Card>`,
     prevPage: { title: 'Button', href: '/docs/components/button' },
     nextPage: { title: 'Badge', href: '/docs/components/badge' },
   },
 
   badge: {
     title: 'Badge',
-    description: 'Pill-shaped highlight badge for promotional flags (Sale, New, Best Seller) with live color tokens.',
+    description: 'Status pills and indicator tags with celestial starlight glows.',
     category: 'Core Primitives',
-    badge: 'Core Primitive',
-    previewComponent: <InteractiveBadgeDemo />,
-    previewCode: `import { Badge } from "@deneb-ui/ui";
-
-export default function Demo() {
-  return <Badge variant="primary">Celestial Glow</Badge>;
-}`,
-    usageCode: `import { Badge } from "@deneb-ui/ui";\n\n<Badge variant="primary">New Drop</Badge>`,
-    props: [
-      { name: 'variant', type: '"primary" | "secondary" | "outline" | "success" | "warning"', defaultValue: '"primary"', description: 'Color scheme.' },
-      { name: 'size', type: '"sm" | "md"', defaultValue: '"md"', description: 'Badge dimensions.' },
-    ],
+    badge: 'Core',
+    previewComponent: (
+      <div className="flex flex-wrap gap-3 items-center justify-center">
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#818CF8]/20 text-[#A5B4FC] border border-[#818CF8]/40 flex items-center gap-1.5 shadow-[0_0_12px_rgba(129,140,248,0.3)]">
+          <DenebStarIcon className="w-3 h-3" />
+          <span>Celestial Active</span>
+        </span>
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+          Open Now
+        </span>
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          Free Shipping
+        </span>
+      </div>
+    ),
+    previewCode: `import { Badge } from "@deneb-ui/ui";\n\n<Badge variant="glow">Celestial Active</Badge>`,
+    usageCode: `import { Badge } from "@deneb-ui/ui";`,
     prevPage: { title: 'Card', href: '/docs/components/card' },
-    nextPage: { title: 'Typography', href: '/docs/components/typography' },
+    nextPage: { title: 'ContactActions', href: '/docs/components/contact-actions' },
   },
 
   typography: {
@@ -939,31 +1231,46 @@ export default function Demo() {
     nextPage: { title: 'ContactActions', href: '/docs/components/contact-actions' },
   },
 
-  // 2. Smart Commerce Actions
   'contact-actions': {
     title: 'ContactActions',
-    description: 'Unified multi-channel contact bar presenting WhatsApp, direct telephone dialing, and email inquiries in a compact pill or column layout.',
+    description: 'Smart multi-channel container that automatically inspects merchant phone, WhatsApp, and email, rendering active triggers with zero template changes.',
     category: 'Smart Commerce Actions',
-    badge: 'High Conversion',
+    badge: 'Smart Action',
     previewComponent: <InteractiveContactActionsDemo />,
     previewCode: `import { ContactActions } from "@deneb-ui/ui";
 
-export default function Demo() {
+export default function ContactDemo() {
   return (
     <ContactActions
-      channels={['whatsapp', 'phone', 'email']}
-      layout="row"
+      phone="+1 (555) 349-2810"
+      whatsapp="15553492810"
+      email="support@denebstore.com"
+      layout="wrap"
       size="md"
     />
   );
 }`,
-    usageCode: `import { ContactActions } from "@deneb-ui/ui";\n\n<ContactActions channels={['whatsapp', 'phone', 'email']} />`,
+    usageCode: `import { ContactActions } from "@deneb-ui/ui";
+
+export default function Page() {
+  return (
+    <ContactActions
+      phone="+1 (555) 349-2810"
+      whatsapp="15553492810"
+      email="support@denebstore.com"
+      labels={{ phone: 'Call Support', whatsapp: 'WhatsApp Inquiry' }}
+      layout="row"
+    />
+  );
+}`,
     props: [
-      { name: 'channels', type: '("whatsapp" | "phone" | "email")[]', defaultValue: '["whatsapp", "phone"]', description: 'Enabled contact options.' },
-      { name: 'layout', type: '"row" | "column" | "wrap"', defaultValue: '"row"', description: 'Flex presentation.' },
-      { name: 'size', type: '"sm" | "md" | "lg"', defaultValue: '"md"', description: 'Button sizes.' },
+      { name: 'phone', type: 'string | null', description: 'Store telephone number. Triggers direct tel: call.' },
+      { name: 'whatsapp', type: 'string | null', description: 'WhatsApp number in E.164 format. Resolves to wa.me link.' },
+      { name: 'email', type: 'string | null', description: 'Store contact email address. Triggers mailto: protocol.' },
+      { name: 'layout', type: '"row" | "column" | "wrap"', defaultValue: '"row"', description: 'Flex layout presentation.' },
+      { name: 'size', type: '"sm" | "md" | "lg"', defaultValue: '"md"', description: 'Size of action buttons.' },
     ],
-    prevPage: { title: 'Image', href: '/docs/components/image' },
+    prevPage: { title: 'Badge', href: '/docs/components/badge' },
     nextPage: { title: 'WhatsAppButton', href: '/docs/components/whatsapp-button' },
   },
 
@@ -985,13 +1292,8 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { WhatsAppButton } from "@deneb-ui/ui";\n\n<WhatsAppButton value="15550192834" label="Chat on WhatsApp" />`,
-    props: [
-      { name: 'value', type: 'string', required: true, description: 'Phone number in international format.' },
-      { name: 'label', type: 'string', defaultValue: '"WhatsApp"', description: 'Button label text.' },
-      { name: 'message', type: 'string', description: 'Pre-filled message template.' },
-    ],
     prevPage: { title: 'ContactActions', href: '/docs/components/contact-actions' },
-    nextPage: { title: 'PhoneButton', href: '/docs/components/phone-button' },
+    nextPage: { title: 'BusinessHours', href: '/docs/components/business-hours' },
   },
 
   'phone-button': {
@@ -1062,12 +1364,11 @@ export default function Demo() {
     nextPage: { title: 'LocationCard', href: '/docs/components/location-card' },
   },
 
-  // 3. Location & Navigation
   'location-card': {
     title: 'LocationCard',
     description: 'Storefront location card with formatted address, map pin, and direct Google Maps directions trigger.',
     category: 'Location & Navigation',
-    badge: 'Maps & Location',
+    badge: 'Maps',
     previewComponent: <InteractiveLocationCardDemo />,
     previewCode: `import { LocationCard } from "@deneb-ui/ui";
 
@@ -1083,14 +1384,8 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { LocationCard } from "@deneb-ui/ui";`,
-    props: [
-      { name: 'street', type: 'string', description: 'Street address line.' },
-      { name: 'city', type: 'string', description: 'City name.' },
-      { name: 'country', type: 'string', description: 'Country name.' },
-      { name: 'mapQuery', type: 'string', description: 'Google Maps search query.' },
-    ],
-    prevPage: { title: 'FloatingContactWidget', href: '/docs/components/floating-contact-widget' },
-    nextPage: { title: 'LocationLink', href: '/docs/components/location-link' },
+    prevPage: { title: 'BusinessHours', href: '/docs/components/business-hours' },
+    nextPage: { title: 'SocialLinks', href: '/docs/components/social-links' },
   },
 
   'location-link': {
@@ -1154,7 +1449,6 @@ export default function Demo() {
     nextPage: { title: 'BusinessHours', href: '/docs/components/business-hours' },
   },
 
-  // 4. Social & Business Hours
   'business-hours': {
     title: 'BusinessHours',
     description: 'Weekly schedule renderer featuring live dynamic calculation of Open Now and Closed status badges based on visitor local time.',
@@ -1174,15 +1468,11 @@ const schedule = {
 };
 
 export default function HoursDemo() {
-  return <BusinessHours schedule={schedule} timezone="Asia/Colombo" />;
+  return <BusinessHours schedule={schedule} timezone="America/Los_Angeles" />;
 }`,
     usageCode: `import { BusinessHours } from "@deneb-ui/ui";\n\n<BusinessHours schedule={schedule} />`,
-    props: [
-      { name: 'schedule', type: 'Record<string, string>', required: true, description: 'Day-to-time map.' },
-      { name: 'timezone', type: 'string', description: 'Timezone for calculations (e.g. "Asia/Colombo").' },
-    ],
-    prevPage: { title: 'Address', href: '/docs/components/address' },
-    nextPage: { title: 'SocialLinks', href: '/docs/components/social-links' },
+    prevPage: { title: 'WhatsAppButton', href: '/docs/components/whatsapp-button' },
+    nextPage: { title: 'LocationCard', href: '/docs/components/location-card' },
   },
 
   'social-links': {
@@ -1200,17 +1490,15 @@ export default function Demo() {
       facebook="https://facebook.com"
       whatsapp="https://wa.me/15550192834"
       youtube="https://youtube.com"
+      github="https://github.com"
       x="https://x.com"
       variant="pills"
     />
   );
 }`,
     usageCode: `import { SocialLinks } from "@deneb-ui/ui";`,
-    props: [
-      { name: 'variant', type: '"pills" | "icons" | "minimal"', defaultValue: '"pills"', description: 'Icon container presentation.' },
-    ],
-    prevPage: { title: 'BusinessHours', href: '/docs/components/business-hours' },
-    nextPage: { title: 'SocialButton', href: '/docs/components/social-button' },
+    prevPage: { title: 'LocationCard', href: '/docs/components/location-card' },
+    nextPage: { title: 'ProductCard', href: '/docs/components/product-card' },
   },
 
   'social-button': {
@@ -1233,14 +1521,13 @@ export default function Demo() {
     nextPage: { title: 'Hero', href: '/docs/components/hero' },
   },
 
-  // 5. Storefront Sections
   hero: {
     title: 'Hero',
     description: 'Centered and split hero banner sections with high-impact headline, glowing CTAs, and commerce actions.',
     category: 'Storefront Sections',
     badge: 'Layout',
     previewComponent: (
-      <div className="p-8 text-center space-y-4 max-w-xl mx-auto">
+      <div className="p-8 text-center space-y-4 max-w-xl">
         <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#818CF8]/15 text-[#A5B4FC] border border-[#818CF8]/30 inline-flex items-center gap-1.5">
           <DenebStarIcon className="w-3 h-3" />
           <span>The Next Gen Commerce Stack</span>
@@ -1252,10 +1539,10 @@ export default function Demo() {
           Pre-configured action primitives designed to turn visitors into buyers within seconds.
         </p>
         <div className="flex justify-center gap-3 pt-2">
-          <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#818CF8] text-white shadow-md border-0 cursor-pointer">
+          <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#818CF8] text-white shadow-md">
             Explore Demo
           </button>
-          <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] text-white border border-[#23283B] cursor-pointer">
+          <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] text-white border border-[#23283B]">
             Documentation
           </button>
         </div>
@@ -1263,18 +1550,13 @@ export default function Demo() {
     ),
     previewCode: `import { Hero } from "@deneb-ui/ui";\n\n<Hero title="Supercharge Your Storefront" subtitle="..." />`,
     usageCode: `import { Hero } from "@deneb-ui/ui";`,
-    props: [
-      { name: 'title', type: 'string', description: 'Hero headline.' },
-      { name: 'subtitle', type: 'string', description: 'Supporting intro text.' },
-      { name: 'primaryCta', type: 'string', description: 'Primary action button text.' },
-    ],
-    prevPage: { title: 'SocialButton', href: '/docs/components/social-button' },
-    nextPage: { title: 'ProductCard', href: '/docs/components/product-card' },
+    prevPage: { title: 'FAQAccordion', href: '/docs/components/faq-accordion' },
+    nextPage: { title: 'ProductDetail', href: '/docs/components/product-detail' },
   },
 
   'product-card': {
     title: 'ProductCard',
-    description: 'High-converting commerce product card with responsive image, pricing, badge, and quick WhatsApp order trigger.',
+    description: 'High-converting commerce product card with responsive image, pricing, badge, and quick add-to-cart action.',
     category: 'Storefront Sections',
     badge: 'Commerce',
     previewComponent: <InteractiveProductCardDemo />,
@@ -1283,23 +1565,18 @@ export default function Demo() {
 export default function Demo() {
   return (
     <ProductCard
-      title="Classic Oxford Runner"
-      price="LKR 4,500"
-      originalPrice="LKR 5,900"
+      title="Deneb Nebula Lumina"
+      price="$149.00"
+      originalPrice="$189.00"
       badge="BESTSELLER"
       rating={4.9}
-      onAddToCart={() => alert('Order triggered!')}
+      onAddToCart={() => alert('Added!')}
     />
   );
 }`,
     usageCode: `import { ProductCard } from "@deneb-ui/ui";`,
-    props: [
-      { name: 'product', type: 'ProductItem', description: 'Product data record.' },
-      { name: 'itemPath', type: 'string', description: 'Path in site content (e.g. "products[0]").' },
-      { name: 'currency', type: 'string', defaultValue: '"LKR"', description: 'Price currency symbol.' },
-    ],
-    prevPage: { title: 'Hero', href: '/docs/components/hero' },
-    nextPage: { title: 'ServiceCard', href: '/docs/components/service-card' },
+    prevPage: { title: 'SocialLinks', href: '/docs/components/social-links' },
+    nextPage: { title: 'PricingCard', href: '/docs/components/pricing-card' },
   },
 
   'service-card': {
@@ -1351,14 +1628,8 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { PricingCard } from "@deneb-ui/ui";`,
-    props: [
-      { name: 'title', type: 'string', required: true, description: 'Tier title.' },
-      { name: 'price', type: 'string', required: true, description: 'Price amount.' },
-      { name: 'features', type: 'string[]', description: 'Feature checkmarks list.' },
-      { name: 'isPopular', type: 'boolean', defaultValue: 'false', description: 'Displays highlight badge.' },
-    ],
-    prevPage: { title: 'ServiceCard', href: '/docs/components/service-card' },
-    nextPage: { title: 'TestimonialCard', href: '/docs/components/testimonial-card' },
+    prevPage: { title: 'ProductCard', href: '/docs/components/product-card' },
+    nextPage: { title: 'FAQAccordion', href: '/docs/components/faq-accordion' },
   },
 
   'testimonial-card': {
@@ -1403,66 +1674,74 @@ export default function Demo() {
   return (
     <Accordion
       items={[
-        { q: 'How does WhatsApp checkout work?', a: 'Customers click the button to order via WhatsApp.' },
+        { q: 'What is DENEB UI?', a: 'A visual-first React ecosystem.' },
         { q: 'Is it free?', a: 'Yes, MIT Licensed.' },
       ]}
     />
   );
 }`,
     usageCode: `import { Accordion } from "@deneb-ui/ui";`,
-    props: [
-      { name: 'items', type: '{ q: string; a: string }[]', required: true, description: 'Questions and answers.' },
-    ],
-    prevPage: { title: 'TestimonialCard', href: '/docs/components/testimonial-card' },
-    nextPage: { title: 'AnnouncementBar', href: '/docs/components/announcement-bar' },
+    prevPage: { title: 'PricingCard', href: '/docs/components/pricing-card' },
+    nextPage: { title: 'Hero', href: '/docs/components/hero' },
   },
 
   'announcement-bar': {
     title: 'AnnouncementBar',
-    description: 'Top sticky announcement ribbon with countdown, promo code, and dismissal action.',
+    description: 'Top promotional ribbon for store announcements, flash sales, coupon codes, and free shipping thresholds.',
     category: 'Storefront Sections',
     badge: 'Marketing',
     previewComponent: <InteractiveAnnouncementBarDemo />,
     previewCode: `import { AnnouncementBar } from "@deneb-ui/ui";
 
-export default function Demo() {
+export default function HeaderPromo() {
   return (
     <AnnouncementBar
-      message="Summer Flash Drop: Get 20% off all sneakers!"
-      ctaLabel="Claim Now"
+      defaultText="Free Worldwide Shipping on all orders over $75"
+      defaultBadge="SALE"
+      defaultLinkText="Shop Drop"
+      defaultLinkUrl="#shop"
     />
   );
 }`,
     usageCode: `import { AnnouncementBar } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add announcement-bar`,
     props: [
-      { name: 'message', type: 'string', required: true, description: 'Banner announcement text.' },
-      { name: 'ctaLabel', type: 'string', description: 'Action button text.' },
+      { name: 'defaultText', type: 'string', description: 'Announcement text message.' },
+      { name: 'defaultBadge', type: 'string', defaultValue: '"PROMO"', description: 'Tag pill text.' },
+      { name: 'defaultLinkText', type: 'string', description: 'Clickable callout link text.' },
+      { name: 'defaultLinkUrl', type: 'string', description: 'Destination URL for callout link.' },
+      { name: 'dismissible', type: 'boolean', defaultValue: 'true', description: 'Whether the user can dismiss the bar.' },
     ],
-    prevPage: { title: 'FAQAccordion', href: '/docs/components/faq-accordion' },
+    prevPage: { title: 'StickyMobileBar', href: '/docs/components/sticky-mobile-bar' },
     nextPage: { title: 'CategoryPills', href: '/docs/components/category-pills' },
   },
 
   'category-pills': {
     title: 'CategoryPills',
-    description: 'Filterable category chips with active states and product counts for high-converting catalog filtering.',
+    description: 'Horizontal scrollable category filter pills with active indicator states for e-commerce catalogs.',
     category: 'Storefront Sections',
-    badge: 'Catalog Filter',
+    badge: 'Navigation',
     previewComponent: <InteractiveCategoryPillsDemo />,
-    previewCode: `import { CategoryPills } from "@deneb-ui/ui";
+    previewCode: `import { useState } from "react";
+import { CategoryPills } from "@deneb-ui/ui";
 
-export default function Demo() {
+export default function StoreCatalog() {
+  const [category, setCategory] = useState("All");
+
   return (
     <CategoryPills
-      categories={['All', 'Running', 'Casual', 'Formal']}
-      activeCategory="All"
-      onSelectCategory={(cat) => console.log(cat)}
+      categories={["All", "Sneakers", "Running", "Training"]}
+      selected={category}
+      onSelect={(c) => setCategory(c)}
     />
   );
 }`,
     usageCode: `import { CategoryPills } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add category-pills`,
     props: [
-      { name: 'categories', type: 'string[]', required: true, description: 'Category list.' },
-      { name: 'activeCategory', type: 'string', description: 'Currently active category.' },
+      { name: 'categories', type: 'string[]', required: true, description: 'List of category names.' },
+      { name: 'selected', type: 'string', description: 'Currently active category name.' },
+      { name: 'onSelect', type: '(category: string) => void', description: 'Callback on selecting a category pill.' },
     ],
     prevPage: { title: 'AnnouncementBar', href: '/docs/components/announcement-bar' },
     nextPage: { title: 'ContactForm', href: '/docs/components/contact-form' },
@@ -1470,21 +1749,30 @@ export default function Demo() {
 
   'contact-form': {
     title: 'ContactForm',
-    description: 'Storefront inquiry form with input validation, toast notifications, and direct submission handling.',
+    description: 'Lead generation and customer inquiry form with validated fields, accessible inputs, and visual editing bindings.',
     category: 'Storefront Sections',
-    badge: 'Lead Capture',
+    badge: 'Forms',
     previewComponent: <InteractiveContactFormDemo />,
     previewCode: `import { ContactForm } from "@deneb-ui/ui";
 
-export default function Demo() {
-  return <ContactForm onSubmit={(data) => console.log(data)} />;
+export default function Contact() {
+  return (
+    <ContactForm
+      title="Get in Touch"
+      subtitle="We typically reply within a few hours."
+      submitLabel="Send Message"
+    />
+  );
 }`,
     usageCode: `import { ContactForm } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add contact-form`,
     props: [
-      { name: 'onSubmit', type: '(data: any) => Promise<void> | void', description: 'Form submission handler.' },
+      { name: 'title', type: 'string', defaultValue: '"Contact Us"', description: 'Heading for the form.' },
+      { name: 'subtitle', type: 'string', description: 'Subheading or support note.' },
+      { name: 'submitLabel', type: 'string', defaultValue: '"Submit"', description: 'Label on submit button.' },
     ],
     prevPage: { title: 'CategoryPills', href: '/docs/components/category-pills' },
-    nextPage: { title: 'Navbar', href: '/docs/components/navbar' },
+    nextPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
   },
 
   navbar: {
@@ -1527,7 +1815,6 @@ export default function Demo() {
     nextPage: { title: 'SiteDataProvider', href: '/docs/components/site-data-provider' },
   },
 
-  // 6. Data & Theme Engine
   'site-data-provider': {
     title: 'SiteDataProvider',
     description: 'Headless state engine connecting Fivora API and live window postMessage updates to storefront components without page reloads.',
@@ -1570,6 +1857,305 @@ export default function App() {
     ],
     prevPage: { title: 'SiteDataProvider', href: '/docs/components/site-data-provider' },
   },
+
+  'product-detail': {
+    title: 'ProductDetail',
+    description: 'An elite single product showcase with multi-angle gallery, live size & color selectors, direct WhatsApp order CTA, and Fivora visual editing synchronization.',
+    category: 'Storefront Sections',
+    badge: 'Commerce',
+    previewComponent: <InteractiveProductDetailDemo />,
+    previewCode: `import { ProductDetail } from "@deneb-ui/ui";
+
+export default function SingleProductPage() {
+  const product = {
+    name: "VANTA Aero X",
+    price: "LKR 32,500",
+    badge: "BESTSELLER",
+    featuredImage: "/products/vanta-aero-x.jpg",
+    description: "Lightweight performance runner with responsive dual-density foam.",
+    specsTitle: "Specifications",
+    shippingTitle: "Shipping & Returns",
+    shippingSummary: "Free Islandwide Delivery within 2-3 business days.",
+  };
+
+  return (
+    <ProductDetail
+      product={product}
+      sectionPath="product"
+      onAddToSelection={(item, size, color) => console.log('Selected:', item, size, color)}
+    />
+  );
+}`,
+    usageCode: `import { ProductDetail } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add product-detail`,
+    props: [
+      { name: 'product', type: 'ProductDetailItem', required: true, description: 'Product data object with name, price, badge, gallery, description, and policy fields.' },
+      { name: 'sectionPath', type: 'string', defaultValue: '"product"', description: 'Fivora page key or section path prefix for visual editing.' },
+      { name: 'sizes', type: 'string[]', defaultValue: "['40', '41', '42', '43', '44', '45', '46']", description: 'Available shoe or apparel sizes.' },
+      { name: 'colors', type: 'Array<{ name: string; hex: string }>', description: 'Color swatch options with names and hex codes.' },
+      { name: 'onAddToSelection', type: '(product, size, color) => void', description: 'Callback triggered when clicking the primary action button.' },
+      { name: 'whatsappUrl', type: 'string', description: 'Custom WhatsApp click-to-chat order URL.' },
+      { name: 'className', type: 'string', defaultValue: '""', description: 'Additional CSS or Tailwind classes.' },
+    ],
+    prevPage: { title: 'Hero', href: '/docs/components/hero' },
+    nextPage: { title: 'ProductQuickView', href: '/docs/components/product-quickview' },
+  },
+
+  'product-quickview': {
+    title: 'ProductQuickView',
+    description: 'Instant lightbox inspection modal for products with thumbnail switcher, bounds-protected quantity counter, and live visual editing.',
+    category: 'Storefront Sections',
+    badge: 'Interactive',
+    previewComponent: <InteractiveProductQuickViewDemo />,
+    previewCode: `import { useState } from "react";
+import { ProductQuickView } from "@deneb-ui/ui";
+
+export default function QuickViewDemo() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Quick View</button>
+      <ProductQuickView
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        product={{
+          id: "1",
+          title: "VANTA Flux 01",
+          price: "28,900",
+          currency: "LKR ",
+          imageUrl: "/products/vanta-flux-01.jpg",
+          description: "Retro silhouette with modern comfort stack.",
+        }}
+        itemPath="home.product1"
+        onAddToCart={(p, qty) => alert(\`Added \${qty} items\`)}
+      />
+    </>
+  );
+}`,
+    usageCode: `import { ProductQuickView } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add product-quickview`,
+    props: [
+      { name: 'product', type: 'ProductQuickViewItem | null', required: true, description: 'Product data object to inspect.' },
+      { name: 'isOpen', type: 'boolean', required: true, description: 'Controls modal open/closed state.' },
+      { name: 'onClose', type: '() => void', required: true, description: 'Callback invoked when dismissing or pressing Escape.' },
+      { name: 'itemPath', type: 'string', description: 'Field path prefix for Fivora live visual editing in test lab.' },
+      { name: 'onAddToCart', type: '(product, quantity) => void', description: 'Callback when buyer adds item to cart.' },
+      { name: 'addToCartLabel', type: 'string', defaultValue: '"Add to Selection"', description: 'Label for the primary CTA button.' },
+    ],
+    prevPage: { title: 'ProductDetail', href: '/docs/components/product-detail' },
+    nextPage: { title: 'ProductGrid', href: '/docs/components/product-grid' },
+  },
+
+  'product-grid': {
+    title: 'ProductGrid',
+    description: 'Responsive commerce catalog grid with category filter tabs and configurable columns per device (mobile / tablet / desktop). Includes quick-view hook.',
+    category: 'Storefront Sections',
+    badge: 'Commerce',
+    previewComponent: <InteractiveProductGridDemo />,
+    previewCode: `import { ProductGrid } from "@deneb-ui/ui";
+
+export default function Catalog() {
+  const products = [
+    { id: 1, name: "VANTA Aero X", category: "Performance", price: "LKR 32,500", imageUrl: "/products/vanta-aero-x.jpg" },
+    { id: 2, name: "VANTA Flux 01", category: "Sneakers", price: "LKR 28,900", imageUrl: "/products/vanta-flux-01.jpg" },
+  ];
+
+  return (
+    <ProductGrid
+      title="Trending Collection"
+      subtitle="Just Dropped"
+      products={products}
+      categories={['All', 'Performance', 'Sneakers']}
+      columns={{ mobile: 1, tablet: 2, desktop: 4 }}
+      onQuickView={(p, itemPath) => console.log('Quick view:', p)}
+    />
+  );
+}`,
+    usageCode: `import { ProductGrid } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add product-grid`,
+    props: [
+      { name: 'products', type: 'ProductItem[]', required: true, description: 'Array of products to display.' },
+      { name: 'sectionPath', type: 'string', defaultValue: '"home"', description: 'Fivora section key for live editing.' },
+      { name: 'title', type: 'string', defaultValue: '"Featured Collection"', description: 'Heading for the product grid.' },
+      { name: 'subtitle', type: 'string', defaultValue: '"Just Dropped"', description: 'Badge or category subtitle above heading.' },
+      { name: 'categories', type: 'string[]', defaultValue: "['All']", description: 'Filter pills rendered above the grid.' },
+      { name: 'columns', type: '{ mobile?: number; tablet?: number; desktop?: number }', description: 'Responsive column counts.' },
+      { name: 'onQuickView', type: '(product, itemPath) => void', description: 'Callback triggered when user hovers and clicks Quick View.' },
+    ],
+    prevPage: { title: 'ProductQuickView', href: '/docs/components/product-quickview' },
+    nextPage: { title: 'CustomerReviews', href: '/docs/components/customer-reviews' },
+  },
+
+  'customer-reviews': {
+    title: 'CustomerReviews',
+    description: 'High-converting social proof showcase with aggregate star score, verified buyer authentication tags, and rating filters.',
+    category: 'Storefront Sections',
+    badge: 'Social Proof',
+    previewComponent: <InteractiveCustomerReviewsDemo />,
+    previewCode: `import { CustomerReviews } from "@deneb-ui/ui";
+
+export default function ReviewsSection() {
+  return (
+    <CustomerReviews
+      title="Loved by Athletes Worldwide"
+      subtitle="Verified Customer Reviews"
+      averageRating="4.9"
+      totalReviews="1,420+"
+    />
+  );
+}`,
+    usageCode: `import { CustomerReviews } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add customer-reviews`,
+    props: [
+      { name: 'title', type: 'string', defaultValue: '"Loved by Athletes & Runners Worldwide"', description: 'Section title.' },
+      { name: 'subtitle', type: 'string', defaultValue: '"Verified Customer Reviews"', description: 'Top subtitle tag.' },
+      { name: 'averageRating', type: 'string | number', defaultValue: '"4.9"', description: 'Aggregate rating score.' },
+      { name: 'totalReviews', type: 'string | number', defaultValue: '"1,420+"', description: 'Total review count display.' },
+      { name: 'reviews', type: 'CustomerReviewItem[]', description: 'Array of custom reviews.' },
+      { name: 'sectionPath', type: 'string', defaultValue: '"home"', description: 'Visual editing field path prefix.' },
+    ],
+    prevPage: { title: 'ProductGrid', href: '/docs/components/product-grid' },
+    nextPage: { title: 'TrustBadges', href: '/docs/components/trust-badges' },
+  },
+
+  'trust-badges': {
+    title: 'TrustBadges',
+    description: 'Conversion-boosting security and guarantee strip featuring free shipping, SSL checkout, warranty, and returns badges.',
+    category: 'Storefront Sections',
+    badge: 'Conversion',
+    previewComponent: <InteractiveTrustBadgesDemo />,
+    previewCode: `import { TrustBadges } from "@deneb-ui/ui";
+
+export default function CheckoutPage() {
+  return <TrustBadges />;
+}`,
+    usageCode: `import { TrustBadges } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add trust-badges`,
+    props: [
+      { name: 'className', type: 'string', defaultValue: '""', description: 'Additional CSS or Tailwind class names.' },
+    ],
+    prevPage: { title: 'CustomerReviews', href: '/docs/components/customer-reviews' },
+    nextPage: { title: 'StickyMobileBar', href: '/docs/components/sticky-mobile-bar' },
+  },
+
+  'sticky-mobile-bar': {
+    title: 'StickyMobileBar',
+    description: 'Sticky bottom checkout and WhatsApp action bar for mobile devices, boosting mobile conversion rates.',
+    category: 'Storefront Sections',
+    badge: 'Mobile',
+    previewComponent: <InteractiveStickyMobileBarDemo />,
+    previewCode: `import { StickyMobileBar } from "@deneb-ui/ui";
+
+export default function MobileLayout() {
+  return (
+    <StickyMobileBar
+      whatsappNumber="15550192834"
+      ctaLabel="Order via WhatsApp"
+      price="LKR 32,500"
+    />
+  );
+}`,
+    usageCode: `import { StickyMobileBar } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add sticky-mobile-bar`,
+    props: [
+      { name: 'whatsappNumber', type: 'string', description: 'Merchant WhatsApp phone number for 1-click ordering.' },
+      { name: 'ctaLabel', type: 'string', defaultValue: '"Order via WhatsApp"', description: 'Action button text.' },
+      { name: 'price', type: 'string', description: 'Price display shown on the left side of the bar.' },
+    ],
+    prevPage: { title: 'TrustBadges', href: '/docs/components/trust-badges' },
+    nextPage: { title: 'AnnouncementBar', href: '/docs/components/announcement-bar' },
+  },
+
+  'cart-drawer': {
+    title: 'CartDrawer',
+    description: 'High-converting slide-over shopping cart drawer with quantity steppers, free shipping progress bar, direct WhatsApp checkout, and visual editing bindings.',
+    category: 'E-Commerce',
+    badge: 'Hot',
+    previewComponent: <InteractiveCartDrawerDemo />,
+    previewCode: `import { CartProvider, useCart, CartDrawer } from "@deneb-ui/ui";
+
+function StoreLayout({ children }) {
+  const { openCart, totalCount } = useCart();
+
+  return (
+    <div>
+      <header>
+        <button onClick={openCart}>Cart ({totalCount})</button>
+      </header>
+      {children}
+      <CartDrawer
+        whatsappNumber="94770000000"
+        storeName="DENEB Athletics"
+        freeShippingThreshold={200}
+      />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <CartProvider>
+      <StoreLayout />
+    </CartProvider>
+  );
+}`,
+    usageCode: `import { CartProvider, useCart, CartDrawer } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add cart-drawer`,
+    props: [
+      { name: 'basePath', type: 'string', defaultValue: '"cart"', description: 'JSON schema path for visual editing annotations.' },
+      { name: 'whatsappNumber', type: 'string', required: true, description: 'Business WhatsApp phone number with country code.' },
+      { name: 'storeName', type: 'string', description: 'Store name for order greeting.' },
+      { name: 'currency', type: 'string', defaultValue: '"$"', description: 'Currency symbol.' },
+      { name: 'freeShippingThreshold', type: 'number', description: 'Amount required to unlock free shipping banner.' },
+      { name: 'checkoutUrl', type: 'string', description: 'Optional secondary direct checkout URL.' },
+      { name: 'onCheckout', type: '(items, total) => void', description: 'Callback when checkout button is clicked.' },
+    ],
+    prevPage: { title: 'ContactForm', href: '/docs/components/contact-form' },
+    nextPage: { title: 'FilterSidebar', href: '/docs/components/filter-sidebar' },
+  },
+
+  'filter-sidebar': {
+    title: 'FilterSidebar',
+    description: 'Faceted catalog filtering sidebar with category chips, price slider, and size swatches. Collapses behind a mobile toggle below 768px; always visible on tablet and desktop.',
+    category: 'E-Commerce',
+    badge: 'Commerce',
+    previewComponent: <InteractiveFilterSidebarDemo />,
+    previewCode: `import { useState } from "react";
+import { FilterSidebar } from "@deneb-ui/ui";
+
+export default function Catalog() {
+  const [filters, setFilters] = useState({
+    selectedCategories: ["Running"],
+    priceRange: [0, 200],
+    selectedSizes: ["US 10"],
+    inStockOnly: true,
+  });
+
+  return (
+    <div className="flex gap-8">
+      <FilterSidebar
+        categories={["Running", "Lifestyle", "Training"]}
+        sizes={["US 8", "US 9", "US 10", "US 11"]}
+        maxPrice={300}
+        onFilterChange={(f) => setFilters(f)}
+      />
+      <main>Catalog Products</main>
+    </div>
+  );
+}`,
+    usageCode: `import { FilterSidebar } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add filter-sidebar`,
+    props: [
+      { name: 'basePath', type: 'string', defaultValue: '"filters"', description: 'Visual editing schema path.' },
+      { name: 'categories', type: 'string[]', description: 'List of product categories.' },
+      { name: 'sizes', type: 'string[]', description: 'Available size filter options.' },
+      { name: 'minPrice', type: 'number', defaultValue: '0', description: 'Minimum price filter bound.' },
+      { name: 'maxPrice', type: 'number', defaultValue: '300', description: 'Maximum price filter bound.' },
+      { name: 'onFilterChange', type: '(filters) => void', description: 'Callback fired on any filter adjustment.' },
+    ],
+    prevPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
+  }
 };
 
 export const COMPONENT_SLUGS = Object.keys(COMPONENT_DOCS);

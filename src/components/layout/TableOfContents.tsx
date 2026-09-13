@@ -18,7 +18,7 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
   };
 
   return (
-    <div className="hidden xl:block w-60 shrink-0 pl-6 py-6 text-xs sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
+    <div className="hidden xl:block w-[220px] shrink-0 pl-6 py-6 text-xs sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
       <div className="space-y-4">
         <div>
           <h4 className="font-semibold text-[#CBD5E1] tracking-wide uppercase text-[11px] mb-3 flex items-center gap-1.5">
@@ -60,7 +60,7 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
         {/* Community & GitHub links */}
         <div className="pt-2 border-t border-[#23283B] space-y-2 text-[#94A3B8]">
           <a
-            href="https://github.com/chamikathereal"
+            href="https://github.com/deneb-ui/ui"
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-2 hover:text-white transition-colors"
@@ -69,7 +69,7 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
             <span>Star on GitHub</span>
           </a>
           <a
-            href="https://github.com/chamikathereal"
+            href="https://github.com/deneb-ui/ui/issues"
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-2 hover:text-white transition-colors"

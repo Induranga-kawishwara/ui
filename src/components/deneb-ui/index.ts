@@ -10,6 +10,9 @@ export * from './EditableBox';
 export * from './EditableGrid';
 export * from './EditableSection';
 export * from './EditableProductCard';
+export * from './EditableProductGrid';
+export * from './EditableProductDetail';
+export * from './EditableCustomerReviews';
 export * from './EditableServiceCard';
 export * from './EditableCard';
 export * from './EditablePricingCard';
@@ -22,8 +25,16 @@ export * from './EditableHero';
 export * from './EditableDialog';
 export * from './EditableAnnouncementBar';
 export * from './EditableCategoryPills';
-export * from './ThemeStyles';
+export * from './StickyMobileBar';
+export * from './TrustBadges';
+export * from './ProductQuickView';
+export * from './CookieConsentBanner';
+export * from './cart/useCart';
+export * from './EditableCartDrawer';
+export * from './EditableFilterSidebar';
 export * from './SiteDataProvider';
+export * from './ThemeStyles';
+export { ResponsiveBaseStyles } from './ResponsiveBaseStyles';
 
 // Smart template components & actions
 export * from './utils';
@@ -48,6 +59,9 @@ export { EditableSection as Section } from './EditableSection';
 export { EditableBox as Box } from './EditableBox';
 export { EditableList as List } from './EditableList';
 export { EditableProductCard as ProductCard } from './EditableProductCard';
+export { EditableProductGrid as ProductGrid } from './EditableProductGrid';
+export { EditableProductDetail as ProductDetail } from './EditableProductDetail';
+export { EditableCustomerReviews as CustomerReviews } from './EditableCustomerReviews';
 export { EditableServiceCard as ServiceCard } from './EditableServiceCard';
 export { EditablePricingCard as PricingCard } from './EditablePricingCard';
 export { EditableTestimonialCard as TestimonialCard } from './EditableTestimonialCard';
@@ -58,7 +72,13 @@ export { EditableFooter as Footer } from './EditableFooter';
 export { EditableHeroCentered as Hero, EditableHeroSplit as HeroSplit } from './EditableHero';
 export { EditableAnnouncementBar as AnnouncementBar } from './EditableAnnouncementBar';
 export { EditableCategoryPills as CategoryPills } from './EditableCategoryPills';
+export { StickyMobileBar } from './StickyMobileBar';
+export { TrustBadges } from './TrustBadges';
+export { ProductQuickView } from './ProductQuickView';
+export { CookieConsentBanner } from './CookieConsentBanner';
 export { FloatingContactWidget } from './contact/FloatingContactWidget';
+export { EditableCartDrawer as CartDrawer } from './EditableCartDrawer';
+export { EditableFilterSidebar as FilterSidebar } from './EditableFilterSidebar';
 
 
 /**
@@ -69,7 +89,3 @@ export const DENEB_FRAMEWORK_NAME = 'DENEB UI';
 export const DENEB_FRAMEWORK_VERSION = '2.0.0';
 export const DENEB_AUTHOR = 'Chamika Gayashan & Induranga Kawishwara';
 
-// Backward compatibility alias
-export const CEEG_FRAMEWORK_NAME = DENEB_FRAMEWORK_NAME;
-export const CEEG_FRAMEWORK_VERSION = DENEB_FRAMEWORK_VERSION;
-export const CEEG_AUTHOR = DENEB_AUTHOR;

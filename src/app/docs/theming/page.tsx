@@ -11,13 +11,14 @@ export default function ThemingPage() {
   const tocItems: TocItem[] = [
     { id: 'overview', title: 'Celestial Palette' },
     { id: 'tokens', title: 'CSS Variables' },
+    { id: 'theme-styles', title: 'ThemeStyles Component' },
+    { id: 'responsive', title: 'Responsive Spacing' },
     { id: 'chromatic', title: 'Chromatic Shimmer' },
-    { id: 'customizing', title: 'Custom Theme Override' },
   ];
 
   return (
-    <div className="flex w-full justify-between gap-10">
-      <div className="flex-1 min-w-0 max-w-4xl py-6 space-y-10">
+    <div className="flex w-full gap-8 lg:gap-10">
+      <div className="flex-1 min-w-0 py-6 space-y-10">
         <div className="flex items-center gap-2 text-xs text-[#94A3B8]">
           <Link href="/docs/installation" className="hover:text-white transition-colors">
             Docs
@@ -106,6 +107,59 @@ export default function ThemingPage() {
           />
         </section>
 
+        {/* ThemeStyles */}
+        <section id="theme-styles" className="space-y-4 pt-4 border-t border-[#23283B]">
+          <h2 className="text-xl font-bold text-white tracking-tight">ThemeStyles Component</h2>
+          <p className="text-sm text-[#94A3B8]">
+            Inject brand tokens and responsive base CSS from <code className="text-white">@deneb-ui/ui</code>:
+          </p>
+          <CodeBlock
+            code={`import { ThemeStyles, getCategoryTheme } from "@deneb-ui/ui";
+
+const theme = getCategoryTheme("retail", {
+  primaryColor: "#818CF8",
+  sectionPadding: "5rem",
+});
+
+export default function Layout({ children }) {
+  return (
+    <>
+      <ThemeStyles theme={theme} />
+      {children}
+    </>
+  );
+}`}
+            language="tsx"
+            filename="app/layout.tsx"
+          />
+          <p className="text-xs text-[#64748B]">
+            <code className="text-white">ThemeStyles</code> includes <code className="text-white">ResponsiveBaseStyles</code> automatically — viewport rules for all DENEB components ship with your theme.
+          </p>
+        </section>
+
+        {/* Responsive spacing */}
+        <section id="responsive" className="space-y-4 pt-4 border-t border-[#23283B]">
+          <h2 className="text-xl font-bold text-white tracking-tight">Responsive Section Spacing</h2>
+          <p className="text-sm text-[#94A3B8]">
+            <code className="text-white">EditableSection</code> padding tokens use fluid <code className="text-white">clamp()</code> values so vertical rhythm scales from phone to desktop:
+          </p>
+          <CodeBlock
+            code={`import { Section } from "@deneb-ui/ui";
+
+<Section name="home-hero" padding="lg">
+  {/* padding scales: clamp(2.5rem, 6vw, 6rem) 0 */}
+</Section>`}
+            language="tsx"
+          />
+          <Link
+            href="/docs/responsive-design"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-[#818CF8] hover:text-white transition-colors"
+          >
+            <span>Full responsive design guide</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </section>
+
         {/* Chromatic Shimmer */}
         <section id="chromatic" className="space-y-4 pt-4 border-t border-[#23283B]">
           <h2 className="text-xl font-bold text-white tracking-tight">Chromatic Text Effect</h2>
@@ -131,10 +185,10 @@ export default function ThemingPage() {
 
         <div className="pt-8 border-t border-[#23283B] flex justify-end">
           <Link
-            href="/docs/cli"
+            href="/docs/responsive-design"
             className="flex items-center gap-2 text-xs font-semibold text-[#818CF8] hover:text-white transition-colors"
           >
-            <span>Next: CLI Reference</span>
+            <span>Next: Responsive Design</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

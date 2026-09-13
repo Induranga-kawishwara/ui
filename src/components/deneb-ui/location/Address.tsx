@@ -37,8 +37,7 @@ export function Address({
   const baseStyles: React.CSSProperties = {
     fontStyle: 'normal',
     lineHeight: 1.5,
-    fontSize: '0.875rem',
-    color: 'var(--color-text-muted, #94A3B8)',
+    color: 'var(--color-text, #0f172a)',
     ...style,
   };
 

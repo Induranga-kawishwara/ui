@@ -1,27 +1,63 @@
 # DENEB UI 🌟
 
-> **Visual-First Commerce Component Library & Headless Storefront Design System**  
-> Official Documentation: [deneb.fivora.site](https://deneb.fivora.site)  
-> Built for [Fivora](https://fivora.com) Next-Gen Local E-Commerce
+<p align="center">
+  <a href="https://deneb.fivora.site">
+    <img src="https://img.shields.io/badge/DENEB_UI-Documentation_Site-6366F1?style=for-the-badge&labelColor=0f172a" alt="DENEB UI Docs" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://deneb.fivora.site"><img src="https://img.shields.io/badge/Live-deneb.fivora.site-818CF8?style=flat-square" alt="Live site" /></a>
+  <a href="https://www.npmjs.com/org/deneb-ui"><img src="https://img.shields.io/npm/v/@deneb-ui/ui.svg?style=flat-square&color=6366F1" alt="npm" /></a>
+  <img src="https://img.shields.io/badge/Next.js-16-000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-emerald?style=flat-square" alt="MIT" /></a>
+</p>
+
+<p align="center">
+  <strong>Official documentation, component showcase, and design system for DENEB UI & Fivora.</strong>
+</p>
+
+<p align="center">
+  <a href="https://deneb.fivora.site/docs/introduction"><strong>Docs Portal</strong></a> ·
+  <a href="https://github.com/deneb-ui/core"><strong>Core Repo</strong></a> ·
+  <a href="https://www.npmjs.com/org/deneb-ui"><strong>npm Packages</strong></a> ·
+  <a href="./DENEB_UI_MASTER_GUIDE.md"><strong>Master Guide</strong></a>
+</p>
 
 ---
 
-## What is DENEB UI?
+## About
 
-**DENEB UI** is an open-source, enterprise-grade React component library and headless storefront engine built specifically for high-conversion localized e-commerce, small business websites, and instant visual editing.
+This repository powers **[deneb.fivora.site](https://deneb.fivora.site)** — the developer documentation portal for:
 
-It bridges the gap between **code-first developers** and **visual website builders**: developers write standard Next.js / React code with DENEB primitives, and non-technical merchants can instantly point, click, and edit any text, image, price, or business hours inside the Fivora Visual Builder.
+- **@deneb-ui/ui** — Visual-first React component library & headless commerce hooks
+- **@deneb-ui/core** — Style engine, token resolver, CSS variables, and validation
+- **@deneb-ui/cli** — Storefront authoring CLI (Deneb ARC)
+- **@deneb-ui/create-template** — Project scaffolder
+
+Package source lives in **[github.com/deneb-ui/core](https://github.com/deneb-ui/core)**.
 
 ---
 
 ## Features
 
-- ⚡ **31+ Production-Ready Components**: Buttons, Cards, Dialogs, WhatsApp buttons, Hero banners, Product Cards, Business Hours, Navbars, and Footers.
+- ⚡ **39+ Production-Ready Components**: Primitives, WhatsApp commerce, Cart Drawer, Filter Sidebar, Product Grids, QuickView, Dynamic Business Hours, Hero banners, and Navigation.
 - 🎨 **Dynamic CSS Token Engine (`ThemeStyles`)**: Runtime custom property injector supporting industry presets (Restaurant, Retail, Luxury, Medical).
-- 🔄 **Headless Commerce State (`SiteDataProvider`)**: Integrated `useProducts()`, `useServices()`, and live API sync with zero layout shifts.
+- 🔄 **Headless Commerce State (`SiteDataProvider`)**: Integrated `useProducts()`, `useServices()`, `useCart()`, and live API sync with zero layout shifts.
 - 🎯 **Visual Editing Protocol (`data-deneb-*`)**: Built-in 2-way postMessage communication for live Fivora Studio previews.
 - 📱 **Mobile-First & Ultra-Responsive**: Designed with touch targets, sticky call-to-actions, and offline resilience.
 - 🚀 **100% Static Export Compatible**: Optimized for Next.js `output: 'export'` Jamstack hosting.
+
+---
+
+## Local Development
+
+```bash
+npm install
+npm run dev        # Starts local docs dev server on http://localhost:3000
+npm run sync:core  # Sync components from ../core/packages/deneb-ui
+npm run build      # Production standalone build for CapRover (deneb.fivora.site)
+```
 
 ---
 
@@ -84,7 +120,7 @@ export default function Storefront() {
 
 ---
 
-## Component Catalog (31 Components)
+## Component Catalog (39 Components)
 
 | Category | Components |
 | :--- | :--- |
@@ -93,10 +129,26 @@ export default function Storefront() {
 | **Location & Navigation** | `LocationCard`, `LocationLink`, `MapEmbed`, `Address` |
 | **Social & Business** | `BusinessHours`, `SocialLinks`, `SocialButton` |
 | **Storefront Sections** | `Hero`, `ProductCard`, `ServiceCard`, `PricingCard`, `TestimonialCard`, `FAQAccordion`, `AnnouncementBar`, `CategoryPills`, `ContactForm`, `Navbar`, `Footer` |
+| **E-Commerce Extensions** | `CartDrawer`, `FilterSidebar`, `ProductDetail`, `ProductQuickView`, `ProductGrid`, `CustomerReviews`, `TrustBadges`, `StickyMobileBar` |
 | **Data & Theme Engine** | `SiteDataProvider`, `ThemeStyles` |
 
 👉 **Read the Full Master Guide**: [DENEB_UI_MASTER_GUIDE.md](./DENEB_UI_MASTER_GUIDE.md)  
 👉 **Live Component Playground**: [deneb.fivora.site](https://deneb.fivora.site)
+
+---
+
+## Documentation Sections
+
+| Section | Path |
+| :--- | :--- |
+| Introduction | `/docs/introduction` |
+| Installation & CLI init | `/docs/installation` |
+| Responsive design | `/docs/responsive-design` |
+| Theming & tokens | `/docs/theming` |
+| CLI reference | `/docs/cli` |
+| Storefront Scaffolding | `/docs/templates` |
+| Setup on Fivora | `/docs/setup-fivora` |
+| Component catalog | `/docs/components/*` |
 
 ---
 
@@ -116,6 +168,10 @@ The documentation portal is configured for continuous deployment on **CapRover**
 
 ---
 
-## License
+## Authors
 
-MIT © [Fivora](https://fivora.com)
+**[Chamika Gayashan](https://github.com/chamikathereal)** · **[Induranga Kawishwara](https://github.com/Induranga-kawishwara)**
+
+<p align="center">
+  <sub>MIT © DENEB UI</sub>
+</p>

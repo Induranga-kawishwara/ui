@@ -22,13 +22,13 @@ export function DocsHeader({ onToggleSidebar }: { onToggleSidebar?: () => void }
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b border-[#23283B] bg-[#080A12]/80 backdrop-blur-xl">
-        <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 w-full">
           {/* Left: Mobile trigger & Logo & Primary Nav */}
           <div className="flex items-center gap-6">
             {onToggleSidebar && (
               <button
                 onClick={onToggleSidebar}
-                className="lg:hidden p-2 rounded-lg border border-[#23283B] bg-[#121625] text-[#94A3B8] hover:text-white"
+                className="md:hidden p-2 rounded-lg border border-[#23283B] bg-[#121625] text-[#94A3B8] hover:text-white"
                 aria-label="Toggle navigation menu"
               >
                 <Menu className="w-5 h-5" />
@@ -80,7 +80,7 @@ export function DocsHeader({ onToggleSidebar }: { onToggleSidebar?: () => void }
 
             {/* GitHub Repo Button with stars */}
             <a
-              href="https://github.com/chamikathereal"
+              href="https://github.com/deneb-ui/ui"
               target="_blank"
               rel="noreferrer"
               className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#23283B] bg-[#121625] text-xs font-medium text-[#CBD5E1] hover:text-white hover:border-[#818CF8]/40 hover:bg-[#818CF8]/10 transition-all group"

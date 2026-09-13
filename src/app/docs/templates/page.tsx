@@ -15,8 +15,8 @@ export default function TemplatesPage() {
   ];
 
   return (
-    <div className="flex w-full justify-between gap-10">
-      <div className="flex-1 min-w-0 max-w-4xl py-6 space-y-10">
+    <div className="flex w-full gap-8 lg:gap-10">
+      <div className="flex-1 min-w-0 py-6 space-y-10">
         <div className="flex items-center gap-2 text-xs text-[#94A3B8]">
           <Link href="/docs/installation" className="hover:text-white transition-colors">
             Docs

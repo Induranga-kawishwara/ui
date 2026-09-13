@@ -10,6 +10,7 @@ import React, {
   useState,
   type ReactNode,
 } from 'react';
+import { ResponsiveBaseStyles } from './ResponsiveBaseStyles';
 
 export const DENEB_PREVIEW_DATA_MESSAGE = 'DENEB_PREVIEW_SITE_DATA';
 export const PREVIEW_DATA_MESSAGE = 'FIVORA_PREVIEW_SITE_DATA';
@@ -414,6 +415,7 @@ export function SiteDataProvider<T extends SiteData = SiteData>({
   const value = useMemo(() => siteData as SiteData, [siteData]);
   return (
     <SiteDataContext.Provider value={value}>
+      <ResponsiveBaseStyles />
       {children}
     </SiteDataContext.Provider>
   );
@@ -474,10 +476,11 @@ export function getFieldStyle(
 
 export function useFieldStyle(path?: string): GenericRecord | null {
   const siteData = useSiteData();
+  const content = siteData?.content;
   return useMemo(() => {
-    if (!path || !siteData?.content) return null;
-    return getFieldStyle(siteData.content, path);
-  }, [siteData.content, path]);
+    if (!path || !content) return null;
+    return getFieldStyle(content, path);
+  }, [content, path]);
 }
 
 /**

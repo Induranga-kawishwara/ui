@@ -54,7 +54,6 @@ export function ContactActions({
     flexDirection: layout === 'column' ? 'column' : 'row',
     flexWrap: layout === 'wrap' || layout === 'row' ? 'wrap' : 'nowrap',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: '0.75rem',
     ...style,
   };
@@ -67,7 +66,6 @@ export function ContactActions({
           fieldPath={phoneFieldPath}
           label={labels.phone || 'Call Us'}
           size={size}
-          variant="secondary"
         />
       )}
       {hasWhatsApp && (
@@ -84,7 +82,6 @@ export function ContactActions({
           fieldPath={emailFieldPath}
           label={labels.email || 'Email Us'}
           size={size}
-          variant="secondary"
         />
       )}
     </div>

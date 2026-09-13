@@ -70,17 +70,13 @@ export default function SetupFivoraPage() {
   return (
     <div suppressHydrationWarning className="flex w-full gap-8 lg:gap-10">
       <div ref={contentRef} className="flex-1 min-w-0 py-6 space-y-12">
-        {/* Breadcrumb & Copy Action */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs text-[#94A3B8]">
-            <Link href="/docs/introduction" className="hover:text-white transition-colors">
-              Docs
-            </Link>
-            <span>/</span>
-            <span className="text-[#818CF8] font-semibold">Set Up Fivora</span>
-          </div>
-
-
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center gap-2 text-xs text-[#94A3B8]">
+          <Link href="/docs/introduction" className="hover:text-white transition-colors">
+            Docs
+          </Link>
+          <span>/</span>
+          <span className="text-[#818CF8] font-semibold">Set Up Fivora</span>
         </div>
 
         {/* Page Header */}

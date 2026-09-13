@@ -170,11 +170,18 @@ The Fivora parent dashboard attaches visual selection boxes and enables in-line 
 Import all components directly from `@deneb-ui/ui`:
 
 
-### Core Primitives
+### Core Primitives (7 Components)
 
 #### 1. Button (`@deneb-ui/ui`)
 
 An interactive button primitive with celestial glows, glassmorphic variants, and visual editing support.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `variant` | `any` | `` | The visual styling variant of the button. |
+| `size` | `any` | `` | Controls button padding, font size, and height. |
+| `disabled` | `boolean` | `false` | Whether the button is interactable. |
+| `className` | `string` | `` | Additional Tailwind or CSS class names. |
 
 ```tsx
 import { Button } from "@deneb-ui/ui";
@@ -196,6 +203,13 @@ export default function Page() {
 
 A versatile container card with obsidian glass styling, luminous borders, and structured content slots.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `variant` | `default' | 'glass' | 'glow' | 'outline` | `` | Visual surface treatment with obsidian and luminous borders. |
+| `padding` | `sm' | 'md' | 'lg' | 'none` | `` | Internal padding of the card container. |
+| `hoverEffect` | `boolean` | `true` | Enable celestial border illumination on hover. |
+| `className` | `string` | `` | Additional Tailwind utility classes. |
+
 ```tsx
 import { Card } from "@deneb-ui/ui";\n\n<Card className="p-6">\n  <h2>Hello World</h2>\n</Card>
 ```
@@ -203,6 +217,13 @@ import { Card } from "@deneb-ui/ui";\n\n<Card className="p-6">\n  <h2>Hello Worl
 #### 3. Badge (`@deneb-ui/ui`)
 
 Status pills and indicator tags with celestial starlight glows.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `variant` | `default' | 'glow' | 'outline' | 'success' | 'warning` | `` | Color and glow palette of the tag. |
+| `size` | `sm' | 'md` | `` | Padding and typography size. |
+| `pulse` | `boolean` | `false` | Renders an animated glowing pulse dot. |
+| `children` | `React.ReactNode` | `-` | Text or element content. |
 
 ```tsx
 import { Badge } from "@deneb-ui/ui";
@@ -212,6 +233,12 @@ import { Badge } from "@deneb-ui/ui";
 
 Semantic text primitives (Heading, Paragraph, Text, Quote) linked directly to Fivora theme font tokens.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `as` | `any` | `` | HTML tag. |
+| `size` | `any` | `` | Font size. |
+| `color` | `string` | `-` | Semantic color token or hex. |
+
 ```tsx
 import { Heading, Paragraph } from "@deneb-ui/ui";
 ```
@@ -219,6 +246,12 @@ import { Heading, Paragraph } from "@deneb-ui/ui";
 #### 5. Dialog (`@deneb-ui/ui`)
 
 Accessible modal dialog with backdrop blur, keyboard ESC dismissal, sizing tiers, and live visual editing.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `open` | `boolean` | `false` | Visibility state. |
+| `onClose` | `() => void` | `-` | Close callback. |
+| `size` | `any` | `` | Modal max-width tier. |
 
 ```tsx
 import { Dialog } from "@deneb-ui/ui";
@@ -228,6 +261,11 @@ import { Dialog } from "@deneb-ui/ui";
 
 Layout containers featuring auto-balancing columns (minCardWidth), custom spacing tokens, and flex alignment.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `minCardWidth` | `string` | `` | Auto-balancing minimum card width. |
+| `gap` | `any` | `` | Spacing between cards. |
+
 ```tsx
 import { Grid, Box } from "@deneb-ui/ui";
 ```
@@ -236,16 +274,29 @@ import { Grid, Box } from "@deneb-ui/ui";
 
 Responsive storefront image component supporting preset aspect ratios, border radii, and visual editing upload triggers.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `aspectRatio` | `any` | `` | Aspect ratio. |
+| `radius` | `any` | `` | Border radius. |
+
 ```tsx
 import { Image } from "@deneb-ui/ui";
 ```
 
 
-### Smart Commerce Actions
+### Smart Commerce Actions (5 Components)
 
 #### 8. ContactActions (`@deneb-ui/ui`)
 
 Smart multi-channel container that automatically inspects merchant phone, WhatsApp, and email, rendering active triggers with zero template changes.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `phone` | `string | null` | `-` | Store telephone number. Triggers direct tel: call. |
+| `whatsapp` | `string | null` | `-` | WhatsApp number in E.164 format. Resolves to wa.me link. |
+| `email` | `string | null` | `-` | Store contact email address. Triggers mailto: protocol. |
+| `layout` | `any` | `` | Flex layout presentation. |
+| `size` | `any` | `` | Size of action buttons. |
 
 ```tsx
 import { ContactActions } from "@deneb-ui/ui";
@@ -267,6 +318,13 @@ export default function Page() {
 
 One-click WhatsApp click-to-chat button with built-in official SVG icon and direct link resolution.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `phoneNumber` | `string` | `` | E.164 formatted telephone number without plus. |
+| `message` | `string` | `` | Pre-filled WhatsApp message draft. |
+| `variant` | `solid' | 'outline' | 'floating` | `` | Button style variant. |
+| `label` | `string` | `` | Accessible action label. |
+
 ```tsx
 import { WhatsAppButton } from "@deneb-ui/ui";\n\n<WhatsAppButton value="15550192834" label="Chat on WhatsApp" />
 ```
@@ -274,6 +332,11 @@ import { WhatsAppButton } from "@deneb-ui/ui";\n\n<WhatsAppButton value="1555019
 #### 10. PhoneButton (`@deneb-ui/ui`)
 
 Direct telephone dialing trigger (tel:) with formatted phone display and official telephone icon.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `string` | `-` | Telephone number string. |
+| `label` | `string` | `-` | Custom button label. |
 
 ```tsx
 import { PhoneButton } from "@deneb-ui/ui";
@@ -283,6 +346,11 @@ import { PhoneButton } from "@deneb-ui/ui";
 
 Direct mailto: action button with optional prefilled subject line and envelope icon.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `string` | `-` | Target email address. |
+| `subject` | `string` | `-` | Default email subject. |
+
 ```tsx
 import { EmailButton } from "@deneb-ui/ui";
 ```
@@ -291,16 +359,30 @@ import { EmailButton } from "@deneb-ui/ui";
 
 Sticky corner floating action button that expands into a speed-dial menu for WhatsApp, phone, and email inquiries.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `position` | `any` | `` | Corner anchor position. |
+| `defaultWhatsApp` | `string` | `-` | WhatsApp number fallback. |
+| `defaultPhone` | `string` | `-` | Phone number fallback. |
+
 ```tsx
 import { FloatingContactWidget } from "@deneb-ui/ui";
 ```
 
 
-### Location & Navigation
+### Location & Navigation (4 Components)
 
 #### 13. LocationCard (`@deneb-ui/ui`)
 
 Storefront location card with formatted address, map pin, and direct Google Maps directions trigger.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `title` | `string` | `` | Location heading title. |
+| `address` | `string` | `` | Street address and unit. |
+| `city` | `string` | `` | City or territory name. |
+| `googleMapsUrl` | `string` | `` | Direct URL for Google Maps navigation. |
+| `hours` | `string` | `` | Summary of operating hours. |
 
 ```tsx
 import { LocationCard } from "@deneb-ui/ui";
@@ -310,6 +392,11 @@ import { LocationCard } from "@deneb-ui/ui";
 
 Inline clickable text link opening the physical business address in Google Maps or Apple Maps.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `address` | `string` | `-` | Address query. |
+| `label` | `string` | `-` | Link text. |
+
 ```tsx
 import { LocationLink } from "@deneb-ui/ui";
 ```
@@ -317,6 +404,11 @@ import { LocationLink } from "@deneb-ui/ui";
 #### 15. MapEmbed (`@deneb-ui/ui`)
 
 Safe responsive Google Maps embed iframe with automatic fallback link when embed URL is not yet configured.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `height` | `number | string` | `360` | Container height in px. |
+| `embedUrl` | `string` | `-` | Google Maps embed iframe URL. |
 
 ```tsx
 import { MapEmbed } from "@deneb-ui/ui";
@@ -326,16 +418,28 @@ import { MapEmbed } from "@deneb-ui/ui";
 
 Semantic, formatted HTML address block with microdata schema readiness and visual editing attributes.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `street` | `string` | `-` | Street name. |
+| `city` | `string` | `-` | City. |
+| `country` | `string` | `-` | Country. |
+
 ```tsx
 import { Address } from "@deneb-ui/ui";
 ```
 
 
-### Social & Business
+### Social & Business (3 Components)
 
 #### 17. BusinessHours (`@deneb-ui/ui`)
 
 Weekly schedule renderer featuring live dynamic calculation of Open Now and Closed status badges based on visitor local time.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `schedule` | `Array<{ day: string; open: string; close: string }>` | `[]` | Weekly business hours timetable. |
+| `showStatus` | `boolean` | `true` | Display live  |
+| `variant` | `card' | 'list' | 'compact` | `` | Visual presentation layout. |
 
 ```tsx
 import { BusinessHours } from "@deneb-ui/ui";\n\n<BusinessHours schedule={schedule} />
@@ -345,6 +449,12 @@ import { BusinessHours } from "@deneb-ui/ui";\n\n<BusinessHours schedule={schedu
 
 Smart social media channel container with branded icons (Instagram, Facebook, TikTok, YouTube, X, GitHub).
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `links` | `Record<string, string>` | `{}` | Object mapping platform keys (instagram, facebook, etc.) to URLs. |
+| `variant` | `icon' | 'pill' | 'colored` | `` | Visual presentation of the social links. |
+| `size` | `sm' | 'md' | 'lg` | `` | Icon and hit-target size. |
+
 ```tsx
 import { SocialLinks } from "@deneb-ui/ui";
 ```
@@ -353,16 +463,29 @@ import { SocialLinks } from "@deneb-ui/ui";
 
 Individual branded social button with official network colors and icons.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `platform` | `any` | `-` | Network ID. |
+| `href` | `string` | `-` | Profile URL. |
+
 ```tsx
 import { SocialButton } from "@deneb-ui/ui";
 ```
 
 
-### Storefront Sections
+### Storefront Sections (17 Components)
 
 #### 20. Hero (`@deneb-ui/ui`)
 
 Centered and split hero banner sections with high-impact headline, glowing CTAs, and commerce actions.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `layout` | `split' | 'centered' | 'minimal` | `` | Hero section visual layout structure. |
+| `title` | `string` | `` | Primary value proposition headline. |
+| `description` | `string` | `` | Secondary explanatory subtitle text. |
+| `image` | `string` | `` | Hero photography or illustration asset URL. |
+| `badge` | `string` | `` | Optional announcement kicker pill. |
 
 ```tsx
 import { Hero } from "@deneb-ui/ui";
@@ -372,6 +495,17 @@ import { Hero } from "@deneb-ui/ui";
 
 High-converting commerce product card with responsive image, pricing, badge, and quick add-to-cart action.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `title` | `string` | `` | Product name headline. |
+| `price` | `number` | `0` | Selling retail price in active currency. |
+| `compareAtPrice` | `number` | `undefined` | Original strike-through MSRP price for discount calculation. |
+| `currency` | `string` | `` | Currency symbol or prefix. |
+| `image` | `string` | `` | Product photograph URL. |
+| `category` | `string` | `` | Category classification badge. |
+| `whatsappNumber` | `string` | `` | Direct WhatsApp one-click order phone number. |
+| `itemPath` | `string` | `` | Visual editing data binding path (e.g.  |
+
 ```tsx
 import { ProductCard } from "@deneb-ui/ui";
 ```
@@ -379,6 +513,16 @@ import { ProductCard } from "@deneb-ui/ui";
 #### 22. ProductDetail (`@deneb-ui/ui`)
 
 An elite single product showcase with multi-angle gallery, live size & color selectors, direct WhatsApp order CTA, and Fivora visual editing synchronization.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `product` | `ProductDetailItem` | `-` | Product data object with name, price, badge, gallery, description, and policy fields. |
+| `sectionPath` | `string` | `` | Fivora page key or section path prefix for visual editing. |
+| `sizes` | `string[]` | `[` | Available shoe or apparel sizes. |
+| `colors` | `Array<{ name: string; hex: string }>` | `-` | Color swatch options with names and hex codes. |
+| `onAddToSelection` | `(product, size, color) => void` | `-` | Callback triggered when clicking the primary action button. |
+| `whatsappUrl` | `string` | `-` | Custom WhatsApp click-to-chat order URL. |
+| `className` | `string` | `` | Additional CSS or Tailwind classes. |
 
 ```tsx
 import { ProductDetail } from "@deneb-ui/ui";
@@ -388,6 +532,15 @@ import { ProductDetail } from "@deneb-ui/ui";
 
 Instant lightbox inspection modal for products with thumbnail switcher, bounds-protected quantity counter, and live visual editing.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `product` | `ProductQuickViewItem | null` | `-` | Product data object to inspect. |
+| `isOpen` | `boolean` | `-` | Controls modal open/closed state. |
+| `onClose` | `() => void` | `-` | Callback invoked when dismissing or pressing Escape. |
+| `itemPath` | `string` | `-` | Field path prefix for Fivora live visual editing in test lab. |
+| `onAddToCart` | `(product, quantity) => void` | `-` | Callback when buyer adds item to cart. |
+| `addToCartLabel` | `string` | `` | Label for the primary CTA button. |
+
 ```tsx
 import { ProductQuickView } from "@deneb-ui/ui";
 ```
@@ -395,6 +548,16 @@ import { ProductQuickView } from "@deneb-ui/ui";
 #### 24. ProductGrid (`@deneb-ui/ui`)
 
 Responsive commerce catalog grid with category filter tabs and configurable columns per device (mobile / tablet / desktop). Includes quick-view hook.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `products` | `ProductItem[]` | `-` | Array of products to display. |
+| `sectionPath` | `string` | `` | Fivora section key for live editing. |
+| `title` | `string` | `` | Heading for the product grid. |
+| `subtitle` | `string` | `` | Badge or category subtitle above heading. |
+| `categories` | `string[]` | `[` | Filter pills rendered above the grid. |
+| `columns` | `{ mobile?: number; tablet?: number; desktop?: number }` | `-` | Responsive column counts. |
+| `onQuickView` | `(product, itemPath) => void` | `-` | Callback triggered when user hovers and clicks Quick View. |
 
 ```tsx
 import { ProductGrid } from "@deneb-ui/ui";
@@ -404,6 +567,15 @@ import { ProductGrid } from "@deneb-ui/ui";
 
 High-converting social proof showcase with aggregate star score, verified buyer authentication tags, and rating filters.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `title` | `string` | `` | Section title. |
+| `subtitle` | `string` | `` | Top subtitle tag. |
+| `averageRating` | `string | number` | `` | Aggregate rating score. |
+| `totalReviews` | `string | number` | `` | Total review count display. |
+| `reviews` | `CustomerReviewItem[]` | `-` | Array of custom reviews. |
+| `sectionPath` | `string` | `` | Visual editing field path prefix. |
+
 ```tsx
 import { CustomerReviews } from "@deneb-ui/ui";
 ```
@@ -411,6 +583,10 @@ import { CustomerReviews } from "@deneb-ui/ui";
 #### 26. TrustBadges (`@deneb-ui/ui`)
 
 Conversion-boosting security and guarantee strip featuring free shipping, SSL checkout, warranty, and returns badges.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `className` | `string` | `` | Additional CSS or Tailwind class names. |
 
 ```tsx
 import { TrustBadges } from "@deneb-ui/ui";
@@ -420,6 +596,12 @@ import { TrustBadges } from "@deneb-ui/ui";
 
 Sticky bottom checkout and WhatsApp action bar for mobile devices, boosting mobile conversion rates.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `whatsappNumber` | `string` | `-` | Merchant WhatsApp phone number for 1-click ordering. |
+| `ctaLabel` | `string` | `` | Action button text. |
+| `price` | `string` | `-` | Price display shown on the left side of the bar. |
+
 ```tsx
 import { StickyMobileBar } from "@deneb-ui/ui";
 ```
@@ -427,6 +609,11 @@ import { StickyMobileBar } from "@deneb-ui/ui";
 #### 28. ServiceCard (`@deneb-ui/ui`)
 
 Service package card with rate label, feature checkmark list, image thumbnail, and quote action.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `service` | `ServiceItem` | `-` | Service data object. |
+| `itemPath` | `string` | `-` | Array path (e.g.  |
 
 ```tsx
 import { ServiceCard } from "@deneb-ui/ui";
@@ -436,6 +623,14 @@ import { ServiceCard } from "@deneb-ui/ui";
 
 Tiered subscription and pricing plan card with feature checkmarks and highlight badges.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `tier` | `string` | `` | Plan name (e.g.  |
+| `price` | `number | string` | `0` | Subscription or package cost. |
+| `features` | `string[]` | `[]` | Included checklist feature items. |
+| `isPopular` | `boolean` | `false` | Highlights card with luminous glowing border. |
+| `ctaText` | `string` | `` | Action button text. |
+
 ```tsx
 import { PricingCard } from "@deneb-ui/ui";
 ```
@@ -443,6 +638,11 @@ import { PricingCard } from "@deneb-ui/ui";
 #### 30. TestimonialCard (`@deneb-ui/ui`)
 
 Customer review card with 5-star ratings, avatar, customer name, and purchased product note.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `item` | `TestimonialItem` | `-` | Testimonial record. |
+| `itemPath` | `string` | `-` | Visual edit path. |
 
 ```tsx
 import { TestimonialCard } from "@deneb-ui/ui";
@@ -452,6 +652,11 @@ import { TestimonialCard } from "@deneb-ui/ui";
 
 Smooth animated expandable accordion for FAQs, policies, and storefront documentation.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `items` | `Array<{ question: string; answer: string }>` | `[]` | List of FAQ questions and markdown answers. |
+| `allowMultiple` | `boolean` | `false` | Allow multiple items to be expanded concurrently. |
+
 ```tsx
 import { Accordion } from "@deneb-ui/ui";
 ```
@@ -459,6 +664,14 @@ import { Accordion } from "@deneb-ui/ui";
 #### 32. AnnouncementBar (`@deneb-ui/ui`)
 
 Top promotional ribbon for store announcements, flash sales, coupon codes, and free shipping thresholds.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `defaultText` | `string` | `-` | Announcement text message. |
+| `defaultBadge` | `string` | `` | Tag pill text. |
+| `defaultLinkText` | `string` | `-` | Clickable callout link text. |
+| `defaultLinkUrl` | `string` | `-` | Destination URL for callout link. |
+| `dismissible` | `boolean` | `true` | Whether the user can dismiss the bar. |
 
 ```tsx
 import { AnnouncementBar } from "@deneb-ui/ui";
@@ -468,6 +681,12 @@ import { AnnouncementBar } from "@deneb-ui/ui";
 
 Horizontal scrollable category filter pills with active indicator states for e-commerce catalogs.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `categories` | `string[]` | `-` | List of category names. |
+| `selected` | `string` | `-` | Currently active category name. |
+| `onSelect` | `(category: string) => void` | `-` | Callback on selecting a category pill. |
+
 ```tsx
 import { CategoryPills } from "@deneb-ui/ui";
 ```
@@ -475,6 +694,12 @@ import { CategoryPills } from "@deneb-ui/ui";
 #### 34. ContactForm (`@deneb-ui/ui`)
 
 Lead generation and customer inquiry form with validated fields, accessible inputs, and visual editing bindings.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `title` | `string` | `` | Heading for the form. |
+| `subtitle` | `string` | `-` | Subheading or support note. |
+| `submitLabel` | `string` | `` | Label on submit button. |
 
 ```tsx
 import { ContactForm } from "@deneb-ui/ui";
@@ -484,6 +709,11 @@ import { ContactForm } from "@deneb-ui/ui";
 
 Glassmorphism storefront header with logo, desktop links, mobile drawer sheet, search, and cart triggers.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `sticky` | `boolean` | `true` | Stick to top on scroll. |
+| `defaultLinks` | `NavLinkItem[]` | `-` | Navigation links array. |
+
 ```tsx
 import { Navbar } from "@deneb-ui/ui";
 ```
@@ -492,16 +722,31 @@ import { Navbar } from "@deneb-ui/ui";
 
 Multi-column storefront footer with brand description, navigation links, policy links, and trust badges.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `brandName` | `string` | `-` | Business title. |
+| `copyright` | `string` | `-` | Copyright text. |
+
 ```tsx
 import { Footer } from "@deneb-ui/ui";
 ```
 
 
-### E-Commerce
+### E-Commerce (2 Components)
 
 #### 37. CartDrawer (`@deneb-ui/ui`)
 
 High-converting slide-over shopping cart drawer with quantity steppers, free shipping progress bar, direct WhatsApp checkout, and visual editing bindings.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `basePath` | `string` | `` | JSON schema path for visual editing annotations. |
+| `whatsappNumber` | `string` | `-` | Business WhatsApp phone number with country code. |
+| `storeName` | `string` | `-` | Store name for order greeting. |
+| `currency` | `string` | `` | Currency symbol. |
+| `freeShippingThreshold` | `number` | `-` | Amount required to unlock free shipping banner. |
+| `checkoutUrl` | `string` | `-` | Optional secondary direct checkout URL. |
+| `onCheckout` | `(items, total) => void` | `-` | Callback when checkout button is clicked. |
 
 ```tsx
 import { CartProvider, useCart, CartDrawer } from "@deneb-ui/ui";
@@ -511,16 +756,30 @@ import { CartProvider, useCart, CartDrawer } from "@deneb-ui/ui";
 
 Faceted catalog filtering sidebar with category chips, price slider, and size swatches. Collapses behind a mobile toggle below 768px; always visible on tablet and desktop.
 
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `basePath` | `string` | `` | Visual editing schema path. |
+| `categories` | `string[]` | `-` | List of product categories. |
+| `sizes` | `string[]` | `-` | Available size filter options. |
+| `minPrice` | `number` | `0` | Minimum price filter bound. |
+| `maxPrice` | `number` | `300` | Maximum price filter bound. |
+| `onFilterChange` | `(filters) => void` | `-` | Callback fired on any filter adjustment. |
+
 ```tsx
 import { FilterSidebar } from "@deneb-ui/ui";
 ```
 
 
-### Data & State Engine
+### Data & State Engine (2 Components)
 
 #### 39. SiteDataProvider (`@deneb-ui/ui`)
 
 Headless state engine connecting Fivora API and live window postMessage updates to storefront components without page reloads.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `initialData` | `SiteData` | `-` | Initial JSON content. |
+| `api` | `SiteDataApiConfig` | `-` | Live backend API endpoints. |
 
 ```tsx
 import { SiteDataProvider, useProducts } from "@deneb-ui/ui";
@@ -529,6 +788,11 @@ import { SiteDataProvider, useProducts } from "@deneb-ui/ui";
 #### 40. ThemeStyles (`@deneb-ui/ui`)
 
 Runtime CSS custom properties injector for dynamic color palettes, typography, and border radii with pre-configured industry presets.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `theme` | `TemplateTheme` | `-` | Theme configuration object. |
+| `preset` | `any` | `-` | Pre-configured preset name. |
 
 ```tsx
 import { ThemeStyles } from "@deneb-ui/ui";

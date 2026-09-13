@@ -1096,6 +1096,13 @@ export default function CardDemo() {
   );
 }`,
     usageCode: `import { Card } from "@deneb-ui/ui";\n\n<Card className="p-6">\n  <h2>Hello World</h2>\n</Card>`,
+    props: [
+      { name: 'variant', type: "'default' | 'glass' | 'glow' | 'outline'", defaultValue: "'default'", description: "Visual surface treatment with obsidian and luminous borders." },
+      { name: 'padding', type: "'sm' | 'md' | 'lg' | 'none'", defaultValue: "'md'", description: "Internal padding of the card container." },
+      { name: 'hoverEffect', type: "boolean", defaultValue: "true", description: "Enable celestial border illumination on hover." },
+      { name: 'className', type: "string", defaultValue: "''", description: "Additional Tailwind utility classes." },
+    ],
+
     prevPage: { title: 'Button', href: '/docs/components/button' },
     nextPage: { title: 'Badge', href: '/docs/components/badge' },
   },
@@ -1121,6 +1128,13 @@ export default function CardDemo() {
     ),
     previewCode: `import { Badge } from "@deneb-ui/ui";\n\n<Badge variant="glow">Celestial Active</Badge>`,
     usageCode: `import { Badge } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'variant', type: "'default' | 'glow' | 'outline' | 'success' | 'warning'", defaultValue: "'default'", description: "Color and glow palette of the tag." },
+      { name: 'size', type: "'sm' | 'md'", defaultValue: "'md'", description: "Padding and typography size." },
+      { name: 'pulse', type: "boolean", defaultValue: "false", description: "Renders an animated glowing pulse dot." },
+      { name: 'children', type: "React.ReactNode", defaultValue: "-", description: "Text or element content." },
+    ],
+
     prevPage: { title: 'Card', href: '/docs/components/card' },
     nextPage: { title: 'ContactActions', href: '/docs/components/contact-actions' },
   },
@@ -1292,6 +1306,13 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { WhatsAppButton } from "@deneb-ui/ui";\n\n<WhatsAppButton value="15550192834" label="Chat on WhatsApp" />`,
+    props: [
+      { name: 'phoneNumber', type: "string", defaultValue: "''", description: "E.164 formatted telephone number without plus." },
+      { name: 'message', type: "string", defaultValue: "''", description: "Pre-filled WhatsApp message draft." },
+      { name: 'variant', type: "'solid' | 'outline' | 'floating'", defaultValue: "'solid'", description: "Button style variant." },
+      { name: 'label', type: "string", defaultValue: "'Chat on WhatsApp'", description: "Accessible action label." },
+    ],
+
     prevPage: { title: 'ContactActions', href: '/docs/components/contact-actions' },
     nextPage: { title: 'BusinessHours', href: '/docs/components/business-hours' },
   },
@@ -1384,6 +1405,14 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { LocationCard } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'title', type: "string", defaultValue: "'Flagship Store'", description: "Location heading title." },
+      { name: 'address', type: "string", defaultValue: "''", description: "Street address and unit." },
+      { name: 'city', type: "string", defaultValue: "''", description: "City or territory name." },
+      { name: 'googleMapsUrl', type: "string", defaultValue: "''", description: "Direct URL for Google Maps navigation." },
+      { name: 'hours', type: "string", defaultValue: "''", description: "Summary of operating hours." },
+    ],
+
     prevPage: { title: 'BusinessHours', href: '/docs/components/business-hours' },
     nextPage: { title: 'SocialLinks', href: '/docs/components/social-links' },
   },
@@ -1471,6 +1500,12 @@ export default function HoursDemo() {
   return <BusinessHours schedule={schedule} timezone="America/Los_Angeles" />;
 }`,
     usageCode: `import { BusinessHours } from "@deneb-ui/ui";\n\n<BusinessHours schedule={schedule} />`,
+    props: [
+      { name: 'schedule', type: "Array<{ day: string; open: string; close: string }>", defaultValue: "[]", description: "Weekly business hours timetable." },
+      { name: 'showStatus', type: "boolean", defaultValue: "true", description: "Display live 'Open Now' or 'Closed' badge." },
+      { name: 'variant', type: "'card' | 'list' | 'compact'", defaultValue: "'card'", description: "Visual presentation layout." },
+    ],
+
     prevPage: { title: 'WhatsAppButton', href: '/docs/components/whatsapp-button' },
     nextPage: { title: 'LocationCard', href: '/docs/components/location-card' },
   },
@@ -1497,6 +1532,12 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { SocialLinks } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'links', type: "Record<string, string>", defaultValue: "{}", description: "Object mapping platform keys (instagram, facebook, etc.) to URLs." },
+      { name: 'variant', type: "'icon' | 'pill' | 'colored'", defaultValue: "'icon'", description: "Visual presentation of the social links." },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", description: "Icon and hit-target size." },
+    ],
+
     prevPage: { title: 'LocationCard', href: '/docs/components/location-card' },
     nextPage: { title: 'ProductCard', href: '/docs/components/product-card' },
   },
@@ -1550,6 +1591,14 @@ export default function Demo() {
     ),
     previewCode: `import { Hero } from "@deneb-ui/ui";\n\n<Hero title="Supercharge Your Storefront" subtitle="..." />`,
     usageCode: `import { Hero } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'layout', type: "'split' | 'centered' | 'minimal'", defaultValue: "'split'", description: "Hero section visual layout structure." },
+      { name: 'title', type: "string", defaultValue: "''", description: "Primary value proposition headline." },
+      { name: 'description', type: "string", defaultValue: "''", description: "Secondary explanatory subtitle text." },
+      { name: 'image', type: "string", defaultValue: "''", description: "Hero photography or illustration asset URL." },
+      { name: 'badge', type: "string", defaultValue: "''", description: "Optional announcement kicker pill." },
+    ],
+
     prevPage: { title: 'FAQAccordion', href: '/docs/components/faq-accordion' },
     nextPage: { title: 'ProductDetail', href: '/docs/components/product-detail' },
   },
@@ -1575,6 +1624,17 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { ProductCard } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'title', type: "string", defaultValue: "''", description: "Product name headline." },
+      { name: 'price', type: "number", defaultValue: "0", description: "Selling retail price in active currency." },
+      { name: 'compareAtPrice', type: "number", defaultValue: "undefined", description: "Original strike-through MSRP price for discount calculation." },
+      { name: 'currency', type: "string", defaultValue: "'$'", description: "Currency symbol or prefix." },
+      { name: 'image', type: "string", defaultValue: "''", description: "Product photograph URL." },
+      { name: 'category', type: "string", defaultValue: "''", description: "Category classification badge." },
+      { name: 'whatsappNumber', type: "string", defaultValue: "''", description: "Direct WhatsApp one-click order phone number." },
+      { name: 'itemPath', type: "string", defaultValue: "''", description: "Visual editing data binding path (e.g. 'content.products.0')." },
+    ],
+
     prevPage: { title: 'SocialLinks', href: '/docs/components/social-links' },
     nextPage: { title: 'PricingCard', href: '/docs/components/pricing-card' },
   },
@@ -1628,6 +1688,14 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { PricingCard } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'tier', type: "string", defaultValue: "''", description: "Plan name (e.g. 'Starter', 'Pro')." },
+      { name: 'price', type: "number | string", defaultValue: "0", description: "Subscription or package cost." },
+      { name: 'features', type: "string[]", defaultValue: "[]", description: "Included checklist feature items." },
+      { name: 'isPopular', type: "boolean", defaultValue: "false", description: "Highlights card with luminous glowing border." },
+      { name: 'ctaText', type: "string", defaultValue: "'Get Started'", description: "Action button text." },
+    ],
+
     prevPage: { title: 'ProductCard', href: '/docs/components/product-card' },
     nextPage: { title: 'FAQAccordion', href: '/docs/components/faq-accordion' },
   },
@@ -1681,6 +1749,11 @@ export default function Demo() {
   );
 }`,
     usageCode: `import { Accordion } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'items', type: "Array<{ question: string; answer: string }>", defaultValue: "[]", description: "List of FAQ questions and markdown answers." },
+      { name: 'allowMultiple', type: "boolean", defaultValue: "false", description: "Allow multiple items to be expanded concurrently." },
+    ],
+
     prevPage: { title: 'PricingCard', href: '/docs/components/pricing-card' },
     nextPage: { title: 'Hero', href: '/docs/components/hero' },
   },

@@ -1,6 +1,6 @@
 # SYSTEM PROMPT FOR AI ASSISTANTS (ChatGPT, Claude, Cursor, Antigravity)
-# Task: Convert an existing storefront or build a new template for the Fivora DENEB UI v2.0 Platform
-# Framework: Next.js 14/15 App Router, React 18/19, Tailwind CSS, TypeScript
+# Task: Convert an existing Next.js storefront or build a new template for the Fivora DENEB UI v2.0 Platform
+# Framework: Next.js 14/15/16 App Router, React 18/19, Tailwind CSS, TypeScript
 # Core Packages: @deneb-ui/ui, @deneb-ui/core, @deneb-ui/cli
 # Documentation: https://deneb.fivora.site
 
@@ -11,29 +11,74 @@ When converting an existing storefront or building a new template, you MUST stri
 
 ## 1. The Core Architecture & Fundamental Rules
 
-Fivora templates are modern Next.js static storefronts hosted inside an interactive visual preview iframe. When merchants customize their site, Fivora's visual builder coordinates bi-directional synchronization via `window.postMessage`.
-
-### 1.1 Fundamental Template Principles
-1. **Single Source of Truth**: ALL customizable text, images, products, contact information, social links, and business hours must be sourced from `src/data/site-data.json`.
-2. **Defensive Nullish Reads**: Always access nested fields using nullish coalescing (`??`) rather than logical OR (`||`):
-   ```tsx
-   const title = content?.hero?.title ?? "Handcrafted Footwear";
-   const products = content?.products ?? [];
-   ```
-   *Never access `.map()` directly on an undefined property.*
-3. **Visual Editing Marker Attributes**:
-   - Single values: `data-preview-field-path="content.hero.title"`
-   - Array / list containers: `data-preview-list-path="content.products"`
-   - Array loop items: `data-preview-item-path={`content.products.${index}`}`
-   - Item leaf fields: `data-preview-field-path={`content.products.${index}.title`}`
-4. **Static Export Requirement**: The template must build statically via `next build` with `output: 'export'` in `next.config.ts`.
-5. **No External Fetching**: Do not call `fetch()` to external URLs during render or build. Dynamic data is provided by `SiteDataProvider` at runtime.
+A Fivora template is a modern Next.js App Router storefront that renders inside an iframe inside the Fivora Merchant Studio.
+- The parent window communicates with the template via a bidirectional `postMessage` protocol:
+  - Child notifies parent when ready: `FIVORA_PREVIEW_READY`
+  - Parent streams live field updates: `FIVORA_PREVIEW_SITE_DATA`
+- **NEVER** write manual `window.addEventListener('message')` listeners. Always use `<SiteDataProvider>` from `@deneb-ui/ui`.
+- All dynamic data (products, business info, hero copy, theme tokens) MUST be sourced from `src/data/site-data.json`.
+- The template must support static export: `output: "export"` in `next.config.ts`.
+- Always access nested fields using nullish coalescing (`??`) rather than logical OR (`||`):
+  ```tsx
+  const title = content?.hero?.title ?? "Handcrafted Footwear";
+  const products = content?.products ?? [];
+  ```
 
 ---
 
-## 2. Mandatory Project Setup Files
+## 2. Complete Installation & Project Setup
 
-### 2.1 `package.json` Dependencies
+### 2.1 Install Core Packages
+Install the required packages in your Next.js project:
+```bash
+# npm
+npm install @deneb-ui/ui @deneb-ui/core lucide-react
+npm install -D @deneb-ui/cli tailwindcss postcss autoprefixer typescript
+
+# yarn
+yarn add @deneb-ui/ui @deneb-ui/core lucide-react
+yarn add -D @deneb-ui/cli tailwindcss postcss autoprefixer typescript
+
+# pnpm
+pnpm add @deneb-ui/ui @deneb-ui/core lucide-react
+pnpm add -D @deneb-ui/cli tailwindcss postcss autoprefixer typescript
+
+# bun
+bun add @deneb-ui/ui @deneb-ui/core lucide-react
+bun add -d @deneb-ui/cli tailwindcss postcss autoprefixer typescript
+```
+
+### 2.2 Configure Tailwind CSS (`tailwind.config.ts`)
+Tailwind must scan the `@deneb-ui/ui` library so all component styles are compiled:
+```typescript
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@deneb-ui/ui/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: "var(--color-primary, #6366F1)",
+        background: "var(--color-background, #090D1A)",
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
+```
+
+---
+
+## 3. Mandatory Project Configuration Files
+
+### 3.1 `package.json` Scripts & Dependencies
 ```json
 {
   "name": "fivora-storefront-template",
@@ -64,7 +109,7 @@ Fivora templates are modern Next.js static storefronts hosted inside an interact
 }
 ```
 
-### 2.2 `next.config.ts` (Static Export Configuration)
+### 3.2 `next.config.ts` (Static Export Configuration)
 ```typescript
 import type { NextConfig } from "next";
 
@@ -81,8 +126,7 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-### 2.3 `fivora-template.json` (Template Manifest v2)
-Every template must include this file in the root directory:
+### 3.3 `fivora-template.json` (Template Manifest v2)
 ```json
 {
   "manifestVersion": 2,
@@ -114,25 +158,17 @@ Every template must include this file in the root directory:
 }
 ```
 
-### 2.4 `src/data/site-data.json` (Single Source of Truth)
+### 3.4 `src/data/site-data.json` (Single Source of Truth)
 ```json
 {
   "project": { "id": "demo-store", "slug": "demo-store", "title": "Artisan Footwear" },
   "shop": {
-    "name": "Artisan Footwear & Leather",
-    "tagline": "Handcrafted micro-batch leather goods",
-    "whatsapp": "94771234567",
-    "phone": "+94 11 234 5678",
+    "name": "Artisan Footwear",
+    "tagline": "Handcrafted Daily Distinction",
+    "whatsapp": "+15550192834",
+    "phone": "+15550192834",
     "email": "concierge@artisanfootwear.com",
-    "address": {
-      "street": "42 Heritage Boulevard",
-      "city": "Colombo",
-      "region": "Western Province",
-      "postalCode": "00700",
-      "country": "Sri Lanka"
-    },
-    "currency": "LKR",
-    "logo": "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+    "address": "452 Broadway Avenue, New York, NY"
   },
   "content": {
     "hero": {
@@ -146,9 +182,9 @@ Every template must include this file in the root directory:
       {
         "id": "vanta-runner",
         "title": "Vanta Velocity Sneaker",
-        "price": 28500,
-        "compareAtPrice": 34000,
-        "currency": "Rs.",
+        "price": 149.99,
+        "compareAtPrice": 189.99,
+        "currency": "$",
         "category": "Running",
         "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
         "rating": 4.9,
@@ -158,8 +194,9 @@ Every template must include this file in the root directory:
       }
     ],
     "businessHours": [
-      { "day": "Monday - Friday", "open": "09:00 AM", "close": "07:00 PM" },
-      { "day": "Saturday - Sunday", "open": "10:00 AM", "close": "05:00 PM" }
+      { "day": "Monday - Friday", "hours": "9:00 AM - 7:00 PM", "isOpen": true },
+      { "day": "Saturday", "hours": "10:00 AM - 5:00 PM", "isOpen": true },
+      { "day": "Sunday", "hours": "Closed", "isOpen": false }
     ]
   },
   "theme": {
@@ -176,15 +213,15 @@ Every template must include this file in the root directory:
 
 ---
 
-## 3. Strict Rules for Visual Editing Attributes (`data-preview-*`)
+## 4. Strict Rules for Visual Editing Attributes (`data-preview-*`)
 
 1. **Leaf Elements Only**:
-   - `data-preview-field-path` MUST only be attached to leaf visual tags: `<h1>-<h6>`, `<p>`, `<span>`, `<a>`, `<button>`, `<img>`.
-   - **DO NOT** place field markers on `<div>`, `<section>`, `<article>`, `<main>`, or `<ul>`.
+   - `data-preview-field-path` and `data-preview-image-path` MUST only be attached to leaf visual tags: `<h1>-<h6>`, `<p>`, `<span>`, `<a>`, `<button>`, `<img>`.
+   - **NEVER** place field markers on `<div>`, `<section>`, `<article>`, `<main>`, or `<ul>`.
 2. **Never Beneath Static Ancestors**:
    - Elements marked with `data-preview-static` declare their entire subtree non-editable.
    - **NEVER** put `data-preview-field-path` inside a container marked with `data-preview-static`.
-3. **Repeated Lists**:
+3. **Repeated Lists & Loops**:
    - The container must have: `data-preview-list-path="content.products"`
    - Each item in the loop must have: `data-preview-item-path={`content.products.${index}`}`
    - Leaf values inside the card must have: `data-preview-field-path={`content.products.${index}.title`}`
@@ -194,16 +231,18 @@ Every template must include this file in the root directory:
 
 ---
 
-## 4. Master DENEB UI Component Catalog (All 40 Components with Props & Real Code)
+## 5. Master DENEB UI Component Catalog (All 40 Components with Props & Real Code)
 
 Every single component below is imported directly from `@deneb-ui/ui`:
 
-
 ### Core Primitives (7 Components)
 
-#### 1. Button (`@deneb-ui/ui`)
-An interactive button primitive with celestial glows, glassmorphic variants, loading states, and visual editing support.
+#### 1. `Button`
+**Import**: `import { Button } from "@deneb-ui/ui";`  
+**Category**: `Core Primitives`  
+**Description**: An interactive button primitive with celestial glows, glassmorphic variants, loading states, and visual editing support.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `variant` | `'default' | 'glow' | 'secondary' | 'outline' | 'ghost'` | `'default'` | The visual styling variant of the button. |
@@ -212,6 +251,7 @@ An interactive button primitive with celestial glows, glassmorphic variants, loa
 | `onClick` | `() => void` | `-` | Click event handler. |
 | `className` | `string` | `''` | Additional Tailwind or CSS class names. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Button } from "@deneb-ui/ui";
 import { ArrowRight, ShoppingBag } from "lucide-react";
@@ -232,9 +272,12 @@ export function ActionButtons() {
 }
 ```
 
-#### 2. Card (`@deneb-ui/ui`)
-A versatile container card with obsidian glass styling, luminous borders, and structured content slots.
+#### 2. `Card`
+**Import**: `import { Card } from "@deneb-ui/ui";`  
+**Category**: `Core Primitives`  
+**Description**: A versatile container card with obsidian glass styling, luminous borders, and structured content slots.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `variant` | `'default' | 'glass' | 'glow' | 'outline'` | `'default'` | Visual surface treatment with obsidian and luminous borders. |
@@ -242,6 +285,7 @@ A versatile container card with obsidian glass styling, luminous borders, and st
 | `hoverEffect` | `boolean` | `true` | Enable celestial border illumination on hover. |
 | `className` | `string` | `''` | Additional Tailwind utility classes. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Card } from "@deneb-ui/ui";
 import { Sparkles } from "lucide-react";
@@ -261,9 +305,12 @@ export function FeatureCard() {
 }
 ```
 
-#### 3. Badge (`@deneb-ui/ui`)
-Status indicator tags with celestial starlight glows, pulsing dots, and color tiers.
+#### 3. `Badge`
+**Import**: `import { Badge } from "@deneb-ui/ui";`  
+**Category**: `Core Primitives`  
+**Description**: Status indicator tags with celestial starlight glows, pulsing dots, and color tiers.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `variant` | `'default' | 'glow' | 'outline' | 'success' | 'warning'` | `'default'` | Color and glow palette of the tag. |
@@ -271,6 +318,7 @@ Status indicator tags with celestial starlight glows, pulsing dots, and color ti
 | `pulse` | `boolean` | `false` | Renders an animated glowing pulse dot. |
 | `children` | `React.ReactNode` | `required` | Tag text or element content. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Badge } from "@deneb-ui/ui";
 
@@ -285,15 +333,19 @@ export function ProductBadges() {
 }
 ```
 
-#### 4. Typography (`@deneb-ui/ui`)
-Semantic text primitives (Heading, Paragraph, Text) connected directly to Fivora theme font tokens and visual click-to-edit markers.
+#### 4. `Typography`
+**Import**: `import { Typography } from "@deneb-ui/ui";`  
+**Category**: `Core Primitives`  
+**Description**: Semantic text primitives (Heading, Paragraph, Text) connected directly to Fivora theme font tokens and visual click-to-edit markers.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `level` | `1 | 2 | 3 | 4 | 5 | 6` | `1` | Heading hierarchy level (h1-h6). |
 | `data-preview-field-path` | `string` | `-` | Click-to-edit path binding (e.g. 'content.home.title'). |
 | `className` | `string` | `''` | Tailwind styling classes. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Heading, Paragraph, Text } from "@deneb-ui/ui";
 
@@ -314,9 +366,12 @@ export function SectionHeader({ title, subtitle }: { title?: string; subtitle?: 
 }
 ```
 
-#### 5. Dialog (`@deneb-ui/ui`)
-Accessible modal dialog with backdrop blur, keyboard ESC dismissal, sizing tiers, and live visual editing.
+#### 5. `Dialog`
+**Import**: `import { Dialog } from "@deneb-ui/ui";`  
+**Category**: `Core Primitives`  
+**Description**: Accessible modal dialog with backdrop blur, keyboard ESC dismissal, sizing tiers, and live visual editing.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `isOpen` | `boolean` | `false` | Controls dialog visibility. |
@@ -324,6 +379,7 @@ Accessible modal dialog with backdrop blur, keyboard ESC dismissal, sizing tiers
 | `title` | `string` | `''` | Dialog header title. |
 | `size` | `'sm' | 'md' | 'lg' | 'xl'` | `'md'` | Modal width tier. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Dialog, Button } from "@deneb-ui/ui";
 import { useState } from "react";
@@ -353,15 +409,19 @@ export function SizeGuideModal() {
 }
 ```
 
-#### 6. Grid (`@deneb-ui/ui`)
-Layout containers featuring auto-balancing columns, responsive device breakpoints, and flex alignment.
+#### 6. `Grid`
+**Import**: `import { Grid } from "@deneb-ui/ui";`  
+**Category**: `Core Primitives`  
+**Description**: Layout containers featuring auto-balancing columns, responsive device breakpoints, and flex alignment.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `cols` | `1 | 2 | 3 | 4` | `3` | Number of columns on desktop viewports. |
 | `gap` | `'sm' | 'md' | 'lg'` | `'md'` | Spacing between grid cells. |
 | `children` | `React.ReactNode` | `required` | Grid child elements. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Grid, Card } from "@deneb-ui/ui";
 
@@ -376,9 +436,12 @@ export function FeaturesSection() {
 }
 ```
 
-#### 7. Image (`@deneb-ui/ui`)
-Responsive storefront image component supporting preset aspect ratios, border radii, zoom hover, and visual editing upload triggers.
+#### 7. `Image`
+**Import**: `import { Image } from "@deneb-ui/ui";`  
+**Category**: `Core Primitives`  
+**Description**: Responsive storefront image component supporting preset aspect ratios, border radii, zoom hover, and visual editing upload triggers.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `src` | `string` | `required` | Image source URL. |
@@ -387,6 +450,7 @@ Responsive storefront image component supporting preset aspect ratios, border ra
 | `radius` | `'sm' | 'md' | 'lg' | 'xl' | 'full'` | `'md'` | Border radius curvature. |
 | `fieldPath` | `string` | `''` | Visual click-to-edit path for image replacement. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Image } from "@deneb-ui/ui";
 
@@ -407,9 +471,12 @@ export function ShowcaseImage({ url, path }: { url: string; path?: string }) {
 
 ### Smart Commerce Actions (5 Components)
 
-#### 8. ContactActions (`@deneb-ui/ui`)
-Multi-channel instant commerce action bar providing 1-tap WhatsApp, phone call, email, and Google Maps routing.
+#### 8. `ContactActions`
+**Import**: `import { ContactActions } from "@deneb-ui/ui";`  
+**Category**: `Smart Commerce Actions`  
+**Description**: Multi-channel instant commerce action bar providing 1-tap WhatsApp, phone call, email, and Google Maps routing.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `whatsapp` | `string` | `''` | Target international WhatsApp number (digits only). |
@@ -419,6 +486,7 @@ Multi-channel instant commerce action bar providing 1-tap WhatsApp, phone call, 
 | `variant` | `'compact' | 'expanded' | 'minimal'` | `'expanded'` | Action bar visual layout style. |
 | `orientation` | `'horizontal' | 'vertical'` | `'horizontal'` | Arrangement axis. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { ContactActions, useSiteData } from "@deneb-ui/ui";
 
@@ -441,9 +509,12 @@ export function StoreContactBar() {
 }
 ```
 
-#### 9. WhatsAppButton (`@deneb-ui/ui`)
-High-converting WhatsApp conversion launcher with pre-filled order or inquiry message templates.
+#### 9. `WhatsAppButton`
+**Import**: `import { WhatsAppButton } from "@deneb-ui/ui";`  
+**Category**: `Smart Commerce Actions`  
+**Description**: High-converting WhatsApp conversion launcher with pre-filled order or inquiry message templates.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `phoneNumber` | `string` | `required` | E.164 formatted telephone number without plus. |
@@ -452,6 +523,7 @@ High-converting WhatsApp conversion launcher with pre-filled order or inquiry me
 | `size` | `'sm' | 'md' | 'lg'` | `'md'` | Button sizing tier. |
 | `label` | `string` | `'Chat on WhatsApp'` | Action text. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { WhatsAppButton, useSiteData } from "@deneb-ui/ui";
 
@@ -469,15 +541,19 @@ export function InstantProductOrder({ title, price }: { title: string; price: nu
 }
 ```
 
-#### 10. PhoneButton (`@deneb-ui/ui`)
-One-tap telephone dialer with international number formatting.
+#### 10. `PhoneButton`
+**Import**: `import { PhoneButton } from "@deneb-ui/ui";`  
+**Category**: `Smart Commerce Actions`  
+**Description**: One-tap telephone dialer with international number formatting.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `phoneNumber` | `string` | `required` | Telephone number to dial. |
 | `label` | `string` | `'Call Now'` | Button label text. |
 | `variant` | `'solid' | 'outline' | 'minimal'` | `'solid'` | Button style. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { PhoneButton } from "@deneb-ui/ui";
 
@@ -486,15 +562,19 @@ export function TelephoneSupport({ phone }: { phone: string }) {
 }
 ```
 
-#### 11. EmailButton (`@deneb-ui/ui`)
-Pre-filled mailto trigger with automatic subject and body encoding.
+#### 11. `EmailButton`
+**Import**: `import { EmailButton } from "@deneb-ui/ui";`  
+**Category**: `Smart Commerce Actions`  
+**Description**: Pre-filled mailto trigger with automatic subject and body encoding.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `email` | `string` | `required` | Inquiry recipient email address. |
 | `subject` | `string` | `''` | Pre-filled email subject line. |
 | `label` | `string` | `'Email Us'` | Button label text. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { EmailButton } from "@deneb-ui/ui";
 
@@ -510,9 +590,12 @@ export function EmailConcierge({ email }: { email: string }) {
 }
 ```
 
-#### 12. FloatingContactWidget (`@deneb-ui/ui`)
-Corner-docked interactive drawer presenting WhatsApp, Call, and Email triggers with zero layout shift.
+#### 12. `FloatingContactWidget`
+**Import**: `import { FloatingContactWidget } from "@deneb-ui/ui";`  
+**Category**: `Smart Commerce Actions`  
+**Description**: Corner-docked interactive drawer presenting WhatsApp, Call, and Email triggers with zero layout shift.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `whatsapp` | `string` | `''` | WhatsApp contact number. |
@@ -521,6 +604,7 @@ Corner-docked interactive drawer presenting WhatsApp, Call, and Email triggers w
 | `position` | `'bottom-right' | 'bottom-left'` | `'bottom-right'` | Screen docking corner. |
 | `storeName` | `string` | `'Store Concierge'` | Title displayed on the widget popover. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { FloatingContactWidget, useSiteData } from "@deneb-ui/ui";
 
@@ -541,9 +625,12 @@ export function GlobalSupportWidget() {
 
 ### Location & Navigation (4 Components)
 
-#### 13. LocationCard (`@deneb-ui/ui`)
-Flagship store address, city, hours, and direct directions button.
+#### 13. `LocationCard`
+**Import**: `import { LocationCard } from "@deneb-ui/ui";`  
+**Category**: `Location & Navigation`  
+**Description**: Flagship store address, city, hours, and direct directions button.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `title` | `string` | `'Flagship Store'` | Location name. |
@@ -552,6 +639,7 @@ Flagship store address, city, hours, and direct directions button.
 | `googleMapsUrl` | `string` | `''` | Direct Google Maps URL. |
 | `hours` | `string` | `''` | Operating hours summary. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { LocationCard } from "@deneb-ui/ui";
 
@@ -568,15 +656,19 @@ export function StoreAddressCard() {
 }
 ```
 
-#### 14. LocationLink (`@deneb-ui/ui`)
-Smart directions link opening Google Maps or Apple Maps.
+#### 14. `LocationLink`
+**Import**: `import { LocationLink } from "@deneb-ui/ui";`  
+**Category**: `Location & Navigation`  
+**Description**: Smart directions link opening Google Maps or Apple Maps.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `address` | `string` | `required` | Target destination address. |
 | `provider` | `'google' | 'apple'` | `'google'` | Map provider. |
 | `label` | `string` | `'Get Directions'` | Link text. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { LocationLink } from "@deneb-ui/ui";
 
@@ -585,9 +677,12 @@ export function MapDirectionsButton({ address }: { address: string }) {
 }
 ```
 
-#### 15. MapEmbed (`@deneb-ui/ui`)
-Responsive map iframe embed with rounded corners and zero layout shift.
+#### 15. `MapEmbed`
+**Import**: `import { MapEmbed } from "@deneb-ui/ui";`  
+**Category**: `Location & Navigation`  
+**Description**: Responsive map iframe embed with rounded corners and zero layout shift.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `address` | `string` | `required` | Address string to center map. |
@@ -595,6 +690,7 @@ Responsive map iframe embed with rounded corners and zero layout shift.
 | `zoom` | `number` | `15` | Default map zoom level. |
 | `aspectRatio` | `string` | `'16/9'` | Aspect ratio. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { MapEmbed } from "@deneb-ui/ui";
 
@@ -603,9 +699,12 @@ export function EmbeddedMapSection({ address }: { address: string }) {
 }
 ```
 
-#### 16. Address (`@deneb-ui/ui`)
-Local SEO Schema.org microdata address formatter.
+#### 16. `Address`
+**Import**: `import { Address } from "@deneb-ui/ui";`  
+**Category**: `Location & Navigation`  
+**Description**: Local SEO Schema.org microdata address formatter.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `street` | `string` | `required` | Street name and number. |
@@ -614,6 +713,7 @@ Local SEO Schema.org microdata address formatter.
 | `postalCode` | `string` | `''` | Postal code. |
 | `country` | `string` | `''` | Country name. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Address, useSiteData } from "@deneb-ui/ui";
 
@@ -635,15 +735,19 @@ export function StructuredAddress() {
 
 ### Social & Business (3 Components)
 
-#### 17. BusinessHours (`@deneb-ui/ui`)
-Live open/closed timetable with real-time open status indicators.
+#### 17. `BusinessHours`
+**Import**: `import { BusinessHours } from "@deneb-ui/ui";`  
+**Category**: `Social & Business`  
+**Description**: Live open/closed timetable with real-time open status indicators.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `schedule` | `Array<{ day: string; open: string; close: string }>` | `[]` | Weekly operating schedule. |
 | `showStatus` | `boolean` | `true` | Show live 'Open Now' or 'Closed' tag. |
 | `variant` | `'card' | 'list' | 'compact'` | `'card'` | Display format. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { BusinessHours, useSiteData } from "@deneb-ui/ui";
 
@@ -663,15 +767,19 @@ export function StoreHoursDisplay() {
 }
 ```
 
-#### 18. SocialLinks (`@deneb-ui/ui`)
-Branded social media network icons with customizable layouts.
+#### 18. `SocialLinks`
+**Import**: `import { SocialLinks } from "@deneb-ui/ui";`  
+**Category**: `Social & Business`  
+**Description**: Branded social media network icons with customizable layouts.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `links` | `Record<string, string>` | `{}` | Object with platform URLs (instagram, facebook, etc.). |
 | `variant` | `'icon' | 'pill' | 'colored'` | `'icon'` | Visual presentation. |
 | `size` | `'sm' | 'md' | 'lg'` | `'md'` | Icon size. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { SocialLinks } from "@deneb-ui/ui";
 
@@ -690,15 +798,19 @@ export function SocialRow() {
 }
 ```
 
-#### 19. SocialButton (`@deneb-ui/ui`)
-Single branded social channel follower trigger.
+#### 19. `SocialButton`
+**Import**: `import { SocialButton } from "@deneb-ui/ui";`  
+**Category**: `Social & Business`  
+**Description**: Single branded social channel follower trigger.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `platform` | `'instagram' | 'facebook' | 'tiktok' | 'youtube' | 'x'` | `'instagram'` | Target platform. |
 | `url` | `string` | `required` | Profile destination URL. |
 | `label` | `string` | `''` | Optional custom label. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { SocialButton } from "@deneb-ui/ui";
 
@@ -710,9 +822,12 @@ export function InstagramFollow() {
 
 ### Storefront Sections (19 Components)
 
-#### 20. Hero (`@deneb-ui/ui`)
-High-conversion storefront hero showcase supporting Split, Centered, and Minimal layouts.
+#### 20. `Hero`
+**Import**: `import { Hero } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: High-conversion storefront hero showcase supporting Split, Centered, and Minimal layouts.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `layout` | `'split' | 'centered' | 'minimal'` | `'split'` | Hero visual composition. |
@@ -723,6 +838,7 @@ High-conversion storefront hero showcase supporting Split, Centered, and Minimal
 | `primaryCta` | `{ label: string; href: string }` | `-` | Primary action button. |
 | `secondaryCta` | `{ label: string; href: string }` | `-` | Secondary action button. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Hero, useSiteData } from "@deneb-ui/ui";
 
@@ -743,9 +859,12 @@ export function MainHero() {
 }
 ```
 
-#### 21. ProductCard (`@deneb-ui/ui`)
-The primary commerce catalog card with pricing, compare-at discounts, star reviews, stock badges, and WhatsApp checkout.
+#### 21. `ProductCard`
+**Import**: `import { ProductCard } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: The primary commerce catalog card with pricing, compare-at discounts, star reviews, stock badges, and WhatsApp checkout.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `title` | `string` | `required` | Product name. |
@@ -757,6 +876,7 @@ The primary commerce catalog card with pricing, compare-at discounts, star revie
 | `whatsappNumber` | `string` | `''` | WhatsApp merchant number for direct order. |
 | `itemPath` | `string` | `''` | Fivora visual editing marker (e.g. 'content.products.0'). |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { ProductCard, useSiteData } from "@deneb-ui/ui";
 
@@ -778,15 +898,19 @@ export function ProductItemView({ product, index }: { product: any; index: numbe
 }
 ```
 
-#### 22. ProductDetail (`@deneb-ui/ui`)
-Elite single product showcase with multi-angle gallery, live size & color selectors, direct WhatsApp order CTA, and Fivora visual editing synchronization.
+#### 22. `ProductDetail`
+**Import**: `import { ProductDetail } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Elite single product showcase with multi-angle gallery, live size & color selectors, direct WhatsApp order CTA, and Fivora visual editing synchronization.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `product` | `ProductItem` | `required` | Comprehensive product record. |
 | `whatsappNumber` | `string` | `''` | WhatsApp target number. |
 | `showReviews` | `boolean` | `true` | Render customer review summary. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { ProductDetail, useSiteData } from "@deneb-ui/ui";
 
@@ -804,9 +928,12 @@ export function SingleProductDetail({ product }: { product: any }) {
 }
 ```
 
-#### 23. ProductQuickView (`@deneb-ui/ui`)
-Instant lightbox inspection modal for products with thumbnail switcher, quantity counter, and 1-click purchase.
+#### 23. `ProductQuickView`
+**Import**: `import { ProductQuickView } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Instant lightbox inspection modal for products with thumbnail switcher, quantity counter, and 1-click purchase.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `product` | `ProductItem` | `required` | Product data object. |
@@ -814,6 +941,7 @@ Instant lightbox inspection modal for products with thumbnail switcher, quantity
 | `onClose` | `() => void` | `required` | Close callback. |
 | `whatsappNumber` | `string` | `''` | WhatsApp order number. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { ProductQuickView, useSiteData } from "@deneb-ui/ui";
 import { useState } from "react";
@@ -837,15 +965,19 @@ export function QuickViewInspection({ product }: { product: any }) {
 }
 ```
 
-#### 24. ProductGrid (`@deneb-ui/ui`)
-Responsive commerce catalog grid with category filter tabs and configurable columns per device.
+#### 24. `ProductGrid`
+**Import**: `import { ProductGrid } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Responsive commerce catalog grid with category filter tabs and configurable columns per device.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `cols` | `1 | 2 | 3 | 4` | `3` | Desktop column count. |
 | `gap` | `'sm' | 'md' | 'lg'` | `'md'` | Grid cell spacing. |
 | `children` | `React.ReactNode` | `required` | List of ProductCard components. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { ProductGrid, ProductCard, useProducts, useSiteData } from "@deneb-ui/ui";
 
@@ -874,15 +1006,19 @@ export function StoreCatalog() {
 }
 ```
 
-#### 25. CartDrawer (`@deneb-ui/ui`)
-High-converting slide-over shopping cart drawer with quantity steppers, free shipping progress bar, and 1-click WhatsApp order dispatch.
+#### 25. `CartDrawer`
+**Import**: `import { CartDrawer } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: High-converting slide-over shopping cart drawer with quantity steppers, free shipping progress bar, and 1-click WhatsApp order dispatch.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `whatsappNumber` | `string` | `required` | WhatsApp number to send completed order to. |
 | `storeName` | `string` | `'Store'` | Store title included in order message. |
 | `freeShippingThreshold` | `number` | `0` | Free shipping threshold amount. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { CartDrawer, useSiteData } from "@deneb-ui/ui";
 
@@ -898,15 +1034,19 @@ export function StoreCartDrawer() {
 }
 ```
 
-#### 26. FilterSidebar (`@deneb-ui/ui`)
-Faceted catalog filtering sidebar with category chips, price range slider, and size swatches.
+#### 26. `FilterSidebar`
+**Import**: `import { FilterSidebar } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Faceted catalog filtering sidebar with category chips, price range slider, and size swatches.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `categories` | `string[]` | `[]` | Available category options. |
 | `priceRange` | `[number, number]` | `[0, 1000]` | Min and max price boundaries. |
 | `onFilterChange` | `(filters: any) => void` | `required` | Filter change event callback. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { FilterSidebar } from "@deneb-ui/ui";
 import { useState } from "react";
@@ -922,15 +1062,19 @@ export function CatalogFilters({ onUpdate }: { onUpdate: (f: any) => void }) {
 }
 ```
 
-#### 27. CustomerReviews (`@deneb-ui/ui`)
-Social proof review showcase with aggregate star score, verified buyer tags, and rating filters.
+#### 27. `CustomerReviews`
+**Import**: `import { CustomerReviews } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Social proof review showcase with aggregate star score, verified buyer tags, and rating filters.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `averageRating` | `number` | `5.0` | Overall star rating. |
 | `totalReviews` | `number` | `0` | Total customer count. |
 | `reviews` | `Array<ReviewItem>` | `[]` | List of review testimonials. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { CustomerReviews } from "@deneb-ui/ui";
 
@@ -948,14 +1092,18 @@ export function ReviewsSection() {
 }
 ```
 
-#### 28. TrustBadges (`@deneb-ui/ui`)
-Conversion-boosting security strip featuring Free Shipping, SSL Checkout, Warranty, and 30-Day Returns badges.
+#### 28. `TrustBadges`
+**Import**: `import { TrustBadges } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Conversion-boosting security strip featuring Free Shipping, SSL Checkout, Warranty, and 30-Day Returns badges.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `layout` | `'row' | 'grid'` | `'row'` | Display arrangement. |
 | `badges` | `Array<TrustBadgeItem>` | `defaultBadges` | Custom badge definitions. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { TrustBadges } from "@deneb-ui/ui";
 
@@ -968,15 +1116,19 @@ export function TrustSection() {
 }
 ```
 
-#### 29. StickyMobileBar (`@deneb-ui/ui`)
-Sticky bottom checkout and WhatsApp action bar for mobile devices, boosting mobile conversion rates.
+#### 29. `StickyMobileBar`
+**Import**: `import { StickyMobileBar } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Sticky bottom checkout and WhatsApp action bar for mobile devices, boosting mobile conversion rates.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `whatsappNumber` | `string` | `required` | WhatsApp order telephone. |
 | `phone` | `string` | `''` | Direct phone call option. |
 | `primaryCtaText` | `string` | `'Order via WhatsApp'` | Action button label. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { StickyMobileBar, useSiteData } from "@deneb-ui/ui";
 
@@ -992,9 +1144,12 @@ export function MobileActionBar() {
 }
 ```
 
-#### 30. ServiceCard (`@deneb-ui/ui`)
-Service offering card with duration, pricing, and direct booking triggers.
+#### 30. `ServiceCard`
+**Import**: `import { ServiceCard } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Service offering card with duration, pricing, and direct booking triggers.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `title` | `string` | `required` | Service title. |
@@ -1002,6 +1157,7 @@ Service offering card with duration, pricing, and direct booking triggers.
 | `duration` | `string` | `''` | Service time duration. |
 | `description` | `string` | `''` | Service description. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { ServiceCard } from "@deneb-ui/ui";
 
@@ -1017,9 +1173,12 @@ export function RestorationService() {
 }
 ```
 
-#### 31. PricingCard (`@deneb-ui/ui`)
-Tier comparison card with feature checklists and popular glow styling.
+#### 31. `PricingCard`
+**Import**: `import { PricingCard } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Tier comparison card with feature checklists and popular glow styling.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `tier` | `string` | `required` | Package name. |
@@ -1028,6 +1187,7 @@ Tier comparison card with feature checklists and popular glow styling.
 | `isPopular` | `boolean` | `false` | Highlight card. |
 | `ctaText` | `string` | `'Choose Plan'` | Button text. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { PricingCard } from "@deneb-ui/ui";
 
@@ -1048,9 +1208,12 @@ export function VipClubCard() {
 }
 ```
 
-#### 32. TestimonialCard (`@deneb-ui/ui`)
-Customer review card with star ratings, quote body, and avatar.
+#### 32. `TestimonialCard`
+**Import**: `import { TestimonialCard } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Customer review card with star ratings, quote body, and avatar.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `name` | `string` | `required` | Client name. |
@@ -1059,6 +1222,7 @@ Customer review card with star ratings, quote body, and avatar.
 | `rating` | `number` | `5` | Star score. |
 | `avatar` | `string` | `''` | Profile picture URL. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { TestimonialCard } from "@deneb-ui/ui";
 
@@ -1075,14 +1239,18 @@ export function ClientQuote() {
 }
 ```
 
-#### 33. FAQAccordion (`@deneb-ui/ui`)
-Expandable FAQ accordion with smooth animations and accessibility.
+#### 33. `FAQAccordion`
+**Import**: `import { FAQAccordion } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Expandable FAQ accordion with smooth animations and accessibility.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `items` | `Array<{ question: string; answer: string }>` | `[]` | Questions and answers. |
 | `allowMultiple` | `boolean` | `false` | Allow multiple open items. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { FAQAccordion } from "@deneb-ui/ui";
 
@@ -1098,9 +1266,12 @@ export function StoreFAQ() {
 }
 ```
 
-#### 34. AnnouncementBar (`@deneb-ui/ui`)
-Dismissible header announcement ticker with CTA links.
+#### 34. `AnnouncementBar`
+**Import**: `import { AnnouncementBar } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Dismissible header announcement ticker with CTA links.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `message` | `string` | `required` | Announcement text. |
@@ -1108,6 +1279,7 @@ Dismissible header announcement ticker with CTA links.
 | `href` | `string` | `''` | CTA destination URL. |
 | `dismissible` | `boolean` | `true` | Show close button. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { AnnouncementBar } from "@deneb-ui/ui";
 
@@ -1123,15 +1295,19 @@ export function HeaderAnnouncement() {
 }
 ```
 
-#### 35. CategoryPills (`@deneb-ui/ui`)
-Horizontal catalog filter pills for instant category switching.
+#### 35. `CategoryPills`
+**Import**: `import { CategoryPills } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Horizontal catalog filter pills for instant category switching.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `categories` | `string[]` | `[]` | Category names. |
 | `activeCategory` | `string` | `'All'` | Selected category. |
 | `onSelect` | `(category: string) => void` | `required` | Selection callback. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { CategoryPills } from "@deneb-ui/ui";
 import { useState } from "react";
@@ -1148,15 +1324,19 @@ export function CategoryBar() {
 }
 ```
 
-#### 36. ContactForm (`@deneb-ui/ui`)
-Direct customer inquiry form with input validation and zero SMTP config.
+#### 36. `ContactForm`
+**Import**: `import { ContactForm } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Direct customer inquiry form with input validation and zero SMTP config.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `recipientEmail` | `string` | `''` | Destination email. |
 | `whatsappFallback` | `string` | `''` | WhatsApp fallback number. |
 | `submitLabel` | `string` | `'Send Message'` | Submit button text. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { ContactForm, useSiteData } from "@deneb-ui/ui";
 
@@ -1172,15 +1352,19 @@ export function SupportForm() {
 }
 ```
 
-#### 37. Navbar (`@deneb-ui/ui`)
-Top header navigation bar with brand name, navigation links, and mobile drawer menu.
+#### 37. `Navbar`
+**Import**: `import { Navbar } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Top header navigation bar with brand name, navigation links, and mobile drawer menu.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `brandName` | `string` | `required` | Brand or store title. |
 | `links` | `Array<{ label: string; href: string }>` | `[]` | Navigation menu items. |
 | `logoUrl` | `string` | `''` | Brand logo asset URL. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Navbar, useSiteData } from "@deneb-ui/ui";
 
@@ -1200,14 +1384,18 @@ export function HeaderNav() {
 }
 ```
 
-#### 38. Footer (`@deneb-ui/ui`)
-Multi-column footer with quick navigation links, store summary, and copyright notice.
+#### 38. `Footer`
+**Import**: `import { Footer } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Multi-column footer with quick navigation links, store summary, and copyright notice.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `brandName` | `string` | `required` | Brand name. |
 | `copyright` | `string` | `''` | Copyright notice text. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { Footer, useSiteData } from "@deneb-ui/ui";
 
@@ -1225,14 +1413,18 @@ export function SiteFooter() {
 
 ### Data & Theme Engine (2 Components)
 
-#### 39. SiteDataProvider (`@deneb-ui/ui`)
-Central headless state provider managing siteData, products, cart, and postMessage visual click-to-edit synchronization.
+#### 39. `SiteDataProvider`
+**Import**: `import { SiteDataProvider } from "@deneb-ui/ui";`  
+**Category**: `Data & Theme Engine`  
+**Description**: Central headless state provider managing siteData, products, cart, and postMessage visual click-to-edit synchronization.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `initialSiteData` | `SiteData` | `required` | Initial JSON seed data loaded from src/data/site-data.json. |
 | `children` | `React.ReactNode` | `required` | App component tree. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { SiteDataProvider, CartProvider } from "@deneb-ui/ui";
 import initialSiteData from "@/data/site-data.json";
@@ -1252,13 +1444,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-#### 40. ThemeStyles (`@deneb-ui/ui`)
-Dynamic CSS variable injector resolving primary accents, backgrounds, glows, and typography tokens.
+#### 40. `ThemeStyles`
+**Import**: `import { ThemeStyles } from "@deneb-ui/ui";`  
+**Category**: `Data & Theme Engine`  
+**Description**: Dynamic CSS variable injector resolving primary accents, backgrounds, glows, and typography tokens.
 
+##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `theme` | `ThemeTokens` | `required` | Theme configuration object. |
 
+##### Copy-Paste Usage Example
 ```tsx
 import { ThemeStyles } from "@deneb-ui/ui";
 import initialSiteData from "@/data/site-data.json";
@@ -1271,9 +1467,9 @@ export function ThemeInjector() {
 
 ---
 
-## 5. Complete Production Storefront Architecture Examples
+## 6. Complete Production Storefront Architecture Examples
 
-### 5.1 Root Layout Setup (`src/app/layout.tsx`)
+### 6.1 Root Layout Setup (`src/app/layout.tsx`)
 ```tsx
 import "./globals.css";
 import { SiteDataProvider, ThemeStyles, ResponsiveBaseStyles, CartProvider } from "@deneb-ui/ui";
@@ -1298,7 +1494,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-### 5.2 Main Storefront Page (`src/app/page.tsx`)
+### 6.2 Main Storefront Page (`src/app/page.tsx`)
 ```tsx
 "use client";
 
@@ -1438,7 +1634,7 @@ export default function HomePage() {
 }
 ```
 
-### 5.3 Static Route for Dynamic Product Pages (`src/app/products/[id]/page.tsx`)
+### 6.3 Static Route for Dynamic Product Pages (`src/app/products/[id]/page.tsx`)
 ```tsx
 import initialSiteData from "@/data/site-data.json";
 import { ProductDetail } from "@deneb-ui/ui";
@@ -1468,7 +1664,28 @@ export default async function ProductPage({
 
 ---
 
-## 6. Step-by-Step AI Conversion Workflow
+## 7. CLI Tooling & Validation Workflow
+
+Before submitting your template or testing in the local studio:
+1. **Run Local Visual Editor Simulation**:
+   ```bash
+   npx @deneb-ui/cli lab .
+   ```
+   This spins up the Fivora Merchant Studio simulation canvas on `http://localhost:4300`.
+2. **Run Strict Preflight Validation**:
+   ```bash
+   npx @deneb-ui/cli validate .
+   ```
+   Checks static export conformance, manifest tokens, and DOM preview markers.
+3. **Generate Certified Submission Archive**:
+   ```bash
+   npx @deneb-ui/cli validate-and-zip .
+   ```
+   Outputs a certified `fivora-template.zip` archive ready for upload to the Fivora Developer Portal.
+
+---
+
+## 8. Step-by-Step AI Conversion Workflow
 
 When using an AI assistant (ChatGPT, Claude, Cursor, Antigravity) to convert an existing storefront into a Fivora template:
 

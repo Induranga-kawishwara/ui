@@ -1,7 +1,5 @@
 'use client';
 
-import type { ProductItem } from './EditableProductCard';
-import type { ServiceItem } from './EditableServiceCard';
 import React, {
   createContext,
   useContext,
@@ -18,6 +16,8 @@ import {
 import { DenebComponentStyles } from './DenebComponentStyles';
 import { FontLoader } from './fonts/FontLoader';
 import { ResponsiveBaseStyles } from './ResponsiveBaseStyles';
+import type { ProductItem } from './EditableProductCard';
+import type { ServiceItem } from './EditableServiceCard';
 
 export const DENEB_PREVIEW_DATA_MESSAGE = 'DENEB_PREVIEW_SITE_DATA';
 export const PREVIEW_DATA_MESSAGE = 'FIVORA_PREVIEW_SITE_DATA';
@@ -87,6 +87,8 @@ export type SiteData = {
   } | null;
   requirements?: { requiredPages?: string[] | null } | null;
   content?: GenericRecord | null;
+  media?: Record<string, string[]> | null;
+  seo?: GenericRecord | null;
   styles?: GenericRecord | null;
   [key: string]: unknown;
 };
@@ -289,12 +291,37 @@ export function SiteDataProvider<T extends SiteData = SiteData>({
 
         setSiteData((current) => {
           const currentContent = isRecord(current.content) ? current.content : {};
+          const currentHome = isRecord(currentContent.home) ? currentContent.home : null;
+
+          const nextProducts = Array.isArray(live.products)
+            ? live.products
+            : currentContent.products;
+          const nextServices = Array.isArray(live.services)
+            ? live.services
+            : currentContent.services;
+
           return {
             ...current,
             content: {
               ...currentContent,
-              ...(Array.isArray(live.products) ? { products: live.products } : {}),
-              ...(Array.isArray(live.services) ? { services: live.services } : {}),
+              ...(nextProducts !== undefined ? { products: nextProducts } : {}),
+              ...(nextServices !== undefined ? { services: nextServices } : {}),
+              ...(currentHome
+                ? {
+                    home: {
+                      ...currentHome,
+                      ...(nextProducts !== undefined && 'products' in currentHome
+                        ? { products: nextProducts }
+                        : {}),
+                      ...(nextServices !== undefined && 'services' in currentHome
+                        ? { services: nextServices }
+                        : {}),
+                      ...(nextProducts !== undefined && 'featuredProducts' in currentHome
+                        ? { featuredProducts: nextProducts }
+                        : {}),
+                    },
+                  }
+                : {}),
             },
           } as T;
         });
@@ -532,6 +559,7 @@ export const DenebDataProvider = SiteDataProvider;
 export const useDenebData = useSiteData;
 export const DenebDataContext = SiteDataContext;
 export type DenebData = SiteData;
+
 
 /**
  * Hook to retrieve products cleanly from SiteData, supporting both

@@ -89,9 +89,10 @@ export default config;
     "build": "next build",
     "start": "next start",
     "lab": "deneb lab .",
-    "validate": "deneb validate .",
+    "validate": "node scripts/merge-platform-contract.js && deneb validate .",
     "validate-and-zip": "deneb validate-and-zip .",
-    "zip": "deneb zip ."
+    "zip": "deneb zip .",
+    "build": "node scripts/merge-platform-contract.js && next build"
   },
   "dependencies": {
     "@deneb-ui/ui": "latest",
@@ -158,8 +159,10 @@ export default nextConfig;
   "author": "Your Studio Name",
   "visualEditing": {
     "contractVersion": 1,
-    "mode": "strict"
+    "mode": "strict",
+    "controlOnlyPaths": []
   },
+  "_note": "controlOnlyPaths is intentionally empty — the deneb CLI auto-merges all platform-managed paths from platform-contract.json. Only add template-specific paths here.",
   "themeSchema": {
     "tokens": [
       { "key": "primaryColor", "type": "color", "label": "Primary Accent", "default": "#6366F1" },
@@ -1978,5 +1981,37 @@ When using an AI assistant (ChatGPT, Claude, Cursor, Antigravity) to convert an 
 6. **Step 6: Preflight & Package**:
    ```bash
    npx @deneb-ui/cli validate
+
+
+---
+
+## Platform Contract System (3-Layer Architecture)
+
+The Fivora strict visual-editing contract is enforced at 3 layers so templates never go stale:
+
+### Layer 1: `platform-contract.json` (deneb-core — single source of truth)
+Lives at `packages/deneb-ui/platform-contract.json`. Contains all paths the Fivora AI/platform writes to `site-data.json` that templates must **never** render as inline editable HTML. The CLI auto-loads this.
+
+### Layer 2: `@deneb-ui/cli` auto-merge (CLI — enforcement)
+`manifest.cjs` and `fivora-contract.cjs` both load `platform-contract.json` and auto-inject those paths as `controlOnly` without any template declaration needed. `isControlOnly()` returns `true` for any platform path even if `controlOnlyPaths: []` in the template manifest.
+
+### Layer 3: `scripts/merge-platform-contract.js` (template — belt-and-suspenders)
+Each template has this script. It runs before every `validate` and `build` to merge platform paths into `fivora-template.json`. This ensures even older CLI versions (that don't have Layer 2) still pass validation. The template's committed `fivora-template.json` keeps `controlOnlyPaths: []` — the script populates it at build time.
+
+### When Fivora Adds a New Platform Field
+
+Only **one** change needed — update `packages/deneb-ui/platform-contract.json`:
+
+```json
+{
+  "platformControlledPaths": [
+    "__fivoraIntake.brandVoice",   ← new field
+    ...existing...
+  ]
+}
+```
+
+Then update `scripts/merge-platform-contract.js` in the template repositories. Zero changes to any `fivora-template.json`.
+
    npx @deneb-ui/cli package
    ```

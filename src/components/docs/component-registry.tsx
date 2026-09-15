@@ -1155,6 +1155,150 @@ function InteractiveThemeStylesDemo() {
 }
 
 
+
+function InteractiveUseProductsDemo() {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const mockProducts = [
+    { id: "1", title: "Minimalist Ceramic Cup", category: "Ceramics", price: "LKR 3,200" },
+    { id: "2", title: "Artisan Linen Apron", category: "Kitchen", price: "LKR 5,400" },
+    { id: "3", title: "Botanical Room Spray", category: "Aromatherapy", price: "LKR 2,800" },
+  ];
+
+  const filtered = activeCategory === "All"
+    ? mockProducts
+    : mockProducts.filter((p) => p.category === activeCategory);
+
+  return (
+    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left text-xs">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-[#818CF8] font-bold">
+          <ShoppingBag className="w-4 h-4" />
+          <span>useProducts() State Preview</span>
+        </div>
+        <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+          ● Rehydrated
+        </span>
+      </div>
+      <p className="text-[#94A3B8] text-[11px]">
+        Simulated live catalog synchronization from <code>api.catalogUrl</code>.
+      </p>
+      <div className="flex gap-1.5 pt-1">
+        {["All", "Ceramics", "Kitchen", "Aromatherapy"].map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-colors cursor-pointer ${
+              activeCategory === cat
+                ? "bg-[#818CF8] text-white border-[#818CF8]"
+                : "bg-[#141829] text-[#94A3B8] border-[#23283B] hover:text-white"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+      <div className="space-y-1.5">
+        {filtered.map((item) => (
+          <div
+            key={item.id}
+            className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] flex items-center justify-between"
+          >
+            <div className="space-y-0.5">
+              <p className="text-white font-medium text-[11px]">{item.title}</p>
+              <span className="text-[10px] text-[#64748B]">{item.category}</span>
+            </div>
+            <span className="font-mono font-semibold text-[#A5B4FC] text-xs">{item.price}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function InteractiveUseSiteApiDemo() {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const endpoints = [
+    { label: "catalogUrl", url: "https://api.fivora.site/site-catalog/starter-demo/live-data" },
+    { label: "contactUrl", url: "https://api.fivora.site/site-contact" },
+    { label: "baseUrl", url: "https://api.fivora.site" },
+  ];
+
+  const handleCopy = (key: string, url: string) => {
+    navigator.clipboard.writeText(url);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 1500);
+  };
+
+  return (
+    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left text-xs">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-[#818CF8] font-bold">
+          <Database className="w-4 h-4" />
+          <span>useSiteApi() Endpoints Explorer</span>
+        </div>
+        <span className="text-[10px] text-[#A5B4FC] font-mono">api.*</span>
+      </div>
+      <p className="text-[#94A3B8] text-[11px]">
+        Access official Fivora backend routes directly in components and custom forms.
+      </p>
+      <div className="space-y-2">
+        {endpoints.map((ep) => (
+          <div
+            key={ep.label}
+            onClick={() => handleCopy(ep.label, ep.url)}
+            className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] hover:border-[#818CF8]/40 transition-colors cursor-pointer group"
+          >
+            <div className="flex justify-between items-center">
+              <span className="font-mono text-[11px] text-emerald-400 font-semibold">{ep.label}</span>
+              <span className="text-[10px] text-[#64748B] group-hover:text-[#A5B4FC]">
+                {copiedKey === ep.label ? "✓ Copied" : "Click to copy"}
+              </span>
+            </div>
+            <p className="font-mono text-[10px] text-[#94A3B8] truncate mt-1">{ep.url}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function InteractiveUseSiteCatalogDemo() {
+  return (
+    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left text-xs">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-[#818CF8] font-bold">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>useSiteCatalog() Bundle</span>
+        </div>
+        <span className="text-[10px] text-[#A5B4FC] font-mono">Metadata & Items</span>
+      </div>
+      <p className="text-[#94A3B8] text-[11px]">
+        Complete state snapshot combining products, services, site identity, and active API routes.
+      </p>
+      <div className="grid grid-cols-2 gap-2 pt-1">
+        <div className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] space-y-1">
+          <span className="text-[10px] text-[#64748B]">Project Status</span>
+          <p className="text-white font-semibold text-xs flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-400"></span> APPROVED
+          </p>
+        </div>
+        <div className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] space-y-1">
+          <span className="text-[10px] text-[#64748B]">Live Domain</span>
+          <p className="text-white font-semibold text-xs truncate">starter-demo.fivora.site</p>
+        </div>
+        <div className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] space-y-1">
+          <span className="text-[10px] text-[#64748B]">Active Products</span>
+          <p className="text-[#818CF8] font-bold text-sm">3 items</p>
+        </div>
+        <div className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] space-y-1">
+          <span className="text-[10px] text-[#64748B]">Active Services</span>
+          <p className="text-[#818CF8] font-bold text-sm">2 items</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ==========================================================================
    Complete Component Documentation Registry (All 31 Components)
    ========================================================================== */
@@ -2028,7 +2172,109 @@ export default function App() {
       { name: 'preset', type: '"restaurant" | "medical" | "luxury"', description: 'Pre-configured preset name.' },
     ],
     prevPage: { title: 'SiteDataProvider', href: '/docs/components/site-data-provider' },
+    nextPage: { title: 'useProducts', href: '/docs/components/use-products' },
   },
+  'use-products': {
+    title: 'useProducts',
+    description: 'React hook to cleanly retrieve products from siteData with automatic backend rehydration from api.catalogUrl and real-time visual editor synchronization.',
+    category: 'Data & Theme Engine',
+    badge: 'Data Hook',
+    previewComponent: <InteractiveUseProductsDemo />,
+    previewCode: `import { useProducts, ProductGrid } from "@deneb-ui/ui";
+
+export default function StorefrontCatalog() {
+  // Automatically synchronizes with live backend catalog & visual editor
+  const products = useProducts();
+
+  return (
+    <ProductGrid
+      title="Trending Collection"
+      subtitle="Handpicked by Store Owner"
+      products={products}
+      categories={['All', 'Ceramics', 'Kitchen']}
+      cardVariant="modern-glass"
+      columns={{ mobile: 1, tablet: 2, desktop: 3 }}
+    />
+  );
+}`,
+    usageCode: `import { useProducts } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'fallback', type: 'ProductItem[]', defaultValue: '[]', description: 'Fallback array returned if siteData.content.products is empty.' },
+      { name: 'returns', type: 'ProductItem[]', description: 'Array of live product items with id, title, price, compareAtPrice, currency, and images.' },
+    ],
+    prevPage: { title: 'ThemeStyles', href: '/docs/components/theme-styles' },
+    nextPage: { title: 'useSiteApi', href: '/docs/components/use-site-api' },
+  },
+
+  'use-site-api': {
+    title: 'useSiteApi',
+    description: 'Hook providing direct typed access to official Fivora backend endpoints configured in site-data.json for custom API requests and form submissions.',
+    category: 'Data & Theme Engine',
+    badge: 'API Endpoints',
+    previewComponent: <InteractiveUseSiteApiDemo />,
+    previewCode: `import { useSiteApi } from "@deneb-ui/ui";
+
+export default function CustomContactSection() {
+  const api = useSiteApi();
+
+  // Direct backend endpoints from site-data.json:
+  const catalogUrl = api?.catalogUrl;
+  const contactUrl = api?.contactUrl;
+  const baseUrl = api?.baseUrl;
+
+  const handleSubmit = async (data: Record<string, unknown>) => {
+    if (!contactUrl) return;
+    await fetch(contactUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  };
+
+  return null;
+}`,
+    usageCode: `import { useSiteApi } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'returns.catalogUrl', type: 'string | null', description: 'Live catalog and product rehydration endpoint.' },
+      { name: 'returns.contactUrl', type: 'string | null', description: 'Customer lead submission endpoint.' },
+      { name: 'returns.analyticsUrl', type: 'string | null', description: 'Pageview and event analytics logging endpoint.' },
+      { name: 'returns.baseUrl', type: 'string | null', description: 'Main Fivora API base URL.' },
+    ],
+    prevPage: { title: 'useProducts', href: '/docs/components/use-products' },
+    nextPage: { title: 'useSiteCatalog', href: '/docs/components/use-site-catalog' },
+  },
+
+  'use-site-catalog': {
+    title: 'useSiteCatalog',
+    description: 'Consolidated hook returning products, services, project identity, site instance, and API configuration in a single reactive call.',
+    category: 'Data & Theme Engine',
+    badge: 'State Bundle',
+    previewComponent: <InteractiveUseSiteCatalogDemo />,
+    previewCode: `import { useSiteCatalog } from "@deneb-ui/ui";
+
+export default function StoreOverview() {
+  const { products, services, project, siteInstance, api } = useSiteCatalog();
+
+  return (
+    <div className="store-summary">
+      <h2>{project?.title}</h2>
+      <p>Live Domain: {siteInstance?.domain}</p>
+      <p>Total Products: {products.length}</p>
+      <p>Total Services: {services.length}</p>
+    </div>
+  );
+}`,
+    usageCode: `import { useSiteCatalog } from "@deneb-ui/ui";`,
+    props: [
+      { name: 'returns.products', type: 'ProductItem[]', description: 'Array of live synchronized store products.' },
+      { name: 'returns.services', type: 'ServiceItem[]', description: 'Array of live synchronized store services.' },
+      { name: 'returns.project', type: 'SiteDataProject | null', description: 'Project slug, title, and status.' },
+      { name: 'returns.siteInstance', type: 'SiteInstanceData | null', description: 'Live domain, subdomain, and custom domain info.' },
+      { name: 'returns.api', type: 'SiteDataApiConfig | null', description: 'Backend API endpoints configuration.' },
+    ],
+    prevPage: { title: 'useSiteApi', href: '/docs/components/use-site-api' },
+  },
+
 
   'product-detail': {
     title: 'ProductDetail',

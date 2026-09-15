@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { EditableProductCard, ProductItem, ProductCardVariant } from './EditableProductCard';
+import { useProducts } from './SiteDataProvider';
 
 export interface EditableProductGridProps extends React.HTMLAttributes<HTMLElement> {
   /**
@@ -24,12 +25,13 @@ export interface EditableProductGridProps extends React.HTMLAttributes<HTMLEleme
   subtitle?: string;
 
   /**
-   * Array of product items.
+   * Array of product items. If omitted or empty, automatically pulls live products using useProducts().
    */
-  products: ProductItem[];
+  products?: ProductItem[];
 
   /**
    * Optional category filter tabs (e.g. ['All', 'Sneakers', 'Performance', 'Lifestyle']).
+   * If omitted, automatically derived from product categories.
    */
   categories?: string[];
 
@@ -64,7 +66,7 @@ export interface EditableProductGridProps extends React.HTMLAttributes<HTMLEleme
 /**
  * EditableProductGrid is an elite, fully responsive e-commerce showcase grid
  * with interactive category filtering, live Fivora visual editing synchronization,
- * and built-in Quick View modal triggers.
+ * automatic useProducts() fallback rehydration, and built-in Quick View modal triggers.
  *
  * Created by Chamika Gayashan & Induranga Kawishwara
  */
@@ -73,16 +75,33 @@ export function EditableProductGrid({
   listPath = 'products',
   title = 'Featured Collection',
   subtitle = 'Just Dropped',
-  products = [],
+  products: userProducts,
   categories = ['All'],
   cardVariant = 'modern-glass',
-  columns = { mobile: 1, tablet: 2, desktop: 3 },
+  columns = { mobile: 1, tablet: 2, desktop: 4 },
   onQuickView,
   cardPrefix = 'product',
   className = '',
   style,
   ...props
 }: EditableProductGridProps) {
+  const liveProducts = useProducts();
+  const products = userProducts && userProducts.length > 0 ? userProducts : liveProducts;
+
+  const resolvedCategories = useMemo(() => {
+    if (categories && categories.length > 1) {
+      return categories;
+    }
+    const distinct = Array.from(
+      new Set(
+        products
+          .map((p) => p.category)
+          .filter((cat): cat is string => typeof cat === 'string' && cat.trim().length > 0)
+      )
+    );
+    return distinct.length > 0 ? ['All', ...distinct] : categories;
+  }, [categories, products]);
+
   const [activeCategory, setActiveCategory] = useState<string>(categories[0] || 'All');
 
   const filteredProducts = useMemo(() => {
@@ -99,11 +118,11 @@ export function EditableProductGrid({
   const gridColClasses = useMemo(() => {
     const m = columns.mobile || 1;
     const t = columns.tablet || 2;
-    const d = columns.desktop || 3;
+    const d = columns.desktop || 4;
 
     const mClass = m === 2 ? 'grid-cols-2' : 'grid-cols-1';
     const tClass = t === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2';
-    const dClass = d === 4 ? 'lg:grid-cols-4' : d === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
+    const dClass = d === 3 ? 'lg:grid-cols-3' : d === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-4';
 
     return `${mClass} ${tClass} ${dClass}`;
   }, [columns]);
@@ -135,9 +154,9 @@ export function EditableProductGrid({
         </div>
 
         {/* Category Pills Filter */}
-        {categories.length > 1 && (
+        {resolvedCategories.length > 1 && (
           <div className="flex flex-wrap items-center gap-2">
-            {categories.map((cat) => {
+            {resolvedCategories.map((cat) => {
               const isActive = activeCategory.toLowerCase() === cat.toLowerCase();
               return (
                 <button

@@ -117,6 +117,9 @@ export const SIDEBAR_NAV: NavSection[] = [
     items: [
       { title: "SiteDataProvider", href: "/docs/components/site-data-provider", badge: "State" },
       { title: "ThemeStyles", href: "/docs/components/theme-styles", badge: "Tokens" },
+      { title: "useProducts", href: "/docs/components/use-products", badge: "Hook", isNew: true },
+      { title: "useSiteApi", href: "/docs/components/use-site-api", badge: "API", isNew: true },
+      { title: "useSiteCatalog", href: "/docs/components/use-site-catalog", badge: "Hook", isNew: true },
     ],
   },
 ];

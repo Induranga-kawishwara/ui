@@ -70,6 +70,8 @@ export const SEARCH_INDEX: SearchItem[] = [
   { title: 'ContactForm', category: 'Components', slug: '/docs/components/contact-form', description: 'Storefront lead generation and inquiry form.' },
   { title: 'Navbar', category: 'Components', slug: '/docs/components/navbar', description: 'Full storefront navigation bar with mobile drawer.' },
   { title: 'Footer', category: 'Components', slug: '/docs/components/footer', description: 'Multi-column storefront footer with copyright and links.' },
+  { title: 'SiteDataProvider', category: 'Components', slug: '/docs/components/site-data-provider', description: 'BroadcastChannel and postMessage live preview synchronization provider.' },
+  { title: 'ThemeStyles', category: 'Components', slug: '/docs/components/theme-styles', description: 'Dynamic CSS variable injector for Fivora colors, fonts, and border radius tokens.' },
 ];
 
 export function SearchDialog({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -119,37 +121,41 @@ export function SearchDialog({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-150">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-6 sm:pt-20 px-2 sm:px-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-150"
+      onClick={onClose}
+    >
       <div
         className="w-full max-w-2xl rounded-2xl border border-[#23283B] bg-[#0C0F1A] shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Input Header */}
-        <div className="flex items-center px-4 py-3.5 border-b border-[#23283B] gap-3">
-          <Search className="w-5 h-5 text-[#818CF8]" />
+        <div className="flex items-center px-3.5 sm:px-4 py-3 sm:py-3.5 border-b border-[#23283B] gap-2.5 sm:gap-3">
+          <Search className="w-4 h-4 sm:w-5 sm:h-5 text-[#818CF8] shrink-0" />
           <input
             autoFocus
             type="text"
-            placeholder="Search documentation, components, or CLI..."
+            placeholder="Search docs, components, CLI..."
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
               setSelectedIndex(0);
             }}
-            className="flex-1 bg-transparent text-sm text-white placeholder-[#64748B] focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-white placeholder-[#64748B] focus:outline-none min-w-0"
           />
           <button
             onClick={onClose}
-            className="p-1 rounded-md text-[#64748B] hover:text-white hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-lg text-[#64748B] hover:text-white hover:bg-white/5 transition-colors shrink-0"
+            aria-label="Close search"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Results List */}
-        <div className="max-h-96 overflow-y-auto p-2 divide-y divide-white/5">
+        <div className="max-h-[55vh] sm:max-h-96 overflow-y-auto p-1.5 sm:p-2 divide-y divide-white/5">
           {filtered.length === 0 ? (
-            <div className="py-12 text-center text-[#64748B] text-sm">
+            <div className="py-10 text-center text-[#64748B] text-xs sm:text-sm">
               No results found for &ldquo;{query}&rdquo;
             </div>
           ) : (
@@ -163,15 +169,15 @@ export function SearchDialog({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                     onClose();
                   }}
                   onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`flex items-center justify-between px-3.5 py-3 rounded-xl cursor-pointer transition-all ${
+                  className={`flex items-center justify-between px-3 sm:px-3.5 py-2.5 sm:py-3 rounded-xl cursor-pointer transition-all ${
                     isSelected
                       ? 'bg-[#818CF8]/15 border border-[#818CF8]/30 text-white'
                       : 'hover:bg-white/5 text-[#CBD5E1]'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
                     <div
-                      className={`p-2 rounded-lg border ${
+                      className={`p-2 rounded-lg border shrink-0 ${
                         isSelected
                           ? 'border-[#818CF8]/40 bg-[#818CF8]/20 text-[#818CF8]'
                           : 'border-[#23283B] bg-[#121625] text-[#94A3B8]'
@@ -185,18 +191,18 @@ export function SearchDialog({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                         <BookOpen className="w-4 h-4" />
                       )}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-sm text-white">{item.title}</span>
-                        <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-white/5 text-[#94A3B8]">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-xs sm:text-sm text-white truncate">{item.title}</span>
+                        <span className="text-[9px] sm:text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-white/5 text-[#94A3B8] shrink-0">
                           {item.category}
                         </span>
                       </div>
-                      <p className="text-xs text-[#94A3B8] line-clamp-1 mt-0.5">{item.description}</p>
+                      <p className="text-[11px] sm:text-xs text-[#94A3B8] line-clamp-1 mt-0.5">{item.description}</p>
                     </div>
                   </div>
                   <ArrowRight
-                    className={`w-4 h-4 transition-transform ${
+                    className={`w-4 h-4 shrink-0 transition-transform ${
                       isSelected ? 'text-[#818CF8] translate-x-1' : 'text-transparent'
                     }`}
                   />
@@ -207,15 +213,16 @@ export function SearchDialog({ isOpen, onClose }: { isOpen: boolean; onClose: ()
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-4 py-2.5 border-t border-[#23283B] bg-[#0A0D17] flex items-center justify-between text-[11px] text-[#64748B]">
-          <div className="flex items-center gap-3">
+        <div className="px-3.5 sm:px-4 py-2.5 border-t border-[#23283B] bg-[#0A0D17] flex items-center justify-between text-[11px] text-[#64748B]">
+          <div className="hidden sm:flex items-center gap-3">
             <span><kbd className="px-1.5 py-0.5 rounded bg-white/10 text-white">↑</kbd> <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-white">↓</kbd> to navigate</span>
             <span><kbd className="px-1.5 py-0.5 rounded bg-white/10 text-white">↵</kbd> to select</span>
             <span><kbd className="px-1.5 py-0.5 rounded bg-white/10 text-white">esc</kbd> to close</span>
           </div>
+          <span className="sm:hidden text-[10px]">Tap item to open</span>
           <div className="flex items-center gap-1 text-[#818CF8]">
             <DenebStarIcon className="w-3 h-3" />
-            <span className="font-mono">DENEB UI</span>
+            <span className="font-mono text-[10px] sm:text-xs">DENEB UI</span>
           </div>
         </div>
       </div>

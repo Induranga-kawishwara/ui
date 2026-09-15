@@ -10,6 +10,8 @@ import { DenebStarIcon } from '@/components/brand/DenebLogo';
 export default function CliReferencePage() {
   const tocItems: TocItem[] = [
     { id: 'overview', title: 'CLI Overview' },
+    { id: 'arc-flags', title: 'ARC Flags & AI Modes' },
+    { id: 'action-buttons', title: 'Smart Action Button Engine' },
     { id: 'doctor', title: 'deneb doctor' },
     { id: 'init', title: 'deneb init' },
     { id: 'update', title: 'deneb update' },
@@ -55,7 +57,7 @@ export default function CliReferencePage() {
           </h2>
           
           <div className="overflow-x-auto">
-            <table className="w-full text-xs sm:text-sm text-left border border-[#23283B] rounded-xl overflow-hidden">
+            <table className="w-full text-xs sm:text-sm text-left border border-[#23283B] rounded-xl overflow-hidden min-w-[560px]">
               <thead className="bg-[#0E1220] text-[#CBD5E1] font-mono uppercase text-[11px] border-b border-[#23283B]">
                 <tr>
                   <th className="p-3 sm:p-4">Command</th>
@@ -71,8 +73,28 @@ export default function CliReferencePage() {
                 </tr>
                 <tr>
                   <td className="p-3 sm:p-4 font-mono font-bold text-white">deneb init</td>
-                  <td className="p-3 sm:p-4">Initialize & configure existing Next.js app for Fivora</td>
-                  <td className="p-3 sm:p-4 text-emerald-400">fivora-template.json, site-data.json, scripts</td>
+                  <td className="p-3 sm:p-4">Universal storefront converter powered by Deneb ARC (AST pipeline)</td>
+                  <td className="p-3 sm:p-4 text-emerald-400">fivora-template.json, site-data.json, editable AST</td>
+                </tr>
+                <tr>
+                  <td className="p-3 sm:p-4 font-mono font-bold text-white">deneb init --dry-run</td>
+                  <td className="p-3 sm:p-4">Preview the transformation plan and schema without modifying any files</td>
+                  <td className="p-3 sm:p-4 text-amber-400">Non-destructive plan simulation</td>
+                </tr>
+                <tr>
+                  <td className="p-3 sm:p-4 font-mono font-bold text-white">deneb init --explain</td>
+                  <td className="p-3 sm:p-4">Print detailed explanations of why each element was converted and matched</td>
+                  <td className="p-3 sm:p-4 text-amber-400">Semantic AST reasoning log</td>
+                </tr>
+                <tr>
+                  <td className="p-3 sm:p-4 font-mono font-bold text-white">deneb init --ai</td>
+                  <td className="p-3 sm:p-4">Run ARC with AI assistance (ChatGPT / OpenAI API key from .env)</td>
+                  <td className="p-3 sm:p-4 text-purple-400">Intelligent fallback adaptation</td>
+                </tr>
+                <tr>
+                  <td className="p-3 sm:p-4 font-mono font-bold text-white">deneb init --ai-dry-run</td>
+                  <td className="p-3 sm:p-4">Test the AI adaptation loop without creating GitHub pull requests</td>
+                  <td className="p-3 sm:p-4 text-purple-400">AI reasoning diff sandbox</td>
                 </tr>
                 <tr>
                   <td className="p-3 sm:p-4 font-mono font-bold text-white">deneb update</td>
@@ -96,6 +118,151 @@ export default function CliReferencePage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </section>
+
+        {/* ARC Advanced Flags & AI Modes */}
+        <section id="arc-flags" className="space-y-4 pt-4 border-t border-[#23283B]">
+          <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-[#818CF8]" />
+            <span>Deneb ARC Flags & AI Modes</span>
+          </h2>
+          <p className="text-sm text-[#94A3B8] leading-relaxed">
+            Deneb ARC (Adaptive Refactoring Compiler) features developer-friendly flags for transparent inspection, non-destructive safety previews, curated recipes, and AI-assisted AST reasoning:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-2">
+              <div className="flex items-center gap-2 text-amber-400 font-mono text-xs font-bold">
+                <Terminal className="w-4 h-4" />
+                <span>--dry-run</span>
+              </div>
+              <p className="text-xs text-[#CBD5E1] font-semibold">Preview Plan Without Writing</p>
+              <p className="text-xs text-[#94A3B8] leading-relaxed">
+                Scans reachable pages, builds the transformation plan, inspects data schema bindings, and checks for Fivora contract violations without touching a single file on disk.
+              </p>
+              <CodeBlock
+                code="npx @deneb-ui/cli init --dry-run"
+                language="bash"
+                filename="terminal"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-2">
+              <div className="flex items-center gap-2 text-amber-400 font-mono text-xs font-bold">
+                <Terminal className="w-4 h-4" />
+                <span>--explain</span>
+              </div>
+              <p className="text-xs text-[#CBD5E1] font-semibold">Detailed Rule Matching Log</p>
+              <p className="text-xs text-[#94A3B8] leading-relaxed">
+                Prints line-by-line AST reasoning showing which element was matched, why it was converted (e.g. hero title, price, CTA button), and which semantic rule triggered the editability contract.
+              </p>
+              <CodeBlock
+                code="npx @deneb-ui/cli init --explain"
+                language="bash"
+                filename="terminal"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-2">
+              <div className="flex items-center gap-2 text-purple-400 font-mono text-xs font-bold">
+                <Sparkles className="w-4 h-4" />
+                <span>--ai</span>
+              </div>
+              <p className="text-xs text-[#CBD5E1] font-semibold">AI-Assisted Adaptation (ChatGPT)</p>
+              <p className="text-xs text-[#94A3B8] leading-relaxed">
+                Uses your OpenAI API key from <code className="text-white font-mono">.env</code> (default: <code className="text-white font-mono">gpt-4o-mini</code>) to resolve ambiguous components, complex layouts, or custom third-party UI libraries with high semantic fidelity.
+              </p>
+              <CodeBlock
+                code="npx @deneb-ui/cli init --ai"
+                language="bash"
+                filename="terminal"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-2">
+              <div className="flex items-center gap-2 text-purple-400 font-mono text-xs font-bold">
+                <Sparkles className="w-4 h-4" />
+                <span>--ai-dry-run</span>
+              </div>
+              <p className="text-xs text-[#CBD5E1] font-semibold">Test AI Loop Without PRs</p>
+              <p className="text-xs text-[#94A3B8] leading-relaxed">
+                Tests the complete AI adaptation loop, validates prompt schemas and AST diffs in sandbox memory, without modifying source files or creating GitHub pull requests.
+              </p>
+              <CodeBlock
+                code="npx @deneb-ui/cli init --ai-dry-run"
+                language="bash"
+                filename="terminal"
+              />
+            </div>
+          </div>
+
+          <div className="p-4 rounded-xl border border-[#23283B] bg-[#0E1220] space-y-2 text-xs text-[#94A3B8]">
+            <div className="font-semibold text-white flex items-center gap-2">
+              <Zap className="w-4 h-4 text-[#818CF8]" />
+              <span>Curated Storefront Recipes (<code className="text-[#818CF8] font-mono">--recipe &lt;name&gt;</code>)</span>
+            </div>
+            <p className="leading-relaxed">
+              You can apply pre-packaged domain blueprints tailored to specific industries with optimized schema seeds:
+            </p>
+            <div className="flex flex-wrap gap-2 pt-1 font-mono text-[11px]">
+              <span className="px-2 py-1 rounded bg-[#121625] text-white border border-[#23283B]">--recipe coffee</span>
+              <span className="px-2 py-1 rounded bg-[#121625] text-white border border-[#23283B]">--recipe restaurant</span>
+              <span className="px-2 py-1 rounded bg-[#121625] text-white border border-[#23283B]">--recipe salon</span>
+              <span className="px-2 py-1 rounded bg-[#121625] text-white border border-[#23283B]">--recipe fashion</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Smart Action Button Engine */}
+        <section id="action-buttons" className="space-y-4 pt-4 border-t border-[#23283B]">
+          <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+            <Zap className="w-5 h-5 text-emerald-400" />
+            <span>Deneb ARC Smart Action Button Engine</span>
+          </h2>
+          <p className="text-sm text-[#94A3B8] leading-relaxed">
+            When building storefronts, developers frequently add buttons such as <strong className="text-white">&ldquo;Order on WhatsApp&rdquo;</strong>, <strong className="text-white">&ldquo;Call Us&rdquo;</strong>, <strong className="text-white">&ldquo;Get Directions&rdquo;</strong>, <strong className="text-white">&ldquo;Store Location&rdquo;</strong>, or <strong className="text-white">&ldquo;Shop Collection&rdquo;</strong>.
+          </p>
+          <p className="text-sm text-[#94A3B8] leading-relaxed">
+            When you run <code className="text-white font-mono bg-white/5 px-1.5 py-0.5 rounded">npx @deneb-ui/cli init</code>, ARC&apos;s AST engine automatically detects these buttons and converts them into <strong className="text-white">dual-editable action elements</strong>:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 space-y-2">
+              <div className="font-semibold text-emerald-300 text-xs flex items-center gap-1.5">
+                <Check className="w-4 h-4" />
+                <span>1. Editable Label Text</span>
+              </div>
+              <p className="text-xs text-[#94A3B8] leading-relaxed">
+                The merchant can click directly on the button text inside Fivora Studio to change &ldquo;Order on WhatsApp&rdquo; to &ldquo;Order with WhatsApp&rdquo; or any localized copy.
+              </p>
+              <div className="font-mono text-[11px] text-[#A5B4FC] bg-[#0A0D17] p-2 rounded border border-[#23283B]">
+                data-preview-field-path=&quot;contact.whatsappLabel&quot;
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-[#818CF8]/20 bg-[#818CF8]/5 space-y-2">
+              <div className="font-semibold text-[#A5B4FC] text-xs flex items-center gap-1.5">
+                <Check className="w-4 h-4" />
+                <span>2. Editable Target Link / Phone URL</span>
+              </div>
+              <p className="text-xs text-[#94A3B8] leading-relaxed">
+                The destination URL or phone number is linked to site-data via a hidden visual marker, allowing the merchant to update the recipient phone number or map link in 1 click.
+              </p>
+              <div className="font-mono text-[11px] text-[#A5B4FC] bg-[#0A0D17] p-2 rounded border border-[#23283B]">
+                data-preview-field-path=&quot;contact.whatsappNumber&quot;
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-3 text-xs text-[#94A3B8]">
+            <div className="font-semibold text-white">How ARC Automatically Transforms Action Buttons:</div>
+            <ul className="list-disc list-inside space-y-1.5 leading-relaxed">
+              <li><strong className="text-white">Tag Conversion:</strong> Seamlessly converts static <code className="text-white font-mono">&lt;button&gt;</code> elements into clickable <code className="text-white font-mono">&lt;a&gt;</code> anchors with <code className="text-white font-mono">target=&quot;_blank&quot;</code> and <code className="text-white font-mono">rel=&quot;noopener noreferrer&quot;</code>.</li>
+              <li><strong className="text-white">100% Style Preservation:</strong> Preserves all existing Tailwind classes, hover transitions, shadow effects, and layout spacing without changing a single pixel of your design.</li>
+              <li><strong className="text-white">SVG Icon Safety:</strong> Keeps existing icons intact while wrapping only the text in a preview-annotated span.</li>
+              <li><strong className="text-white">Supported Action Intents:</strong> WhatsApp (<code className="text-white font-mono">whatsapp://</code> or <code className="text-white font-mono">https://wa.me/</code>), Direct Calling (<code className="text-white font-mono">tel:</code>), Maps & Directions (<code className="text-white font-mono">maps.google.com</code>), and Store Navigation.</li>
+            </ul>
           </div>
         </section>
 
@@ -135,11 +302,11 @@ export default function CliReferencePage() {
             <span>2. deneb init (Universal Template Converter & Initializer)</span>
           </h2>
           <p className="text-sm text-[#94A3B8] leading-relaxed">
-            Runs <strong className="text-white">Deneb ARC</strong> (Adaptive Refactoring Compiler) by default — an AST pipeline that converts Next.js App Router and Pages Router storefronts into Fivora-editable templates while preserving your design. Use <code className="text-white font-mono">--legacy</code> for the older regex converter.
+            Runs <strong className="text-white">Deneb ARC</strong> (Adaptive Refactoring Compiler) by default — an AST pipeline that converts Next.js App Router and Pages Router storefronts into Fivora-editable templates while preserving your design.
           </p>
 
           <CodeBlock
-            code={`# Inside your Next.js project root (Deneb ARC — default):\nnpx @deneb-ui/cli init\n\n# Preview transformation plan without writing files:\nnpx @deneb-ui/cli init --explain\n\n# Use legacy regex converter:\nnpx @deneb-ui/cli init --legacy`}
+            code={`# Convert storefront with Deneb ARC (default):\nnpx @deneb-ui/cli init\n\n# Preview transformation plan without modifying any files:\nnpx @deneb-ui/cli init --dry-run\n\n# Print detailed explanations of why each element was converted:\nnpx @deneb-ui/cli init --explain\n\n# Run with AI assistance (ChatGPT / OpenAI API key from .env):\nnpx @deneb-ui/cli init --ai\n\n# Test AI adaptation loop in sandbox without creating pull requests:\nnpx @deneb-ui/cli init --ai-dry-run\n\n# Apply specific industry storefront recipe:\nnpx @deneb-ui/cli init --recipe coffee\n\n# Fallback to legacy regex converter:\nnpx @deneb-ui/cli init --legacy`}
             language="bash"
             filename="terminal"
           />

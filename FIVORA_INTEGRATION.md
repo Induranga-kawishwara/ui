@@ -13,8 +13,8 @@ Fivora's static content contract validator requires all elements with `data-prev
 Our Fivora editable components have been engineered with the following best practices:
 
 - **Strict Validation Compliance:** All Fivora `data-preview` markers are implemented using literal paths or string template literals, ensuring zero errors in the `deneb validate` pipeline.
-- **Empty-State Safety:** Fivora tests components by supplying empty data. We have removed conditional rendering for text fields (`{text && <span>{text}</span>}`) and replaced them with dynamic `hidden` classes (`<span className={!text ? "hidden" : "..."}>{text}</span>`) to ensure the editable target remains securely mounted for Fivora's empty-state export tests.
-- **Static Exclusions (`data-preview-static="true"`):** Complex inner wrappers containing untagged elements, images, or SVGs properly utilize `data-preview-static="true"` tags (such as on our dynamic Star rating SVGs). This prevents Fivora from incorrectly parsing decorative visual nodes.
+- **Empty-State Safety:** Fivora tests components by supplying empty data. Keep every `data-preview-field-path` target mounted when the value is `""`, `false`, or `0`. Do not `return null` and do not put `hidden` on the marker element itself — empty text is fine, unmounting is not.
+- **Static Exclusions (`data-preview-static="decorative-icon"`):** Complex inner wrappers containing untagged elements, images, or SVGs properly utilize `data-preview-static` with a reason (such as on our dynamic Star rating SVGs). This prevents Fivora from incorrectly parsing decorative visual nodes.
 - **Title Tooltips Sanitization:** Fivora flags missing mappings on elements carrying `title` attributes (e.g. `title="Rating: 5 of 5"`). We have removed extraneous titles from container divs to guarantee pristine validation.
 - **Interactive Ratings Sync:** Fivora edits the schema value. The Star rating system reacts dynamically and visibly via mutation observers without requiring full-page re-renders.
 

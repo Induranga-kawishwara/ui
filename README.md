@@ -314,9 +314,9 @@ The Fivora Merchant Studio automatically enables inline visual editing by inspec
    - Elements marked with `data-preview-static` declare their entire subtree non-editable.
    - **NEVER** place `data-preview-field-path` inside a container marked with `data-preview-static`.
 3. **Repeated Lists & Loops**:
-   - List wrapper: `data-preview-list-path="content.products"`
-   - Iterated item container: `data-preview-item-path={`content.products.${index}`}`
-   - Leaf value inside item: `data-preview-field-path={`content.products.${index}.title`}`
+   - List wrapper: `data-preview-list-path="home.products"`
+   - Iterated item container: `data-preview-item-path={`home.products.${index}`}`
+   - Leaf value inside item: `data-preview-field-path={`home.products.${index}.title`}`
 4. **Defensive Defaults**:
    - Always use nullish coalescing (`??`) rather than `||` for text values: `content?.hero?.title ?? "Fallback"`
    - Always default arrays: `const products = content?.products ?? [];` so testing probes never trigger `Cannot read properties of undefined (reading 'map')`.
@@ -438,7 +438,7 @@ export function ProductBadges() {
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `level` | `1 | 2 | 3 | 4 | 5 | 6` | `1` | Heading hierarchy level (h1-h6). |
-| `data-preview-field-path` | `string` | `-` | Click-to-edit path binding (e.g. 'content.home.title'). |
+| `data-preview-field-path` | `string` | `-` | Click-to-edit path binding (e.g. 'home.title'). |
 | `className` | `string` | `''` | Tailwind styling classes. |
 
 ##### Copy-Paste Usage Example
@@ -451,10 +451,10 @@ export function SectionHeader({ title, subtitle }: { title?: string; subtitle?: 
       <Text className="text-xs uppercase font-bold tracking-widest text-indigo-400">
         Artisanal Heritage
       </Text>
-      <Heading level={2} data-preview-field-path="content.home.catalogTitle" className="text-3xl font-extrabold text-white">
+      <Heading level={2} data-preview-field-path="home.catalogTitle" className="text-3xl font-extrabold text-white">
         {title ?? "Bespoke Collection"}
       </Heading>
-      <Paragraph data-preview-field-path="content.home.catalogSubtitle" className="text-sm text-slate-400 max-w-xl mx-auto">
+      <Paragraph data-preview-field-path="home.catalogSubtitle" className="text-sm text-slate-400 max-w-xl mx-auto">
         {subtitle ?? "Each pair is individually numbered and conditioned before leaving our workshop."}
       </Paragraph>
     </div>
@@ -560,7 +560,7 @@ export function ShowcaseImage({ url, path }: { url: string; path?: string }) {
       alt="Hero Sneaker"
       aspectRatio="16/9"
       radius="xl"
-      fieldPath={path ?? "content.hero.image"}
+      fieldPath={path ?? "home.hero.image"}
       className="shadow-2xl border border-slate-800"
     />
   );
@@ -983,7 +983,7 @@ export function MainHero() {
 | `image` | `string` | `required` | Product photo URL. |
 | `category` | `string` | `''` | Category badge tag. |
 | `whatsappNumber` | `string` | `''` | WhatsApp merchant number for direct order. |
-| `itemPath` | `string` | `''` | Fivora visual editing marker (e.g. 'content.products.0'). |
+| `itemPath` | `string` | `''` | Fivora visual editing marker (e.g. 'home.products.0'). |
 
 ##### Copy-Paste Usage Example
 ```tsx
@@ -993,7 +993,7 @@ export function ProductItemView({ product, index }: { product: any; index: numbe
   const siteData = useSiteData();
   return (
     <ProductCard
-      itemPath={`content.products.${index}`}
+      itemPath={`home.products.${index}`}
       title={product.title}
       price={product.price}
       compareAtPrice={product.compareAtPrice}
@@ -1098,12 +1098,12 @@ export function StoreCatalog() {
   const siteData = useSiteData();
 
   return (
-    <section id="products" data-preview-list-path="content.products">
+    <section id="products" data-preview-list-path="home.products">
       <ProductGrid cols={3} gap="lg">
         {products.map((p, idx) => (
           <ProductCard
             key={p.id || idx}
-            itemPath={`content.products.${idx}`}
+            itemPath={`home.products.${idx}`}
             title={p.title}
             price={p.price}
             compareAtPrice={p.compareAtPrice}

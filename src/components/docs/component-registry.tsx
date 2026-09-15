@@ -341,14 +341,6 @@ function InteractiveProductGridDemo() {
       badge: 'SALE',
       imageUrl: '/products/vanta-stealth-pro.jpg',
     },
-    {
-      id: 4,
-      name: 'VANTA Edge Carbon',
-      category: 'Lifestyle',
-      price: 'LKR 24,800',
-      badge: 'TRENDING',
-      imageUrl: '/products/vanta-edge-carbon.jpg',
-    },
   ];
 
   return (
@@ -357,9 +349,9 @@ function InteractiveProductGridDemo() {
         title="New Arrivals"
         subtitle="Just Dropped"
         products={sampleProducts}
-        categories={['All', 'Performance', 'Sneakers', 'Lifestyle']}
+        categories={['All', 'Performance', 'Sneakers']}
         sectionPath="demo-grid"
-        columns={{ mobile: 1, tablet: 2, desktop: 4 }}
+        columns={{ mobile: 1, tablet: 2, desktop: 3 }}
         onQuickView={(p) => setSelectedQuickView(p)}
       />
       {selectedQuickView && (
@@ -2139,6 +2131,7 @@ export default function Catalog() {
   const products = [
     { id: 1, name: "VANTA Aero X", category: "Performance", price: "LKR 32,500", imageUrl: "/products/vanta-aero-x.jpg" },
     { id: 2, name: "VANTA Flux 01", category: "Sneakers", price: "LKR 28,900", imageUrl: "/products/vanta-flux-01.jpg" },
+    { id: 3, name: "VANTA Stealth Pro", category: "Performance", price: "LKR 21,200", imageUrl: "/products/vanta-stealth-pro.jpg" },
   ];
 
   return (
@@ -2147,7 +2140,7 @@ export default function Catalog() {
       subtitle="Just Dropped"
       products={products}
       categories={['All', 'Performance', 'Sneakers']}
-      columns={{ mobile: 1, tablet: 2, desktop: 4 }}
+      columns={{ mobile: 1, tablet: 2, desktop: 3 }}
       onQuickView={(p, itemPath) => console.log('Quick view:', p)}
     />
   );

@@ -239,7 +239,8 @@ export function EditableProductCard({
   const description = String(product?.description || '');
   const category = String(product?.category || '');
   const badge = String(product?.badge || '');
-  const imageUrl = String(product?.imageUrl || product?.image || '');
+  const fallbackImage = imageFallback || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80';
+  const imageUrl = String(product?.imageUrl || product?.image || fallbackImage);
 
   // Resolved phone number for WhatsApp
   const resolvedPhone = String(product?.whatsappNumber || whatsappNumber || '94770000000');

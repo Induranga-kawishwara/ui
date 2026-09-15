@@ -186,38 +186,6 @@ function InteractiveSocialDemo() {
   );
 }
 
-function InteractiveProductCardDemo() {
-  return (
-    <div className="w-full max-w-xs mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] hover:border-[#818CF8]/50 shadow-xl space-y-3 text-left">
-      <div className="relative aspect-square rounded-xl overflow-hidden bg-[#141829]">
-        <img
-          src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80"
-          alt="Product"
-          className="w-full h-full object-cover"
-        />
-        <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#818CF8] text-white">
-          BESTSELLER
-        </span>
-      </div>
-      <div className="flex items-center justify-between text-xs">
-        <span className="text-[#818CF8] font-bold uppercase tracking-wider text-[10px]">Footwear</span>
-        <div className="flex items-center gap-1 text-amber-400 font-semibold text-[11px]">
-          <Star className="w-3.5 h-3.5 fill-amber-400" />
-          <span>4.9 (128)</span>
-        </div>
-      </div>
-      <h4 className="font-bold text-white text-sm">Classic Oxford Runner</h4>
-      <div className="flex items-baseline gap-2">
-        <span className="text-base font-extrabold text-white">LKR 4,500</span>
-        <span className="text-xs line-through text-[#94A3B8]">LKR 5,900</span>
-      </div>
-      <button className="w-full py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center gap-1.5 border-0 cursor-pointer shadow-md">
-        <MessageSquare className="w-3.5 h-3.5" /> Order via WhatsApp
-      </button>
-    </div>
-  );
-}
-
 function InteractivePricingCardDemo() {
   return (
     <div className="w-full max-w-xs mx-auto p-6 rounded-2xl bg-[#0F1424] border-2 border-[#818CF8] shadow-[0_0_30px_rgba(129,140,248,0.2)] space-y-4 text-left">
@@ -522,59 +490,196 @@ function InteractiveContactFormDemo() {
   );
 }
 
-function InteractiveCartDrawerDemoInner() {
-  const { openCart, addItem, totalCount } = useCart();
+function InteractiveProductCardDemoInner() {
+  const { openCart, totalCount } = useCart();
+  const [lastWhatsAppQuery, setLastWhatsAppQuery] = useState<string | null>(null);
+
+  const products = [
+    {
+      id: 'ceylon-spiced-chai',
+      name: 'Royal Ceylon Spiced Chai Tea',
+      brand: 'Ceylon Organics',
+      price: 2450,
+      originalPrice: 'LKR 2,900',
+      currency: 'LKR',
+      category: 'Artisan Tea',
+      badge: 'Best Seller',
+      description: 'Handcrafted single-origin black tea infused with organic Sri Lankan cardamom, cinnamon, and ginger.',
+      imageUrl: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80',
+      whatsappNumber: '94771234567',
+      whatsappButtonText: 'Inquire on WhatsApp',
+      addToCartButtonText: 'Add to Cart',
+    },
+    {
+      id: 'nuwara-eliya-pekoe',
+      name: 'Single Estate Silver Tips Pekoe',
+      brand: 'Highland Estate',
+      price: 3800,
+      currency: 'LKR',
+      category: 'High Grown',
+      badge: 'Limited Reserve',
+      description: 'Sun-dried high altitude silver tips harvested from 6,000ft peaks in Nuwara Eliya, Sri Lanka.',
+      imageUrl: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80',
+      whatsappNumber: '94771234567',
+      whatsappButtonText: 'Chat on WhatsApp',
+      addToCartButtonText: 'Add to Cart',
+    },
+  ];
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 gap-4 w-full">
-      <div className="flex flex-wrap gap-3 justify-center">
+    <div className="flex flex-col gap-6 w-full p-2">
+      <div className="flex items-center justify-between pb-3 border-b border-[#23283B]">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-xs font-semibold text-neutral-300">Live Dual-Action Demo (LKR + WhatsApp + Cart)</span>
+        </div>
         <button
           type="button"
-          onClick={() =>
-            addItem({
-              id: 'shoe-vanta-1',
-              name: 'Vanta Aero-X Runner',
-              price: 189.99,
-              size: 'US 10',
-              color: 'Phantom Black',
-              image: '/products/vanta-aero-x.png',
-            })
-          }
-          className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#1E2337] text-white hover:bg-[#282F49] border border-[#2D3552] transition-colors cursor-pointer"
+          onClick={openCart}
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold hover:bg-emerald-600/30 transition-all cursor-pointer"
         >
-          + Add Vanta Runner ($189.99)
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            addItem({
-              id: 'shoe-hyper-2',
-              name: 'HyperPulse Knit',
-              price: 145.0,
-              size: 'US 9.5',
-              color: 'Sonic White',
-              image: '/products/hyperpulse-knit.png',
-            })
-          }
-          className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#1E2337] text-white hover:bg-[#282F49] border border-[#2D3552] transition-colors cursor-pointer"
-        >
-          + Add HyperPulse ($145.00)
+          <ShoppingBag className="w-3.5 h-3.5" />
+          <span>Cart ({totalCount})</span>
         </button>
       </div>
 
-      <button
-        type="button"
-        onClick={openCart}
-        className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-      >
-        <ShoppingBag className="w-4 h-4" />
-        <span>Open Cart Drawer ({totalCount} items)</span>
-      </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {products.map((p, idx) => (
+          <ProductCard
+            key={p.id}
+            itemPath={`featuredProducts[${idx}]`}
+            product={p}
+            cardVariant="modern-glass"
+            currency="LKR"
+            whatsappNumber="94771234567"
+            storeName="Ceylon Tea Masters"
+            onWhatsAppClick={(prod, url) => {
+              setLastWhatsAppQuery(decodeURIComponent(url.split('text=')[1] || ''));
+            }}
+          />
+        ))}
+      </div>
+
+      {lastWhatsAppQuery && (
+        <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-xs text-emerald-200">
+          <div className="font-bold text-emerald-400 mb-1 flex items-center gap-1.5">
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Last Single-Product WhatsApp Message Generated:</span>
+          </div>
+          <pre className="whitespace-pre-wrap font-mono text-[11px] text-neutral-300 bg-black/40 p-2.5 rounded-lg border border-neutral-800">
+            {lastWhatsAppQuery}
+          </pre>
+        </div>
+      )}
 
       <CartDrawer
-        whatsappNumber="94770000000"
-        storeName="DENEB Athletics"
-        freeShippingThreshold={200}
+        whatsappNumber="94771234567"
+        storeName="Ceylon Tea Masters"
+        currency="LKR"
+        freeShippingThreshold={10000}
+      />
+    </div>
+  );
+}
+
+function InteractiveProductCardDemo() {
+  return (
+    <CartProvider>
+      <InteractiveProductCardDemoInner />
+    </CartProvider>
+  );
+}
+
+function InteractiveCartDrawerDemoInner() {
+  const { openCart, addItem, totalCount, items, getWhatsAppOrderUrl, subtotal } = useCart();
+  const [previewMsg, setPreviewMsg] = useState(false);
+
+  const sampleProducts = [
+    {
+      id: 'lka-cin-1',
+      name: 'Organic Ceylon True Cinnamon (100g)',
+      brand: 'Ceylon Organics',
+      price: 1500,
+      image: 'https://images.unsplash.com/photo-1509358271058-acd22cc93898?auto=format&fit=crop&w=400&q=80',
+    },
+    {
+      id: 'lka-tea-2',
+      name: 'Single Estate Artisan Pekoe (250g)',
+      brand: 'Highland Tea Co.',
+      price: 3200,
+      image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=400&q=80',
+    },
+    {
+      id: 'lka-choc-3',
+      name: 'Handcrafted Ceylon Cocoa 70% Dark',
+      brand: 'Vanta Artisan',
+      price: 2100,
+      image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=400&q=80',
+    },
+  ];
+
+  const generatedUrl = getWhatsAppOrderUrl('94771234567', { storeName: 'DENEB Lanka Store', currency: 'LKR' });
+  const decodedMessage = decodeURIComponent(generatedUrl.split('text=')[1] || '');
+
+  return (
+    <div className="flex flex-col items-center justify-center p-6 gap-5 w-full">
+      <p className="text-xs text-neutral-400 text-center max-w-md">
+        Add multiple products to test unified WhatsApp order generation. When clicking <strong>Purchase through WhatsApp</strong>, all items are combined into a single structured order chat!
+      </p>
+
+      <div className="flex flex-wrap gap-2.5 justify-center">
+        {sampleProducts.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => addItem(p)}
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#1E2337] text-white hover:bg-[#282F49] border border-[#2D3552] transition-colors cursor-pointer flex items-center gap-1.5"
+          >
+            <span className="text-emerald-400 font-bold">+</span>
+            <span>{p.name.split(' (')[0]}</span>
+            <span className="text-neutral-400 text-[11px]">(LKR {p.price.toLocaleString()})</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={openCart}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <ShoppingBag className="w-4 h-4" />
+          <span>View Cart ({totalCount} items · LKR {subtotal.toLocaleString()})</span>
+        </button>
+
+        {items.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setPreviewMsg(!previewMsg)}
+            className="px-4 py-2.5 rounded-xl text-xs font-medium text-[#A5B4FC] bg-[#141829] border border-[#2D3552] hover:bg-[#1E233D] transition-colors cursor-pointer"
+          >
+            {previewMsg ? 'Hide Order Message' : 'Preview WhatsApp Text'}
+          </button>
+        )}
+      </div>
+
+      {previewMsg && items.length > 0 && (
+        <div className="w-full max-w-lg mt-2 p-4 rounded-xl bg-black/60 border border-emerald-500/30 text-left">
+          <div className="text-xs font-bold text-emerald-400 mb-2 flex items-center gap-1.5">
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Generated Single-Chat WhatsApp Order:</span>
+          </div>
+          <pre className="whitespace-pre-wrap font-mono text-[11px] text-neutral-300 bg-black/50 p-3 rounded-lg border border-neutral-800 max-h-60 overflow-y-auto">
+            {decodedMessage}
+          </pre>
+        </div>
+      )}
+
+      <CartDrawer
+        whatsappNumber="94771234567"
+        storeName="DENEB Lanka Store"
+        currency="LKR"
+        freeShippingThreshold={15000}
       />
     </div>
   );
@@ -1640,41 +1745,6 @@ export default function Demo() {
     nextPage: { title: 'ProductDetail', href: '/docs/components/product-detail' },
   },
 
-  'product-card': {
-    title: 'ProductCard',
-    description: 'High-converting commerce product card with responsive image, pricing, badge, and quick add-to-cart action.',
-    category: 'Storefront Sections',
-    badge: 'Commerce',
-    previewComponent: <InteractiveProductCardDemo />,
-    previewCode: `import { ProductCard } from "@deneb-ui/ui";
-
-export default function Demo() {
-  return (
-    <ProductCard
-      title="Deneb Nebula Lumina"
-      price="$149.00"
-      originalPrice="$189.00"
-      badge="BESTSELLER"
-      rating={4.9}
-      onAddToCart={() => alert('Added!')}
-    />
-  );
-}`,
-    usageCode: `import { ProductCard } from "@deneb-ui/ui";`,
-    props: [
-      { name: 'title', type: "string", defaultValue: "''", description: "Product name headline." },
-      { name: 'price', type: "number", defaultValue: "0", description: "Selling retail price in active currency." },
-      { name: 'compareAtPrice', type: "number", defaultValue: "undefined", description: "Original strike-through MSRP price for discount calculation." },
-      { name: 'currency', type: "string", defaultValue: "'$'", description: "Currency symbol or prefix." },
-      { name: 'image', type: "string", defaultValue: "''", description: "Product photograph URL." },
-      { name: 'category', type: "string", defaultValue: "''", description: "Category classification badge." },
-      { name: 'whatsappNumber', type: "string", defaultValue: "''", description: "Direct WhatsApp one-click order phone number." },
-      { name: 'itemPath', type: "string", defaultValue: "''", description: "Visual editing data binding path (e.g. 'content.products.0')." },
-    ],
-
-    prevPage: { title: 'SocialLinks', href: '/docs/components/social-links' },
-    nextPage: { title: 'PricingCard', href: '/docs/components/pricing-card' },
-  },
 
   'service-card': {
     title: 'ServiceCard',
@@ -2177,54 +2247,6 @@ export default function MobileLayout() {
     nextPage: { title: 'AnnouncementBar', href: '/docs/components/announcement-bar' },
   },
 
-  'cart-drawer': {
-    title: 'CartDrawer',
-    description: 'High-converting slide-over shopping cart drawer with quantity steppers, free shipping progress bar, direct WhatsApp checkout, and visual editing bindings.',
-    category: 'E-Commerce',
-    badge: 'Hot',
-    previewComponent: <InteractiveCartDrawerDemo />,
-    previewCode: `import { CartProvider, useCart, CartDrawer } from "@deneb-ui/ui";
-
-function StoreLayout({ children }) {
-  const { openCart, totalCount } = useCart();
-
-  return (
-    <div>
-      <header>
-        <button onClick={openCart}>Cart ({totalCount})</button>
-      </header>
-      {children}
-      <CartDrawer
-        whatsappNumber="94770000000"
-        storeName="DENEB Athletics"
-        freeShippingThreshold={200}
-      />
-    </div>
-  );
-}
-
-export default function App() {
-  return (
-    <CartProvider>
-      <StoreLayout />
-    </CartProvider>
-  );
-}`,
-    usageCode: `import { CartProvider, useCart, CartDrawer } from "@deneb-ui/ui";`,
-    cliCommand: `npx @deneb-ui/cli add cart-drawer`,
-    props: [
-      { name: 'basePath', type: 'string', defaultValue: '"cart"', description: 'JSON schema path for visual editing annotations.' },
-      { name: 'whatsappNumber', type: 'string', required: true, description: 'Business WhatsApp phone number with country code.' },
-      { name: 'storeName', type: 'string', description: 'Store name for order greeting.' },
-      { name: 'currency', type: 'string', defaultValue: '"$"', description: 'Currency symbol.' },
-      { name: 'freeShippingThreshold', type: 'number', description: 'Amount required to unlock free shipping banner.' },
-      { name: 'checkoutUrl', type: 'string', description: 'Optional secondary direct checkout URL.' },
-      { name: 'onCheckout', type: '(items, total) => void', description: 'Callback when checkout button is clicked.' },
-    ],
-    prevPage: { title: 'ContactForm', href: '/docs/components/contact-form' },
-    nextPage: { title: 'FilterSidebar', href: '/docs/components/filter-sidebar' },
-  },
-
   'filter-sidebar': {
     title: 'FilterSidebar',
     description: 'Faceted catalog filtering sidebar with category chips, price slider, and size swatches. Collapses behind a mobile toggle below 768px; always visible on tablet and desktop.',
@@ -2381,7 +2403,108 @@ export default function LocationMap({ mapUrl, address }: { mapUrl?: string; addr
       { name: 'title', type: 'string', defaultValue: '"Google Map Location"', description: 'Accessibility title attribute for the iframe.' },
     ],
     prevPage: { title: 'TestimonialSection', href: '/docs/components/testimonial-section' },
-    nextPage: { title: 'CustomerReviews', href: '/docs/components/customer-reviews' },
+    nextPage: { title: 'ProductCard', href: '/docs/components/product-card' },
+  },
+
+  'product-card': {
+    title: 'ProductCard',
+    description: 'High-converting e-commerce product card with Sri Lankan Rupee (LKR) pricing, brand attribution, dual WhatsApp inquiry & Add to Cart actions, and Fivora visual editing synchronization.',
+    category: 'E-Commerce & Storefront',
+    badge: 'LKR + WhatsApp',
+    previewComponent: <InteractiveProductCardDemo />,
+    previewCode: `import { ProductCard } from "@deneb-ui/ui";
+
+export default function FeaturedProduct() {
+  const product = {
+    id: "spiced-chai",
+    name: "Royal Ceylon Spiced Chai Tea",
+    brand: "Ceylon Organics",
+    price: "LKR 2,450.00",
+    originalPrice: "LKR 2,900.00",
+    description: "Single-origin Sri Lankan black tea with organic cinnamon and cardamom.",
+    imageUrl: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80",
+    whatsappNumber: "94771234567",
+    whatsappButtonText: "Inquire on WhatsApp",
+    addToCartButtonText: "Add to Cart"
+  };
+
+  return (
+    <ProductCard
+      itemPath="products[0]"
+      product={product}
+      cardVariant="modern-glass"
+      currency="LKR"
+      whatsappNumber="94771234567"
+      storeName="Ceylon Tea Masters"
+    />
+  );
+}`,
+    usageCode: `import { ProductCard } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add product-card`,
+    props: [
+      { name: 'itemPath', type: 'string', required: true, description: 'Fivora visual editing item path (e.g. "products[0]").' },
+      { name: 'product', type: 'ProductItem', required: true, description: 'Product data object containing name, brand, price, imageUrl, description, and WhatsApp settings.' },
+      { name: 'cardVariant', type: "'modern-glass' | 'classic' | 'minimal' | 'horizontal'", defaultValue: "'modern-glass'", description: 'Visual style and layout variant.' },
+      { name: 'currency', type: 'string', defaultValue: "'LKR'", description: 'Currency code or symbol for price formatting.' },
+      { name: 'showBrand', type: 'boolean', defaultValue: 'true', description: 'Whether to display the editable brand tag.' },
+      { name: 'showPrice', type: 'boolean', defaultValue: 'true', description: 'Whether to display the product price.' },
+      { name: 'whatsappNumber', type: 'string', defaultValue: "'94770000000'", description: 'Default WhatsApp number for product inquiries.' },
+      { name: 'whatsappActionLabel', type: 'string', defaultValue: "'Inquire on WhatsApp'", description: 'Default label for the WhatsApp button.' },
+      { name: 'addToCartLabel', type: 'string', defaultValue: "'Add to Cart'", description: 'Default label for the Add to Cart button.' },
+      { name: 'showWhatsAppButton', type: 'boolean', defaultValue: 'true', description: 'Whether to display the WhatsApp contact button.' },
+      { name: 'showAddToCartButton', type: 'boolean', defaultValue: 'true', description: 'Whether to display the Add to Cart button.' },
+      { name: 'storeName', type: 'string', description: 'Store name included in WhatsApp chat message template.' },
+      { name: 'onAddToCart', type: '(product: ProductItem) => void', description: 'Callback triggered when Add to Cart is clicked.' },
+      { name: 'onWhatsAppClick', type: '(product: ProductItem, url: string) => void', description: 'Callback triggered when WhatsApp button is clicked.' },
+    ],
+    prevPage: { title: 'Map', href: '/docs/components/map' },
+    nextPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
+  },
+
+  'cart-drawer': {
+    title: 'CartDrawer',
+    description: 'Interactive slide-over cart drawer with real-time state persistence, LKR currency formatting, quantity controls, and one-click unified WhatsApp checkout compiling all cart products into a single order chat message.',
+    category: 'E-Commerce & Storefront',
+    badge: 'WhatsApp Checkout',
+    previewComponent: <InteractiveCartDrawerDemo />,
+    previewCode: `import { CartProvider, CartDrawer, useCart } from "@deneb-ui/ui";
+
+function StoreHeader() {
+  const { openCart, totalCount } = useCart();
+  return (
+    <button onClick={openCart} className="relative p-2">
+      <span>Cart ({totalCount})</span>
+    </button>
+  );
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <CartProvider>
+      <StoreHeader />
+      {children}
+      <CartDrawer
+        whatsappNumber="94771234567"
+        storeName="DENEB Lanka Store"
+        currency="LKR"
+        freeShippingThreshold={15000}
+      />
+    </CartProvider>
+  );
+}`,
+    usageCode: `import { CartDrawer, CartProvider, useCart } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add cart-drawer`,
+    props: [
+      { name: 'basePath', type: 'string', defaultValue: "'cart'", description: 'Root key in site-data.json for Fivora visual editing.' },
+      { name: 'whatsappNumber', type: 'string', defaultValue: "'94770000000'", description: 'WhatsApp business phone number for order chat.' },
+      { name: 'storeName', type: 'string', description: 'Store name printed on the WhatsApp order summary.' },
+      { name: 'currency', type: 'string', defaultValue: "'LKR'", description: 'Currency symbol or code used for item and total calculation.' },
+      { name: 'freeShippingThreshold', type: 'number', description: 'Optional threshold in LKR to show free shipping progress bar.' },
+      { name: 'checkoutUrl', type: 'string', description: 'Optional secondary checkout web URL.' },
+      { name: 'onCheckout', type: '(items: CartItem[], total: number) => void', description: 'Optional checkout callback.' },
+    ],
+    prevPage: { title: 'ProductCard', href: '/docs/components/product-card' },
+    nextPage: { title: 'Button', href: '/docs/components/button' },
   },
 };
 

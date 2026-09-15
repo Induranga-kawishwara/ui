@@ -181,10 +181,10 @@ export function ComponentDocPage({
           </div>
 
           {activeTab === 'preview' ? (
-            <div className="relative min-h-[300px] w-full rounded-2xl border border-[#23283B] bg-[#0A0D17] cosmic-grid flex items-center justify-center p-8 sm:p-12 overflow-hidden shadow-xl">
+            <div className="relative min-h-[260px] sm:min-h-[300px] w-full rounded-2xl border border-[#23283B] bg-[#0A0D17] cosmic-grid flex items-center justify-center p-4 sm:p-8 md:p-12 overflow-hidden shadow-xl">
               {/* Radial celestial ambient light */}
               <div className="absolute inset-0 cosmic-radial-glow pointer-events-none" />
-              <div className="relative z-10 w-full flex items-center justify-center">
+              <div className="relative z-10 w-full flex items-center justify-center overflow-x-auto">
                 {previewComponent}
               </div>
             </div>
@@ -204,12 +204,12 @@ export function ComponentDocPage({
 
           <div className="space-y-3">
             {/* Package manager tabs */}
-            <div className="flex items-center gap-1 border-b border-[#23283B] pb-1">
+            <div className="flex items-center gap-1 border-b border-[#23283B] pb-1 overflow-x-auto">
               {(['npm', 'pnpm', 'yarn', 'bun'] as const).map((pm) => (
                 <button
                   key={pm}
                   onClick={() => setPackageManager(pm)}
-                  className={`px-3 py-1 rounded-md text-xs font-mono font-medium transition-all ${
+                  className={`px-3 py-1 rounded-md text-xs font-mono font-medium transition-all shrink-0 ${
                     packageManager === pm
                       ? 'text-[#818CF8] bg-[#818CF8]/10 border border-[#818CF8]/30 font-semibold'
                       : 'text-[#94A3B8] hover:text-white'
@@ -242,7 +242,7 @@ export function ComponentDocPage({
           <section id="props" className="space-y-4 pt-4 border-t border-[#23283B]">
             <h2 className="text-xl font-bold text-white tracking-tight">Props Reference</h2>
             <div className="overflow-x-auto rounded-xl border border-[#23283B] bg-[#0A0D17]">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[540px]">
                 <thead className="border-b border-[#23283B] bg-[#0E1220] text-[#CBD5E1] uppercase font-mono tracking-wider">
                   <tr>
                     <th className="px-4 py-3">Prop</th>

@@ -22,11 +22,11 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           <div className="relative z-50 w-72 max-w-[85vw] bg-[#0A0D17] border-r border-[#23283B] p-4 flex flex-col h-full overflow-y-auto shadow-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-[#23283B]">
               <span className="text-xs font-mono uppercase text-[#818CF8] font-bold">
-                Navigation Menu
+                Docs Navigation
               </span>
               <button
                 onClick={() => setMobileSidebarOpen(false)}
-                className="p-1 rounded-md text-[#94A3B8] hover:text-white"
+                className="p-1.5 rounded-lg border border-[#23283B] bg-[#121625] text-[#94A3B8] hover:text-white"
                 aria-label="Close menu"
               >
                 <X className="w-4 h-4" />
@@ -38,12 +38,12 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       )}
 
       {/* Main Container: sidebar docked to the left with full viewport width */}
-      <div className="flex-1 w-full px-4 sm:px-6 lg:px-8 flex gap-6 lg:gap-10">
+      <div className="flex-1 w-full px-3 sm:px-6 lg:px-8 flex gap-4 md:gap-6 lg:gap-10 max-w-7xl mx-auto">
         {/* Desktop Sticky Sidebar (visible on md: 768px+) */}
         <DocsSidebar className="hidden md:block border-r border-[#23283B]/60 pr-6 shrink-0 w-[220px] lg:w-[240px] sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto" />
 
         {/* Content Viewport */}
-        <main className="flex-1 min-w-0">{children}</main>
+        <main className="flex-1 min-w-0 pb-16">{children}</main>
       </div>
     </div>
   );

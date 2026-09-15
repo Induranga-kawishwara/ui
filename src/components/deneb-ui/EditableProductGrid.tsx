@@ -76,7 +76,7 @@ export function EditableProductGrid({
   products = [],
   categories = ['All'],
   cardVariant = 'modern-glass',
-  columns = { mobile: 1, tablet: 2, desktop: 4 },
+  columns = { mobile: 1, tablet: 2, desktop: 3 },
   onQuickView,
   cardPrefix = 'product',
   className = '',
@@ -99,11 +99,11 @@ export function EditableProductGrid({
   const gridColClasses = useMemo(() => {
     const m = columns.mobile || 1;
     const t = columns.tablet || 2;
-    const d = columns.desktop || 4;
+    const d = columns.desktop || 3;
 
     const mClass = m === 2 ? 'grid-cols-2' : 'grid-cols-1';
     const tClass = t === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2';
-    const dClass = d === 3 ? 'lg:grid-cols-3' : d === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-4';
+    const dClass = d === 4 ? 'lg:grid-cols-4' : d === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
 
     return `${mClass} ${tClass} ${dClass}`;
   }, [columns]);

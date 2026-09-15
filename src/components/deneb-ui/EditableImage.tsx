@@ -94,6 +94,12 @@ export function EditableImage({
       alt={alt}
       style={combinedStyle}
       className={`editable-image ${hoverZoom ? 'hover:scale-105' : ''} ${className}`.trim()}
+      onError={(e) => {
+        if (fallbackSrc && e.currentTarget.src !== fallbackSrc) {
+          e.currentTarget.src = fallbackSrc;
+        }
+        if (props.onError) props.onError(e);
+      }}
       {...props}
     />
   );

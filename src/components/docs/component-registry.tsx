@@ -2374,27 +2374,21 @@ export default function QuickViewDemo() {
     previewCode: `import { ProductGrid } from "@deneb-ui/ui";
 
 export default function Catalog() {
-  const products = [
-    { id: 1, name: "VANTA Aero X", category: "Performance", price: "LKR 32,500", imageUrl: "/products/vanta-aero-x.jpg" },
-    { id: 2, name: "VANTA Flux 01", category: "Sneakers", price: "LKR 28,900", imageUrl: "/products/vanta-flux-01.jpg" },
-    { id: 3, name: "VANTA Stealth Pro", category: "Performance", price: "LKR 21,200", imageUrl: "/products/vanta-stealth-pro.jpg" },
-  ];
-
+  // Zero-Config: Automatically fetches products via useProducts()
+  // and auto-derives category filter pills!
   return (
     <ProductGrid
       title="Trending Collection"
       subtitle="Just Dropped"
-      products={products}
-      categories={['All', 'Performance', 'Sneakers']}
       columns={{ mobile: 1, tablet: 2, desktop: 3 }}
-      onQuickView={(p, itemPath) => console.log('Quick view:', p)}
+      onQuickView={(p, itemPath) => console.log("Quick view:", p)}
     />
   );
 }`,
     usageCode: `import { ProductGrid } from "@deneb-ui/ui";`,
     cliCommand: `npx @deneb-ui/cli add product-grid`,
     props: [
-      { name: 'products', type: 'ProductItem[]', required: true, description: 'Array of products to display.' },
+      { name: 'products', type: 'ProductItem[]', required: false, defaultValue: 'useProducts()', description: 'Optional. If omitted, automatically fetches live products from site data and backend.' },
       { name: 'sectionPath', type: 'string', defaultValue: '"home"', description: 'Fivora section key for live editing.' },
       { name: 'title', type: 'string', defaultValue: '"Featured Collection"', description: 'Heading for the product grid.' },
       { name: 'subtitle', type: 'string', defaultValue: '"Just Dropped"', description: 'Badge or category subtitle above heading.' },

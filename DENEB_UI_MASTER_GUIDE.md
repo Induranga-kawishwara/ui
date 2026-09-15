@@ -110,21 +110,41 @@ export default config;
 ```
 
 ### 3.2 `next.config.ts` (Static Export Configuration)
+
+> ⚠️ **CRITICAL — AI Agents & Developers: Copy This Exactly**
+>
+> Do **NOT** add `outputFileTracingRoot`, `turbopack`, or `experimental` blocks.
+> The Fivora platform injects workspace roots automatically.
+> Adding them causes **TS1117: duplicate property** and fails build validation.
+
 ```typescript
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
+
+const basePath = (process.env.NEXT_PUBLIC_SITE_BASE_PATH ?? '').replace(
+  /\/$/,
+  '',
+);
 
 const nextConfig: NextConfig = {
-  output: "export",
+  output: 'export',
   trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
-  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || "",
+  basePath,
+  assetPrefix: basePath || undefined,
+  images: { unoptimized: true },
 };
 
 export default nextConfig;
 ```
+
+**What to include vs. never add:**
+
+| ✅ Include | ❌ Never add |
+| :--- | :--- |
+| `output: 'export'` | `outputFileTracingRoot` |
+| `trailingSlash: true` | `turbopack` |
+| `basePath` from `NEXT_PUBLIC_SITE_BASE_PATH` | `experimental.outputFileTracingRoot` |
+| `assetPrefix: basePath \|\| undefined` | `outputFileTracingRoot: process.cwd()` |
+| `images: { unoptimized: true }` | Any hardcoded absolute path |
 
 ### 3.3 `fivora-template.json` (Template Manifest v2)
 ```json

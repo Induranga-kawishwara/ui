@@ -1593,6 +1593,143 @@ export function ThemeInjector() {
 
 ---
 
+### Data & Commerce Integration Hooks
+
+DENEB UI provides headless reactive data hooks to cleanly access live storefront data, products, services, and backend endpoints without manual `fetch()` boilerplates.
+
+#### `useProducts(fallback?: ProductItem[])`
+**Import**: `import { useProducts } from "@deneb-ui/ui";`  
+**Category**: `Data & Commerce Hooks`  
+**Description**: React hook to retrieve products cleanly from `siteData`. Automatically resolves top-level `content.products`, nested `home.products`, live backend rehydration updates from `api.catalogUrl`, and instant parent editor `postMessage` updates.
+
+##### Signature
+```ts
+function useProducts(fallback?: ProductItem[]): ProductItem[]
+```
+
+##### Copy-Paste Usage Example
+```tsx
+import { useProducts, ProductGrid } from "@deneb-ui/ui";
+
+export function StoreCatalog() {
+  const products = useProducts();
+
+  return (
+    <ProductGrid
+      title="Featured Collection"
+      subtitle="Handpicked Styles"
+      products={products}
+      categories={["All", "Shoes", "Apparel"]}
+      cardVariant="modern-glass"
+      columns={{ mobile: 1, tablet: 2, desktop: 3 }}
+    />
+  );
+}
+```
+
+#### `useSiteApi()`
+**Import**: `import { useSiteApi } from "@deneb-ui/ui";`  
+**Category**: `Data & Commerce Hooks`  
+**Description**: Hook to access official Fivora backend API endpoints configured in `site-data.json` (`baseUrl`, `catalogUrl`, `contactUrl`, `analyticsUrl`).
+
+##### Signature
+```ts
+function useSiteApi(): SiteDataApiConfig | null
+```
+
+##### Copy-Paste Usage Example
+```tsx
+import { useSiteApi } from "@deneb-ui/ui";
+
+export function ApiDemo() {
+  const api = useSiteApi();
+
+  // api?.baseUrl      -> "https://api.fivora.site"
+  // api?.catalogUrl   -> "https://api.fivora.site/site-catalog/:slug/live-data"
+  // api?.contactUrl   -> "https://api.fivora.site/site-contact"
+  // api?.analyticsUrl -> "https://api.fivora.site/site-analytics/page-view"
+
+  return null;
+}
+```
+
+#### `useSiteCatalog()`
+**Import**: `import { useSiteCatalog } from "@deneb-ui/ui";`  
+**Category**: `Data & Commerce Hooks`  
+**Description**: Comprehensive hook returning `{ products, services, project, siteInstance, api }` in a single call with live rehydration.
+
+##### Signature
+```ts
+function useSiteCatalog(): {
+  products: ProductItem[];
+  services: ServiceItem[];
+  project: SiteDataProject | null;
+  siteInstance: SiteInstanceData | null;
+  api: SiteDataApiConfig | null;
+}
+```
+
+##### Copy-Paste Usage Example
+```tsx
+import { useSiteCatalog } from "@deneb-ui/ui";
+
+export function StoreOverview() {
+  const { products, services, project, siteInstance, api } = useSiteCatalog();
+
+  return (
+    <div>
+      <h3>{project?.title}</h3>
+      <p>Total Products: {products.length}</p>
+      <p>Total Services: {services.length}</p>
+    </div>
+  );
+}
+```
+
+#### `useServices(fallback?: ServiceItem[])`
+**Import**: `import { useServices } from "@deneb-ui/ui";`  
+**Category**: `Data & Commerce Hooks`  
+**Description**: React hook to retrieve services from `content.services` or `content.home.services` with live rehydration support.
+
+##### Signature
+```ts
+function useServices(fallback?: ServiceItem[]): ServiceItem[]
+```
+
+##### Copy-Paste Usage Example
+```tsx
+import { useServices, ServiceCard } from "@deneb-ui/ui";
+
+export function ServicesList() {
+  const services = useServices();
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {services.map((service, index) => (
+        <ServiceCard
+          key={service.id || index}
+          itemPath={`services[${index}]`}
+          service={service}
+        />
+      ))}
+    </div>
+  );
+}
+```
+
+#### `useSiteData()`
+**Import**: `import { useSiteData } from "@deneb-ui/ui";`  
+**Category**: `Data & Commerce Hooks`  
+**Description**: Access the entire live `siteData` tree (content, common navigation, shop info, requirements, and media).
+
+##### Signature
+```ts
+function useSiteData(): SiteData
+```
+
+
+---
+
 
 #### 41. `GoogleFeedback`
 

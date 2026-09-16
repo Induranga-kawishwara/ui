@@ -731,13 +731,14 @@ function InteractiveGoogleFeedbackDemo() {
 
 function InteractiveTestimonialSectionDemo() {
   return (
-    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full max-w-5xl mx-auto rounded-2xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden shadow-2xl">
       <TestimonialSection
         basePath="testimonials"
         badge="Critic Acclaim"
         heading="What Connoisseurs Say"
         subheading="Unfiltered sensory impressions and reviews from sommeliers, culinary critics, and world sensory judges."
-        cardClassName="!bg-[#121625] !border-[#23283B] !text-white"
+        className="py-6 sm:py-10 px-2 sm:px-4"
+        cardClassName="!bg-[#121625] !border-[#23283B] !text-white shadow-xl hover:!border-[#818CF8]/40 transition-all"
       />
     </div>
   );

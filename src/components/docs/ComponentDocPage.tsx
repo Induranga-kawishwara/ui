@@ -181,7 +181,7 @@ export function ComponentDocPage({
           </div>
 
           {activeTab === 'preview' ? (
-            <div className="relative min-h-[260px] sm:min-h-[300px] w-full rounded-2xl border border-[#23283B] bg-[#0A0D17] cosmic-grid flex items-center justify-center p-4 sm:p-8 md:p-12 overflow-hidden shadow-xl">
+            <div className="relative min-h-[260px] sm:min-h-[300px] w-full rounded-2xl border border-[#23283B] bg-[#0A0D17] cosmic-grid flex items-center justify-center p-2 sm:p-5 lg:p-7 overflow-hidden shadow-xl">
               {/* Radial celestial ambient light */}
               <div className="absolute inset-0 cosmic-radial-glow pointer-events-none" />
               <div className="relative z-10 w-full flex items-center justify-center overflow-x-auto">

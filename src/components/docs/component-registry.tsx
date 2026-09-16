@@ -344,7 +344,7 @@ function InteractiveProductGridDemo() {
   ];
 
   return (
-    <div className="w-full max-w-5xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
       <ProductGrid
         title="New Arrivals"
         subtitle="Just Dropped"
@@ -374,7 +374,7 @@ function InteractiveProductGridDemo() {
 
 function InteractiveCustomerReviewsDemo() {
   return (
-    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
       <CustomerReviews
         title="Runner Verified Feedback"
         subtitle="Authentic Athlete Reviews"
@@ -718,12 +718,11 @@ function InteractiveGoogleFeedbackDemo() {
     <div className="w-full rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
       <GoogleFeedback
         basePath="feedback"
-        badgeTitle="Google"
+        badgeTitle="Google Reviews"
         badgeRating="4.9"
         badgeReviewsCount="128 verified reviews"
-        heading="Loved by Coffee Lovers Worldwide"
-        subheading="Real stories and reviews from our global community of coffee purists and daily ritualists."
-        cardClassName="!bg-[#121625] !border-[#23283B] !text-white"
+        heading="Loved by Customers Worldwide"
+        subheading="Real stories and verified 5-star reviews from our official Google Business profile."
       />
     </div>
   );
@@ -738,7 +737,6 @@ function InteractiveTestimonialSectionDemo() {
         heading="What Connoisseurs Say"
         subheading="Unfiltered sensory impressions and reviews from sommeliers, culinary critics, and world sensory judges."
         className="py-6 sm:py-10 px-2 sm:px-4"
-        cardClassName="!bg-[#121625] !border-[#23283B] !text-white shadow-xl hover:!border-[#818CF8]/40 transition-all"
       />
     </div>
   );

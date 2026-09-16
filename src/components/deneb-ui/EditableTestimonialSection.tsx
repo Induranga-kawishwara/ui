@@ -126,7 +126,7 @@ function TestimonialCard({
 
   return (
     <div
-      data-preview-item-path={`testimonials.testimonials[${index}]`}
+      data-preview-item-path={`${basePath}.testimonials[${index}]`}
       className={`relative p-5 sm:p-7 lg:p-8 rounded-2xl bg-gradient-to-b from-slate-900/60 to-slate-950/80 border border-slate-800/80 hover:border-slate-700 shadow-md transition-all duration-300 flex flex-col justify-between space-y-5 min-w-0 ${cardClassName || ''}`.trim()}
     >
       <div className="space-y-4 min-w-0">
@@ -134,7 +134,7 @@ function TestimonialCard({
         <div className="flex flex-wrap items-center justify-between gap-2">
           {Boolean(currentItem.tag) && (
             <span
-              data-preview-field-path={`testimonials.testimonials[${index}].tag`}
+              data-preview-field-path={`${basePath}.testimonials[${index}].tag`}
               className="px-2.5 py-1 rounded-full bg-slate-800/80 text-lime-400 text-[10px] sm:text-[11px] uppercase tracking-wider font-extrabold border border-lime-400/20 shrink-0"
             >
               {tagText}
@@ -152,7 +152,7 @@ function TestimonialCard({
             </div>
             <span
               ref={ratingRef}
-              data-preview-field-path={`testimonials.testimonials[${index}].rating`}
+              data-preview-field-path={`${basePath}.testimonials[${index}].rating`}
               data-fivora-rating-text="true"
               className="text-xs font-black text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-md border border-amber-400/20 group-hover:bg-amber-400/20 transition-colors tabular-nums"
             >
@@ -163,7 +163,7 @@ function TestimonialCard({
 
         {/* Quote Body */}
         <blockquote
-          data-preview-field-path={`testimonials.testimonials[${index}].quote`}
+          data-preview-field-path={`${basePath}.testimonials[${index}].quote`}
           className="font-serif-italic text-sm sm:text-base text-slate-300 leading-relaxed break-words"
         >
           &ldquo;{quoteText}&rdquo;
@@ -175,18 +175,18 @@ function TestimonialCard({
         <img
           src={authorAvatar}
           alt={authorName}
-          data-preview-field-path={`testimonials.testimonials[${index}].avatar`}
+          data-preview-field-path={`${basePath}.testimonials[${index}].avatar`}
           className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border border-slate-700 shadow-sm shrink-0"
         />
         <div className="min-w-0 flex-1">
           <h4
-            data-preview-field-path={`testimonials.testimonials[${index}].author`}
+            data-preview-field-path={`${basePath}.testimonials[${index}].author`}
             className="font-heading font-black text-sm sm:text-base text-white truncate"
           >
             {authorName}
           </h4>
           <p
-            data-preview-field-path={`testimonials.testimonials[${index}].role`}
+            data-preview-field-path={`${basePath}.testimonials[${index}].role`}
             className="text-xs text-slate-400 font-medium leading-snug line-clamp-2"
           >
             {authorRole}
@@ -240,17 +240,17 @@ export function EditableTestimonialSection({
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-10 sm:mb-14 px-2">
           {badge && (
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-lime-400/10 text-lime-400 text-xs uppercase tracking-widest font-black border border-lime-400/20">
-              <span data-preview-field-path={`testimonials.badge`}>{badge}</span>
+              <span data-preview-field-path={`${basePath}.badge`}>{badge}</span>
             </div>
           )}
           <h2
-            data-preview-field-path={`testimonials.heading`}
+            data-preview-field-path={`${basePath}.heading`}
             className="font-heading text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight"
           >
             {heading}
           </h2>
           <p
-            data-preview-field-path={`testimonials.subheading`}
+            data-preview-field-path={`${basePath}.subheading`}
             className="text-xs sm:text-base text-slate-400 leading-relaxed max-w-2xl mx-auto"
           >
             {subheading}
@@ -259,7 +259,7 @@ export function EditableTestimonialSection({
 
         {/* Testimonials Grid */}
         <div
-          data-preview-list-path={`testimonials.testimonials`}
+          data-preview-list-path={`${basePath}.testimonials`}
           className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-7 [grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))] w-full"
         >
           {items.map((item, index) => (

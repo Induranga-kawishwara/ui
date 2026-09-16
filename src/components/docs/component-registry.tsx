@@ -2,35 +2,14 @@
 
 import React, { useState } from 'react';
 import {
-  ContactActions,
-  WhatsAppButton,
-  PhoneButton,
-  EmailButton,
-  LocationCard,
-  LocationLink,
-  Address,
-  SocialLinks,
-  SocialButton,
-  BusinessHours,
-  FloatingContactWidget,
-  Button as DenebButton,
-  Card as DenebCard,
-  Badge as DenebBadge,
-  Heading as DenebHeading,
   ProductCard,
   ProductDetail,
   ProductGrid,
   ProductQuickView,
+  ProductItem,
   CustomerReviews,
   TrustBadges,
   StickyMobileBar,
-  PricingCard,
-  TestimonialCard,
-  ServiceCard,
-  Accordion as FAQAccordion,
-  AnnouncementBar,
-  CategoryPills,
-  ContactForm,
   CartDrawer,
   FilterSidebar,
   CartProvider,
@@ -47,9 +26,7 @@ import {
   MessageSquare,
   MapPin,
   Clock,
-  Star,
   ShoppingBag,
-  ShieldCheck,
   ChevronRight,
   CheckCircle2,
   Maximize2,
@@ -315,8 +292,8 @@ function InteractiveProductQuickViewDemo() {
 }
 
 function InteractiveProductGridDemo() {
-  const [selectedQuickView, setSelectedQuickView] = useState<any>(null);
-  const sampleProducts = [
+  const [selectedQuickView, setSelectedQuickView] = useState<ProductItem | null>(null);
+  const sampleProducts: ProductItem[] = [
     {
       id: 1,
       name: 'VANTA Aero X',
@@ -359,9 +336,9 @@ function InteractiveProductGridDemo() {
           isOpen={Boolean(selectedQuickView)}
           onClose={() => setSelectedQuickView(null)}
           product={{
-            id: String(selectedQuickView.id),
-            title: selectedQuickView.name,
-            price: selectedQuickView.price,
+            id: String(selectedQuickView.id ?? '1'),
+            title: String(selectedQuickView.name || selectedQuickView.title || 'Product'),
+            price: selectedQuickView.price ?? 'LKR 0',
             imageUrl: selectedQuickView.imageUrl,
             badge: selectedQuickView.badge,
             description: 'Precision-engineered storefront product ready for high conversion.',
@@ -1350,18 +1327,7 @@ export default function Page() {
     description: 'A versatile container card with obsidian glass styling, luminous borders, and structured content slots.',
     category: 'Core Primitives',
     badge: 'Core',
-    previewComponent: (
-      <div className="max-w-sm w-full p-6 rounded-2xl border border-[#23283B] bg-[#0E111C] space-y-3 shadow-xl hover:border-[#818CF8]/40 transition-all">
-        <div className="flex items-center gap-2 text-[#818CF8] font-bold text-xs uppercase tracking-wider">
-          <DenebStarIcon className="w-3.5 h-3.5" />
-          <span>Cosmic Card Container</span>
-        </div>
-        <h3 className="font-bold text-lg text-white">Starlight Glass Panel</h3>
-        <p className="text-xs text-[#94A3B8] leading-relaxed">
-          Pre-styled container with subtle inner gradients and backdrop blur for clean storefront composition.
-        </p>
-      </div>
-    ),
+    previewComponent: <InteractiveCardDemo />,
     previewCode: `import { Card } from "@deneb-ui/ui";
 
 export default function CardDemo() {
@@ -1389,20 +1355,7 @@ export default function CardDemo() {
     description: 'Status pills and indicator tags with celestial starlight glows.',
     category: 'Core Primitives',
     badge: 'Core',
-    previewComponent: (
-      <div className="flex flex-wrap gap-3 items-center justify-center">
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#818CF8]/20 text-[#A5B4FC] border border-[#818CF8]/40 flex items-center gap-1.5 shadow-[0_0_12px_rgba(129,140,248,0.3)]">
-          <DenebStarIcon className="w-3 h-3" />
-          <span>Celestial Active</span>
-        </span>
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-          Open Now
-        </span>
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-          Free Shipping
-        </span>
-      </div>
-    ),
+    previewComponent: <InteractiveBadgeDemo />,
     previewCode: `import { Badge } from "@deneb-ui/ui";\n\n<Badge variant="glow">Celestial Active</Badge>`,
     usageCode: `import { Badge } from "@deneb-ui/ui";`,
     props: [

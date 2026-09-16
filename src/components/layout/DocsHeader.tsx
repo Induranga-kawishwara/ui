@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DenebLogo, DenebStarIcon, GitHubIcon } from '@/components/brand/DenebLogo';
 import { SearchDialog } from './SearchDialog';
-import { Search, Menu, X, ExternalLink, Sparkles } from 'lucide-react';
+import { Search, Menu, X, Sparkles } from 'lucide-react';
 
 export function DocsHeader({ onToggleSidebar }: { onToggleSidebar?: () => void }) {
   const pathname = usePathname();

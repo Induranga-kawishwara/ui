@@ -19,8 +19,6 @@ import {
   ExternalLink,
   FileText,
   Bookmark,
-  Info,
-  CheckCircle2,
 } from 'lucide-react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
@@ -664,7 +662,7 @@ export function StoreFooter() {
               'Data & Theme Engine',
             ].map((catName) => {
               const catComponents = Object.entries(COMPONENT_DOCS).filter(
-                ([_, doc]) => doc.category === catName
+                ([, doc]) => doc.category === catName
               );
               if (catComponents.length === 0) return null;
 

@@ -217,8 +217,6 @@ export function EditableProductCard({
   whatsappActionLabel = 'Inquire on WhatsApp',
   addToCartLabel = 'Add to Cart',
   actionSlot,
-  actionLabel,
-  actionLabelPath,
   onAddToCart,
   onWhatsAppClick,
   className = '',
@@ -333,7 +331,7 @@ export function EditableProductCard({
         ...style,
       }}
       className={`editable-product-card group ${isHorizontal ? 'is-horizontal' : ''} ${className}`.trim()}
-      {...(props as any)}
+      {...(props as React.HTMLAttributes<HTMLElement>)}
     >
       {/* Image Wrap */}
       <div

@@ -3,15 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  Sparkles,
   Terminal,
-  FolderGit2,
   Boxes,
   CheckCircle2,
   ArrowRight,
   Zap,
-  Code2,
-  Layers,
 } from 'lucide-react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
@@ -19,7 +15,6 @@ import { DenebStarIcon } from '@/components/brand/DenebLogo';
 
 export default function InstallationPage() {
   const [pm, setPm] = useState<'npm' | 'pnpm' | 'yarn' | 'bun'>('npm');
-  const [framework, setFramework] = useState<'nextjs' | 'vite'>('nextjs');
 
   const tocItems: TocItem[] = [
     { id: 'quickstart', title: 'Quick Scaffolding' },

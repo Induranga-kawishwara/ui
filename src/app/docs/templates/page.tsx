@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Box, Sparkles, ArrowRight, CheckCircle2, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ShoppingBag } from 'lucide-react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';

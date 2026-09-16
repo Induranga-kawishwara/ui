@@ -93,6 +93,7 @@ export const SIDEBAR_NAV: NavSection[] = [
       { title: 'CartDrawer', href: '/docs/components/cart-drawer', badge: 'Hot', isNew: true },
       { title: 'FilterSidebar', href: '/docs/components/filter-sidebar', isNew: true },
       { title: 'ProductDetail', href: '/docs/components/product-detail', badge: 'Hot', isNew: true },
+      { title: 'PlatformProductDetail', href: '/docs/components/platform-product-detail', badge: 'Safe', isNew: true },
       { title: 'ProductQuickView', href: '/docs/components/product-quickview', badge: 'Modal', isNew: true },
       { title: 'ProductGrid', href: '/docs/components/product-grid', isNew: true },
       { title: 'ProductCard', href: '/docs/components/product-card' },

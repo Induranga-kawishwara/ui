@@ -49,7 +49,7 @@
    - [Data & Theme Engine (2)](#data--theme-engine)
 7. [Complete Storefront Implementation Examples](#complete-storefront-implementation-examples)
    - [Main Storefront Page (`src/app/page.tsx`)](#71-main-storefront-page-srcapppagetsx)
-   - [Static Dynamic Product Route (`src/app/products/[id]/page.tsx`)](#72-static-dynamic-product-route-srcappproductsidpagetsx)
+   - [Stable Live Product Route (`src/app/products/detail/page.tsx`)](#72-stable-live-product-route-srcappproductsdetailpagetsx)
 8. [CLI Tooling & Validation Workflow](#cli-tooling--validation-workflow)
 9. [Local Development](#local-development)
 10. [Authors & License](#authors--license)
@@ -72,7 +72,7 @@ When a merchant views your storefront inside Fivora:
 
 | Package | Purpose | Version |
 | :--- | :--- | :--- |
-| [`@deneb-ui/ui`](https://www.npmjs.com/package/@deneb-ui/ui) | 43 production commerce components, state providers, and hooks | `latest` |
+| [`@deneb-ui/ui`](https://www.npmjs.com/package/@deneb-ui/ui) | Production commerce components, state providers, and hooks | `latest` |
 | [`@deneb-ui/core`](https://www.npmjs.com/package/@deneb-ui/core) | CSS token injection, variable resolver, theme presets, schemas | `latest` |
 | [`@deneb-ui/cli`](https://www.npmjs.com/package/@deneb-ui/cli) | Local visual preview simulator (`lab`), preflight validator (`validate`), zip packaging | `latest` |
 
@@ -1017,26 +1017,50 @@ export function ProductItemView({ product, index }: { product: any; index: numbe
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `product` | `ProductItem` | `required` | Comprehensive product record. |
-| `whatsappNumber` | `string` | `''` | WhatsApp target number. |
-| `showReviews` | `boolean` | `true` | Render customer review summary. |
+| `sectionPath` | `string` | `'product'` | Visual editing path prefix. |
+| `sizes` | `string[]` | footwear defaults | Fallback options when the product has no sizes/options. |
+| `colors` | `Array<{ name: string; hex: string }>` | default swatches | Color choices shown by the detail UI. |
+| `onAddToSelection` | `(product, size, color) => void` | `undefined` | Primary action callback. |
+| `whatsappUrl` | `string` | generated from product data | Optional custom WhatsApp order URL. |
 
 ##### Copy-Paste Usage Example
 ```tsx
-import { ProductDetail, useSiteData } from "@deneb-ui/ui";
+import { ProductDetail } from "@deneb-ui/ui";
 
 export function SingleProductDetail({ product }: { product: any }) {
-  const siteData = useSiteData();
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
       <ProductDetail
         product={product}
-        whatsappNumber={siteData?.shop?.whatsapp}
-        showReviews={true}
+        sectionPath="product"
+        onAddToSelection={(item, size, color) =>
+          console.log("Selected", item, size, color)
+        }
       />
     </main>
   );
 }
 ```
+
+#### `PlatformProductDetail` (recommended for product routes)
+
+`ProductDetail` is the visual component. `PlatformProductDetail` is the route
+controller: it reads the product ID, resolves current live data, retries the
+catalog API, and handles loading, errors, and missing products.
+
+```tsx
+// src/app/products/detail/page.tsx
+import { PlatformProductDetail } from "@deneb-ui/ui";
+
+export default function ProductDetailPage() {
+  return <PlatformProductDetail />;
+}
+```
+
+For a custom template design, pass
+`renderProduct={(product, context) => <MyDetail product={product} index={context.productIndex} />}`
+or use the `usePlatformProductDetail()` hook directly. Build card links with
+`platformProductDetailHref(product.id)`.
 
 #### 23. `ProductQuickView`
 
@@ -2041,33 +2065,18 @@ export default function HomePage() {
 }
 ```
 
-### 7.2 Static Dynamic Product Route (`src/app/products/[id]/page.tsx`)
+### 7.2 Stable Live Product Route (`src/app/products/detail/page.tsx`)
 ```tsx
-import initialSiteData from "@/data/site-data.json";
-import { ProductDetail } from "@deneb-ui/ui";
+import { PlatformProductDetail } from "@deneb-ui/ui";
 
-// REQUIRED FOR NEXT.JS STATIC EXPORT:
-export function generateStaticParams() {
-  const products = initialSiteData.content?.products || [];
-  return products.map((p) => ({ id: p.id }));
-}
-
-export default async function ProductPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const products = initialSiteData.content?.products || [];
-  const product = products.find((p) => p.id === id) || products[0];
-
-  return (
-    <main className="max-w-6xl mx-auto px-4 py-12">
-      <ProductDetail product={product} />
-    </main>
-  );
+export default function ProductDetailPage() {
+  return <PlatformProductDetail />;
 }
 ```
+
+Link products with `platformProductDetailHref(product.id)`. Never use
+`/products/${product.id}` in a static export because merchant-created products
+do not have build-time HTML directories.
 
 ---
 

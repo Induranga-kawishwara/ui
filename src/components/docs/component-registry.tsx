@@ -19,6 +19,7 @@ import {
   Heading as DenebHeading,
   ProductCard,
   ProductDetail,
+  PlatformProductDetail,
   ProductGrid,
   ProductQuickView,
   CustomerReviews,
@@ -268,6 +269,28 @@ function InteractiveProductDetailDemo() {
         product={sampleProduct}
         sectionPath="demo-product"
         onAddToSelection={(p, size, color) => alert(`Selected ${p.name} - Size: ${size}, Color: ${color}`)}
+      />
+    </div>
+  );
+}
+
+function InteractivePlatformProductDetailDemo() {
+  const sampleProduct = {
+    id: 'live-product-1',
+    name: 'Live Catalog Oxford',
+    price: 'LKR 24,900',
+    description: 'A product resolved by stable query ID, including items created after the template was published.',
+    badge: 'LIVE PRODUCT',
+    featuredImage: '/products/vanta-stealth-pro.jpg',
+    sizes: ['40', '41', '42', '43'],
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden shadow-2xl">
+      <PlatformProductDetail
+        productId={sampleProduct.id}
+        products={[sampleProduct]}
+        catalogUrl={null}
       />
     </div>
   );
@@ -2315,6 +2338,69 @@ export default function SingleProductPage() {
       { name: 'className', type: 'string', defaultValue: '""', description: 'Additional CSS or Tailwind classes.' },
     ],
     prevPage: { title: 'Hero', href: '/docs/components/hero' },
+    nextPage: { title: 'PlatformProductDetail', href: '/docs/components/platform-product-detail' },
+  },
+
+  'platform-product-detail': {
+    title: 'PlatformProductDetail',
+    description: 'The safe product-page controller for static storefronts. It reads the stable query ID, resolves live SiteData, retries the catalog API, and owns loading, error, and not-found states.',
+    category: 'Storefront Sections',
+    badge: 'Recommended',
+    previewComponent: <InteractivePlatformProductDetailDemo />,
+    previewCode: `import { PlatformProductDetail } from "@deneb-ui/ui";
+
+// src/app/products/detail/page.tsx
+export default function ProductDetailPage() {
+  return <PlatformProductDetail />;
+}`,
+    usageCode: `import {
+  PlatformProductDetail,
+  platformProductDetailHref,
+  usePlatformProductDetail,
+} from "@deneb-ui/ui";`,
+    props: [
+      { name: 'productId', type: 'string | number', description: 'Explicit product ID. When omitted, the component reads ?id= from the browser URL.' },
+      { name: 'queryParam', type: 'string', defaultValue: '"id"', description: 'Query-string key used to resolve the requested product.' },
+      { name: 'products', type: 'ProductDetailItem[]', description: 'Optional fallback products while SiteDataProvider loads.' },
+      { name: 'catalogUrl', type: 'string | null', description: 'Optional live catalog endpoint override. Use null to disable remote lookup.' },
+      { name: 'renderProduct', type: '(product, context) => ReactNode', description: 'Template-specific renderer; platform lookup and fallback behavior remain automatic.' },
+      { name: 'loadingFallback', type: 'ReactNode', description: 'Custom loading state.' },
+      { name: 'notFoundFallback', type: 'ReactNode', description: 'Custom missing-product state.' },
+      { name: 'errorFallback', type: 'ReactNode', description: 'Custom network-error state.' },
+      { name: 'backHref', type: 'string', defaultValue: '"/products/"', description: 'Destination of the default back action.' },
+    ],
+    variants: [
+      {
+        title: 'Template-specific product design',
+        description: 'Keep your own visual component and delegate product resolution to DENEB.',
+        preview: <InteractivePlatformProductDetailDemo />,
+        code: `import { PlatformProductDetail } from "@deneb-ui/ui";
+import { MyProductDetail } from "@/components/products/my-product-detail";
+
+export default function ProductDetailPage() {
+  return (
+    <PlatformProductDetail
+      renderProduct={(product, { productIndex }) => (
+        <MyProductDetail product={product} index={productIndex} />
+      )}
+    />
+  );
+}`,
+      },
+      {
+        title: 'Safe product-card link',
+        description: 'Use the helper instead of a build-time dynamic /products/[id] URL.',
+        preview: (
+          <a className="text-[#A5B4FC] underline" href="#preview">
+            /products/detail/?id=live-product-1
+          </a>
+        ),
+        code: `import { platformProductDetailHref } from "@deneb-ui/ui";
+
+<a href={platformProductDetailHref(product.id)}>View product</a>`,
+      },
+    ],
+    prevPage: { title: 'ProductDetail', href: '/docs/components/product-detail' },
     nextPage: { title: 'ProductQuickView', href: '/docs/components/product-quickview' },
   },
 
@@ -2360,7 +2446,7 @@ export default function QuickViewDemo() {
       { name: 'onAddToCart', type: '(product, quantity) => void', description: 'Callback when buyer adds item to cart.' },
       { name: 'addToCartLabel', type: 'string', defaultValue: '"Add to Selection"', description: 'Label for the primary CTA button.' },
     ],
-    prevPage: { title: 'ProductDetail', href: '/docs/components/product-detail' },
+    prevPage: { title: 'PlatformProductDetail', href: '/docs/components/platform-product-detail' },
     nextPage: { title: 'ProductGrid', href: '/docs/components/product-grid' },
   },
 

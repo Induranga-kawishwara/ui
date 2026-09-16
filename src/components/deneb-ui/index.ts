@@ -13,7 +13,9 @@ export * from './EditableGrid';
 export * from './EditableSection';
 export * from './EditableProductCard';
 export * from './EditableProductGrid';
+export * from './EditableProductShowcase';
 export * from './EditableProductDetail';
+export * from './PlatformProductDetail';
 export * from './EditableCustomerReviews';
 export * from './EditableGoogleFeedback';
 export * from './EditableServiceCard';
@@ -43,6 +45,7 @@ export { DenebComponentStyles } from './DenebComponentStyles';
 export { FontLoader, DENEB_FONTS_LINK_ID } from './fonts/FontLoader';
 export { useDenebFonts } from './fonts/useDenebFonts';
 export * from './hooks/useComponentStyle';
+export * from './hooks/useWhatsAppForm';
 export {
   DENEB_FONT_REGISTRY,
   DENEB_GOOGLE_FONT_COUNT,
@@ -91,6 +94,7 @@ export { EditableBox as Box } from './EditableBox';
 export { EditableList as List } from './EditableList';
 export { EditableProductCard as ProductCard } from './EditableProductCard';
 export { EditableProductGrid as ProductGrid } from './EditableProductGrid';
+export { EditableProductShowcase as ProductShowcase } from './EditableProductShowcase';
 export { EditableProductDetail as ProductDetail } from './EditableProductDetail';
 export { EditableCustomerReviews as CustomerReviews } from './EditableCustomerReviews';
 export { EditableGoogleFeedback as GoogleFeedback } from './EditableGoogleFeedback';
@@ -109,6 +113,8 @@ export { EditableCartDrawer as CartDrawer } from './EditableCartDrawer';
 export { EditableFilterSidebar as FilterSidebar } from './EditableFilterSidebar';
 
 
+export { PlatformAdditionalPages, AdditionalPagesNav } from './PlatformAdditionalPages';
+
 /**
  * DENEB UI Framework Metadata
  * Developed by Chamika Gayashan & Induranga Kawishwara
@@ -116,4 +122,3 @@ export { EditableFilterSidebar as FilterSidebar } from './EditableFilterSidebar'
 export const DENEB_FRAMEWORK_NAME = 'DENEB UI';
 export const DENEB_FRAMEWORK_VERSION = '2.0.0';
 export const DENEB_AUTHOR = 'Chamika Gayashan & Induranga Kawishwara';
-

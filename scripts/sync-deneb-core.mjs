@@ -20,10 +20,12 @@ const uiRoot = path.resolve(__dirname, '..');
 
 // Potential source of core components:
 // 1. node_modules/@deneb-ui/ui/src (when installed from npm)
-// 2. Relative monorepo: ../core/packages/deneb-ui/src (when running locally or linked)
+// 2. Relative monorepo: ../deneb-core/packages/deneb-ui/src (local checkout)
+// 3. Legacy sibling name: ../core/packages/deneb-ui/src
 function findCoreComponentsDir() {
   const candidates = [
     path.join(uiRoot, 'node_modules', '@deneb-ui', 'ui', 'src'),
+    path.join(uiRoot, '..', 'deneb-core', 'packages', 'deneb-ui', 'src'),
     path.join(uiRoot, '..', 'core', 'packages', 'deneb-ui', 'src'),
   ];
   for (const c of candidates) {
@@ -37,6 +39,7 @@ function findCoreComponentsDir() {
 function findCoreCliDir() {
   const candidates = [
     path.join(uiRoot, 'node_modules', '@deneb-ui', 'cli'),
+    path.join(uiRoot, '..', 'deneb-core', 'cli', 'deneb-cli'),
     path.join(uiRoot, '..', 'core', 'cli', 'deneb-cli'),
   ];
   for (const c of candidates) {

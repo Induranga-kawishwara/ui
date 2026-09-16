@@ -715,7 +715,7 @@ function InteractiveFilterSidebarDemo() {
 
 function InteractiveGoogleFeedbackDemo() {
   return (
-    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
       <GoogleFeedback
         basePath="feedback"
         badgeTitle="Google"
@@ -731,7 +731,7 @@ function InteractiveGoogleFeedbackDemo() {
 
 function InteractiveTestimonialSectionDemo() {
   return (
-    <div className="w-full max-w-5xl mx-auto rounded-2xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden shadow-2xl">
+    <div className="w-full rounded-2xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 md:p-6 overflow-hidden shadow-2xl">
       <TestimonialSection
         basePath="testimonials"
         badge="Critic Acclaim"

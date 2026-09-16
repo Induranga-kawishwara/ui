@@ -23,7 +23,7 @@ export function DocsHeader({ onToggleSidebar }: { onToggleSidebar?: () => void }
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b border-[#23283B] bg-[#080A12]/90 backdrop-blur-xl">
-        <div className="flex h-16 items-center justify-between px-3 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto">
+        <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-10 w-full">
           {/* Left: Mobile Docs Sidebar Trigger & Logo & Desktop Primary Nav */}
           <div className="flex items-center gap-2 sm:gap-6">
             {onToggleSidebar && (

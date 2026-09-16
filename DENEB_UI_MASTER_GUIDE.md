@@ -943,26 +943,49 @@ export function ProductItemView({ product, index }: { product: any; index: numbe
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `product` | `ProductItem` | `required` | Comprehensive product record. |
-| `whatsappNumber` | `string` | `''` | WhatsApp target number. |
-| `showReviews` | `boolean` | `true` | Render customer review summary. |
+| `sectionPath` | `string` | `'product'` | Visual editing path prefix. |
+| `sizes` | `string[]` | footwear defaults | Fallback options when the product has no sizes/options. |
+| `colors` | `Array<{ name: string; hex: string }>` | default swatches | Color choices shown by the detail UI. |
+| `onAddToSelection` | `(product, size, color) => void` | `undefined` | Primary action callback. |
+| `whatsappUrl` | `string` | generated from product data | Optional custom WhatsApp order URL. |
 
 ##### Copy-Paste Usage Example
 ```tsx
-import { ProductDetail, useSiteData } from "@deneb-ui/ui";
+import { ProductDetail } from "@deneb-ui/ui";
 
 export function SingleProductDetail({ product }: { product: any }) {
-  const siteData = useSiteData();
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
       <ProductDetail
         product={product}
-        whatsappNumber={siteData?.shop?.whatsapp}
-        showReviews={true}
+        sectionPath="product"
+        onAddToSelection={(item, size, color) =>
+          console.log("Selected", item, size, color)
+        }
       />
     </main>
   );
 }
 ```
+
+#### `PlatformProductDetail` (recommended for product routes)
+
+Use `PlatformProductDetail` for the stable `/products/detail/?id=...` route. It
+resolves both build-time and newly-created live products, retries the catalog
+API, and owns loading, error, and not-found states.
+
+```tsx
+// src/app/products/detail/page.tsx
+import { PlatformProductDetail } from "@deneb-ui/ui";
+
+export default function ProductDetailPage() {
+  return <PlatformProductDetail />;
+}
+```
+
+Use `platformProductDetailHref(product.id)` for product-card links. Templates
+that need a custom layout can pass `renderProduct` or use the
+`usePlatformProductDetail()` hook.
 
 #### 23. `ProductQuickView`
 **Import**: `import { ProductQuickView } from "@deneb-ui/ui";`  
@@ -2027,33 +2050,17 @@ export default function HomePage() {
 }
 ```
 
-### 6.3 Static Route for Dynamic Product Pages (`src/app/products/[id]/page.tsx`)
+### 6.3 Stable Live Product Route (`src/app/products/detail/page.tsx`)
 ```tsx
-import initialSiteData from "@/data/site-data.json";
-import { ProductDetail } from "@deneb-ui/ui";
+import { PlatformProductDetail } from "@deneb-ui/ui";
 
-// REQUIRED FOR STATIC EXPORT:
-export function generateStaticParams() {
-  const products = initialSiteData.content?.products || [];
-  return products.map((p) => ({ id: p.id }));
-}
-
-export default async function ProductPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const products = initialSiteData.content?.products || [];
-  const product = products.find((p) => p.id === id) || products[0];
-
-  return (
-    <main className="max-w-6xl mx-auto px-4 py-12">
-      <ProductDetail product={product} />
-    </main>
-  );
+export default function ProductDetailPage() {
+  return <PlatformProductDetail />;
 }
 ```
+
+Link products with `platformProductDetailHref(product.id)`. Do not use a
+build-time `/products/[id]` route for merchant-managed catalogs.
 
 ---
 
@@ -2091,7 +2098,7 @@ When using an AI assistant (ChatGPT, Claude, Cursor, Antigravity) to convert an 
 4. **Step 4: Dynamic State Binding**:
    Replace static hardcoded data with `useProducts()`, `useSiteData()`, or `siteData.content.*`.
 5. **Step 5: Static Export Validation**:
-   Ensure `output: 'export'` in `next.config.ts`, `generateStaticParams()` on all dynamic `[id]` pages, and no server-side secrets.
+   Ensure `output: 'export'` in `next.config.ts`, export the stable `/products/detail/` page, use `platformProductDetailHref(product.id)`, and include no server-side secrets.
 6. **Step 6: Preflight & Package**:
    ```bash
    npx @deneb-ui/cli validate

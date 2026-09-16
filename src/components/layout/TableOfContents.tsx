@@ -23,7 +23,7 @@ export function TableOfContents({ items }: { items: TocItem[] }) {
   return (
     <>
       {/* Desktop Sticky Table of Contents (xl: 1280px+) */}
-      <div className="hidden xl:block w-[220px] shrink-0 pl-6 py-6 text-xs sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
+      <div className="hidden xl:block w-[230px] xl:w-[250px] shrink-0 border-l border-[#23283B]/60 pl-6 py-6 text-xs sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
         <div className="space-y-4">
           <div>
             <h4 className="font-semibold text-[#CBD5E1] tracking-wide uppercase text-[11px] mb-3 flex items-center gap-1.5">

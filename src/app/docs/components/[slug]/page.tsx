@@ -26,6 +26,7 @@ export const COMPONENT_SLUGS = [
   'product-detail',
   'product-quickview',
   'product-grid',
+  'product-showcase',
   'cart-drawer',
   'filter-sidebar',
   'customer-reviews',

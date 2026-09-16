@@ -1118,7 +1118,56 @@ export function StoreCatalog() {
 }
 ```
 
-#### 25. `CartDrawer`
+#### 25. `ProductShowcase` (or `EditableProductShowcase`)
+
+**Import**: `import { ProductShowcase, EditableProductShowcase } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: Complete flagship product showcase section with live-editable category filter pills, glassmorphism cards, interactive color swatches (`data-preview-field-type="color"`), compare-at strikethrough pricing, quick-view detail modal linking (`/products/detail/?id=...`), and direct WhatsApp order button.
+
+##### Fivora Backend & Routing Alignment
+- **Backend Endpoints**: Fully compatible with `ShopOwnerController` & `ShopOwnerService` endpoints (`GET /shop-owner/shops/:shopId/products`, `POST`, `PUT`, `PATCH .../availability`, `POST .../reorder`).
+- **Generated Site Routing**: Follows `backend/src/common/generated-site-product-route.ts` mapping (`/products/detail/?id=...` and `/products/:id`).
+
+##### Props Table
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `sectionPath` | `string` | `'home'` | Field path prefix for Fivora visual editing synchronization. |
+| `listPath` | `string` | `'featuredPhones'` | List property key within section (e.g., `'products'`). |
+| `badge` | `string` | `''` | Section pill kicker / badge text. |
+| `heading` | `string` | `''` | Section main heading text. |
+| `description` | `string` | `''` | Section description copy. |
+| `products` | `ProductShowcaseItem[]` | `undefined` | Array of products (falls back to `siteData.content[sectionPath][listPath]`). |
+| `currency` | `string` | `'Rs'` | Currency prefix. |
+| `shippingLabel` | `string` | `'Free Insured Courier'` | Free delivery or courier subtext badge. |
+| `whatsappOrderLabel` | `string` | `'Order via WhatsApp'` | WhatsApp action button label. |
+| `categories` | `string[]` | `['All', ...]` | Category filter options. |
+| `onQuickView` | `(product, index) => void` | `undefined` | Callback invoked when user clicks quick view eye icon. |
+| `productDetailRoutePrefix` | `string` | `'/products/detail'` | Product detail route prefix. |
+
+##### Copy-Paste Usage Example
+```tsx
+import { ProductShowcase, useSiteData } from "@deneb-ui/ui";
+
+export function FeaturedShowcase() {
+  const siteData = useSiteData();
+  const home = siteData?.content?.home;
+
+  return (
+    <ProductShowcase
+      sectionPath="home"
+      listPath="featuredPhones"
+      badge={home?.badge ?? "Direct Showroom & Verified Refurbished"}
+      heading={home?.heading ?? "Upgrade Your Everyday."}
+      description={home?.description ?? "Brand new flagships and laboratory-certified refurbished devices."}
+      currency="Rs"
+      shippingLabel="Free Insured Courier"
+      whatsappOrderLabel="Order via WhatsApp"
+    />
+  );
+}
+```
+
+#### 26. `CartDrawer`
 
 **Import**: `import { CartDrawer } from "@deneb-ui/ui";`  
 **Category**: `Storefront Sections`  

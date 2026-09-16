@@ -286,12 +286,12 @@ export function EditableProductCard({
 
   const variantStyles: Record<ProductCardVariant, React.CSSProperties> = {
     'modern-glass': {
-      backgroundColor: 'rgba(255, 255, 255, 0.85)',
+      backgroundColor: 'var(--product-card-bg, #0F1424)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
-      border: '1px solid rgba(226, 232, 240, 0.8)',
+      border: '1px solid var(--product-card-border, #1E2638)',
       borderRadius: '16px',
-      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
+      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.4)',
       overflow: 'hidden',
       transition: 'transform 0.25s ease, box-shadow 0.25s ease',
       display: 'flex',
@@ -393,8 +393,8 @@ export function EditableProductCard({
                   fontSize: '0.75rem',
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
-                  color: 'var(--brand-accent, #14b8a6)',
-                  fontWeight: 600,
+                  color: 'var(--brand-accent, #a3e635)',
+                  fontWeight: 700,
                   display: 'inline-block',
                 }}
               />
@@ -411,8 +411,8 @@ export function EditableProductCard({
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'var(--muted-text, #64748b)',
-                  backgroundColor: 'rgba(241, 245, 249, 0.9)',
+                  color: '#94a3b8',
+                  backgroundColor: 'rgba(30, 41, 59, 0.8)',
                   padding: '2px 8px',
                   borderRadius: '6px',
                 }}
@@ -430,7 +430,7 @@ export function EditableProductCard({
               fontSize: '1.125rem',
               fontWeight: 700,
               lineHeight: 1.35,
-              color: 'var(--heading-color, #0f172a)',
+              color: 'var(--heading-color, #ffffff)',
               marginBottom: '0.375rem',
             }}
           />
@@ -444,7 +444,7 @@ export function EditableProductCard({
               defaultValue={description}
               style={{
                 fontSize: '0.875rem',
-                color: 'var(--muted-text, #64748b)',
+                color: 'var(--muted-text, #94a3b8)',
                 lineHeight: 1.5,
                 marginBottom: '0.75rem',
                 display: '-webkit-box',
@@ -461,7 +461,7 @@ export function EditableProductCard({
           style={{
             marginTop: '0.75rem',
             paddingTop: '0.75rem',
-            borderTop: cardVariant === 'minimal' ? 'none' : '1px solid rgba(226, 232, 240, 0.7)',
+            borderTop: cardVariant === 'minimal' ? 'none' : '1px solid rgba(51, 65, 85, 0.6)',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.75rem',
@@ -478,7 +478,7 @@ export function EditableProductCard({
                 style={{
                   fontSize: '1.3rem',
                   fontWeight: 800,
-                  color: 'var(--brand-color, #2563eb)',
+                  color: 'var(--brand-color, #ffffff)',
                   letterSpacing: '-0.02em',
                 }}
               />

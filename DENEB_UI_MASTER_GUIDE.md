@@ -251,10 +251,23 @@ export default nextConfig;
 4. **Defensive Defaults**:
    - Always use nullish coalescing (`??`) rather than `||` for text values.
    - Always default array lists: `const products = content?.products ?? [];` so probe testing never throws `Cannot read properties of undefined (reading 'map')`.
+5. **Platform Additional Pages (`additionalPages`)**:
+   - **What it is**: Merchants configure custom policy & information pages (Privacy Policy, Terms of Service, Return Policy, Shipping Info, About) directly in the Fivora Merchant Studio.
+   - **Where it goes**: Every template MUST render these in the Footer (or Navigation menu) so shoppers can view store policies.
+   - **Exact Contract Rules**:
+     - Container wrapper MUST have `data-preview-list-path="additionalPages"` and MUST stay mounted even when the array is empty (`[]`).
+     - Each item in loop MUST have `data-preview-item-path={`additionalPages[${index}]`}`.
+     - ONLY the link title text gets `data-preview-field-path={`additionalPages[${index}].title`}`.
+     - Never attach field markers to non-leaf routing fields (`id`, `slug`, `url`, `content`, `isPublished`).
+     - Never place visual markers inside elements tagged with `data-preview-static`.
+   - **Pre-built Component**: Alternatively, use `<PlatformAdditionalPages pages={siteData?.additionalPages} />` from `@deneb-ui/ui`.
+6. **Platform Contract Protection (`controlOnlyPaths`)**:
+   - Platform-managed fields like `__fivoraIntake.*` (onboarding questionnaires) and non-visual properties of `additionalPages` are managed by Fivora.
+   - Always maintain `node scripts/merge-platform-contract.js` in `package.json` scripts (`validate` and `build`) so these 25 platform-managed paths are automatically excluded from visual editing DOM checks.
 
 ---
 
-## 5. Master DENEB UI Component Catalog (All 43 Components with Props & Real Code)
+## 5. Master DENEB UI Component Catalog (All 44 Components with Props & Real Code)
 
 Every single component below is imported directly from `@deneb-ui/ui`:
 
@@ -1740,6 +1753,59 @@ export function StoreMap() {
         address={siteData?.shop?.address}
       />
     </div>
+  );
+}
+```
+
+#### 44. `PlatformAdditionalPages`
+**Import**: `import { PlatformAdditionalPages } from "@deneb-ui/ui";`  
+**Category**: `Navigation & Platform`  
+**Description**: Turnkey component that automatically renders dynamic merchant policy and information pages (`additionalPages`) injected by the Fivora platform. Automatically attaches compliant `data-preview-list-path`, `data-preview-item-path`, and `data-preview-field-path` visual markers while isolating non-editable routing paths.
+
+##### Props Table
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `pages` | `AdditionalPageItem[]` | `[]` | Array of additional pages from `siteData.additionalPages`. |
+| `listPath` | `string` | `"additionalPages"` | Fivora visual editing list path identifier. |
+| `variant` | `"links" \| "inline" \| "column"` | `"links"` | Display layout variant for the pages. |
+| `className` | `string` | `""` | Container CSS or Tailwind styling classes. |
+| `linkClassName` | `string` | `""` | Link element styling classes. |
+
+##### Copy-Paste Usage Example
+```tsx
+import { PlatformAdditionalPages } from "@deneb-ui/ui";
+import { useSiteData } from "@/lib/siteDataContext";
+
+export function StoreFooter() {
+  const siteData = useSiteData();
+
+  return (
+    <footer className="bg-slate-950 text-slate-400 py-12 px-6">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 className="text-white font-bold mb-4">{siteData?.shop?.name ?? "Store"}</h3>
+          <p className="text-sm">{siteData?.shop?.description}</p>
+        </div>
+
+        <div>
+          <h4 className="text-white font-semibold text-sm mb-3">Quick Links</h4>
+          <ul className="space-y-2 text-sm">
+            <li><a href="/" className="hover:text-white">Home</a></li>
+            <li><a href="#products" className="hover:text-white">Catalog</a></li>
+          </ul>
+        </div>
+
+        {/* Dynamic Merchant Policies & Custom Pages */}
+        <div>
+          <h4 className="text-white font-semibold text-sm mb-3">Policies & Legal</h4>
+          <PlatformAdditionalPages 
+            pages={siteData?.additionalPages}
+            variant="links"
+            linkClassName="text-sm text-slate-400 hover:text-white transition-colors"
+          />
+        </div>
+      </div>
+    </footer>
   );
 }
 ```

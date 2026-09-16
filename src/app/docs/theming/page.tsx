@@ -17,8 +17,8 @@ export default function ThemingPage() {
   ];
 
   return (
-    <div className="flex w-full gap-8 lg:gap-10">
-      <div className="flex-1 min-w-0 py-6 space-y-10">
+    <div className="flex w-full min-h-full">
+      <div className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 xl:px-12 py-8 space-y-10">
         <div className="flex items-center gap-2 text-xs text-[#94A3B8]">
           <Link href="/docs/installation" className="hover:text-white transition-colors">
             Docs

@@ -37,13 +37,13 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         </div>
       )}
 
-      {/* Main Container: sidebar docked to the left with full viewport width */}
-      <div className="flex-1 w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex gap-4 md:gap-6 lg:gap-8 xl:gap-10">
+      {/* Main Container: full viewport spread with flush edge-to-edge docked sidebars */}
+      <div className="flex-1 w-full flex">
         {/* Desktop Sticky Sidebar (visible on md: 768px+) */}
-        <DocsSidebar className="hidden md:block border-r border-[#23283B]/60 pr-6 shrink-0 w-[230px] lg:w-[250px] xl:w-[260px] sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto" />
+        <DocsSidebar className="hidden md:block border-r border-[#23283B]/60 px-4 lg:px-5 shrink-0 w-[240px] lg:w-[260px] xl:w-[270px] sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto" />
 
         {/* Content Viewport */}
-        <main className="flex-1 min-w-0 pb-16">{children}</main>
+        <main className="flex-1 min-w-0 flex flex-col">{children}</main>
       </div>
     </div>
   );

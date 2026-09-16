@@ -73,8 +73,8 @@ export default function SetupFivoraPage() {
   ];
 
   return (
-    <div suppressHydrationWarning className="flex w-full gap-8 lg:gap-10">
-      <div ref={contentRef} className="flex-1 min-w-0 py-6 space-y-12">
+    <div suppressHydrationWarning className="flex w-full min-h-full">
+      <div ref={contentRef} className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 xl:px-12 py-8 space-y-12">
         {/* Breadcrumb Navigation */}
         <div className="flex items-center gap-2 text-xs text-[#94A3B8]">
           <Link href="/docs/introduction" className="hover:text-white transition-colors">

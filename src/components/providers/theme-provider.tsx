@@ -14,8 +14,38 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const THEME_STORAGE_KEY = 'deneb-theme';
 
+function disableTransitionsTemporarily() {
+  if (typeof document === 'undefined') return;
+  const css = document.createElement('style');
+  css.setAttribute('type', 'text/css');
+  css.appendChild(
+    document.createTextNode(
+      `*, *::before, *::after {
+        -webkit-transition: none !important;
+        -moz-transition: none !important;
+        -o-transition: none !important;
+        -ms-transition: none !important;
+        transition: none !important;
+      }`
+    )
+  );
+  document.head.appendChild(css);
+
+  // Force synchronous reflow so classes apply simultaneously at 0ms
+  void window.getComputedStyle(document.body).opacity;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (document.head.contains(css)) {
+        document.head.removeChild(css);
+      }
+    });
+  });
+}
+
 function applyThemeClass(newTheme: Theme) {
   if (typeof document === 'undefined') return;
+  disableTransitionsTemporarily();
   const root = document.documentElement;
   if (newTheme === 'dark') {
     root.classList.add('dark');
@@ -52,8 +82,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {
-    setThemeState(newTheme);
     applyThemeClass(newTheme);
+    setThemeState(newTheme);
     try {
       localStorage.setItem(THEME_STORAGE_KEY, newTheme);
     } catch {
@@ -62,16 +92,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setThemeState((prev) => {
-      const nextTheme = prev === 'dark' ? 'light' : 'dark';
-      applyThemeClass(nextTheme);
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-      } catch {
-        // localStorage unavailable
-      }
-      return nextTheme;
-    });
+    const isDark = document.documentElement.classList.contains('dark');
+    const nextTheme: Theme = isDark ? 'light' : 'dark';
+    applyThemeClass(nextTheme);
+    setThemeState(nextTheme);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {
+      // localStorage unavailable
+    }
   }, []);
 
   return (

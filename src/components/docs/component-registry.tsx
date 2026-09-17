@@ -372,7 +372,7 @@ function InteractiveProductGridDemo() {
 
 function InteractiveCustomerReviewsDemo() {
   return (
-    <div className="w-full rounded-3xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full overflow-hidden">
       <CustomerReviews
         title="Runner Verified Feedback"
         subtitle="Authentic Athlete Reviews"
@@ -623,11 +623,11 @@ function InteractiveCartDrawerDemoInner() {
             key={p.id}
             type="button"
             onClick={() => addItem(p)}
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#1E2337] text-white hover:bg-[#282F49] border border-[#2D3552] transition-colors cursor-pointer flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white text-slate-800 hover:bg-slate-50 border border-slate-200 dark:bg-[#1E2337] dark:text-white dark:hover:bg-[#282F49] dark:border-[#2D3552] transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs"
           >
-            <span className="text-emerald-400 font-bold">+</span>
+            <span className="text-emerald-500 font-bold">+</span>
             <span>{p.name.split(' (')[0]}</span>
-            <span className="text-neutral-400 text-[11px]">(LKR {p.price.toLocaleString()})</span>
+            <span className="text-slate-500 dark:text-neutral-400 text-[11px]">(LKR {p.price.toLocaleString()})</span>
           </button>
         ))}
       </div>
@@ -646,7 +646,7 @@ function InteractiveCartDrawerDemoInner() {
           <button
             type="button"
             onClick={() => setPreviewMsg(!previewMsg)}
-            className="px-4 py-2.5 rounded-xl text-xs font-medium text-[#A5B4FC] bg-[#141829] border border-[#2D3552] hover:bg-[#1E233D] transition-colors cursor-pointer"
+            className="px-4 py-2.5 rounded-xl text-xs font-medium text-indigo-600 dark:text-[#A5B4FC] bg-white dark:bg-[#141829] border border-slate-200 dark:border-[#2D3552] hover:bg-slate-50 dark:hover:bg-[#1E233D] transition-colors cursor-pointer shadow-xs"
           >
             {previewMsg ? 'Hide Order Message' : 'Preview WhatsApp Text'}
           </button>
@@ -654,8 +654,8 @@ function InteractiveCartDrawerDemoInner() {
       </div>
 
       {previewMsg && items.length > 0 && (
-        <div className="w-full max-w-lg mt-2 p-4 rounded-xl bg-black/60 border border-emerald-500/30 text-left">
-          <div className="text-xs font-bold text-emerald-400 mb-2 flex items-center gap-1.5">
+        <div className="w-full max-w-lg mt-2 p-4 rounded-xl bg-slate-50 border border-emerald-500/40 dark:bg-black/60 dark:border-emerald-500/30 text-left shadow-xs">
+          <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-1.5">
             <MessageSquare className="w-3.5 h-3.5" />
             <span>Generated Single-Chat WhatsApp Order:</span>
           </div>
@@ -713,7 +713,7 @@ function InteractiveFilterSidebarDemo() {
 
 function InteractiveGoogleFeedbackDemo() {
   return (
-    <div className="w-full rounded-3xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full overflow-hidden">
       <GoogleFeedback
         basePath="feedback"
         badgeTitle="Google Reviews"
@@ -721,6 +721,7 @@ function InteractiveGoogleFeedbackDemo() {
         badgeReviewsCount="128 verified reviews"
         heading="Loved by Customers Worldwide"
         subheading="Real stories and verified 5-star reviews from our official Google Business profile."
+        className="py-1 sm:py-2 px-0"
       />
     </div>
   );
@@ -728,13 +729,13 @@ function InteractiveGoogleFeedbackDemo() {
 
 function InteractiveTestimonialSectionDemo() {
   return (
-    <div className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 md:p-6 overflow-hidden shadow-sm dark:shadow-2xl">
+    <div className="w-full overflow-hidden">
       <TestimonialSection
         basePath="testimonials"
         badge="Critic Acclaim"
         heading="What Connoisseurs Say"
         subheading="Unfiltered sensory impressions and reviews from sommeliers, culinary critics, and world sensory judges."
-        className="py-6 sm:py-10 px-2 sm:px-4"
+        className="py-1 sm:py-2 px-0"
       />
     </div>
   );
@@ -795,29 +796,29 @@ function InteractiveDialogDemo() {
 
       {open && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#0F1424] border border-[#23283B] rounded-2xl p-6 shadow-2xl space-y-4 text-left">
-            <div className="flex items-center justify-between border-b border-[#23283B] pb-3">
-              <h3 className="font-bold text-white text-base">Quick Product Preview</h3>
+          <div className="w-full max-w-md bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] rounded-2xl p-6 shadow-2xl space-y-4 text-left">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#23283B] pb-3">
+              <h3 className="font-bold text-slate-900 dark:text-white text-base">Quick Product Preview</h3>
               <button
                 onClick={() => setOpen(false)}
-                className="text-xs text-[#94A3B8] hover:text-white bg-transparent border-0 cursor-pointer"
+                className="text-xs text-slate-500 hover:text-slate-900 dark:text-[#94A3B8] dark:hover:text-white bg-transparent border-0 cursor-pointer"
               >
                 ✕ Close
               </button>
             </div>
-            <p className="text-xs text-[#94A3B8] leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-[#94A3B8] leading-relaxed">
               DENEB Dialog primitives support keyboard Escape listeners, focus traps, backdrop blur, and visual editing paths.
             </p>
             <div className="pt-2 flex justify-end gap-2">
               <button
                 onClick={() => setOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#1F2538] text-white border-0 cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-[#1F2538] dark:text-white dark:hover:bg-[#282F49] border border-slate-200 dark:border-transparent cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={() => setOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#818CF8] text-white border-0 cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-[#818CF8] dark:hover:bg-[#6366F1] border-0 cursor-pointer shadow-xs"
               >
                 Confirm Order
               </button>
@@ -833,13 +834,13 @@ function InteractiveGridDemo() {
   return (
     <div className="w-full p-4">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-xs">
-        <div className="p-4 rounded-xl bg-[#121625] border border-[#23283B] text-white font-semibold">
+        <div className="p-4 rounded-xl bg-white border border-slate-200 text-slate-900 font-semibold shadow-xs dark:bg-[#121625] dark:border-[#23283B] dark:text-white dark:shadow-none">
           Auto-Fit Card 1
         </div>
-        <div className="p-4 rounded-xl bg-[#121625] border border-[#23283B] text-white font-semibold">
+        <div className="p-4 rounded-xl bg-white border border-slate-200 text-slate-900 font-semibold shadow-xs dark:bg-[#121625] dark:border-[#23283B] dark:text-white dark:shadow-none">
           Auto-Fit Card 2
         </div>
-        <div className="p-4 rounded-xl bg-[#121625] border border-[#23283B] text-white font-semibold">
+        <div className="p-4 rounded-xl bg-white border border-slate-200 text-slate-900 font-semibold shadow-xs dark:bg-[#121625] dark:border-[#23283B] dark:text-white dark:shadow-none">
           Auto-Fit Card 3
         </div>
       </div>
@@ -850,7 +851,7 @@ function InteractiveGridDemo() {
 function InteractiveImageDemo() {
   return (
     <div className="w-full max-w-xs p-4 mx-auto">
-      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#23283B] shadow-lg group">
+      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 dark:border-[#23283B] shadow-lg group">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
@@ -870,9 +871,9 @@ function InteractivePhoneDemo() {
     <div className="flex items-center justify-center p-4">
       <a
         href="tel:+15550192834"
-        className="px-5 py-2.5 rounded-xl font-semibold text-xs bg-[#121625] text-white border border-[#23283B] hover:border-[#818CF8]/50 flex items-center gap-2 text-decoration-none"
+        className="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-slate-800 border border-slate-200 hover:border-indigo-500/50 hover:bg-slate-50 dark:bg-[#121625] dark:text-white dark:border-[#23283B] dark:hover:border-[#818CF8]/50 flex items-center gap-2 text-decoration-none shadow-xs"
       >
-        <Phone className="w-3.5 h-3.5 text-[#818CF8]" />
+        <Phone className="w-3.5 h-3.5 text-indigo-600 dark:text-[#818CF8]" />
         <span>Call +1 (555) 019-2834</span>
       </a>
     </div>
@@ -884,9 +885,9 @@ function InteractiveEmailDemo() {
     <div className="flex items-center justify-center p-4">
       <a
         href="mailto:support@deneb-ui.dev?subject=Inquiry"
-        className="px-5 py-2.5 rounded-xl font-semibold text-xs bg-[#121625] text-white border border-[#23283B] hover:border-[#818CF8]/50 flex items-center gap-2 text-decoration-none"
+        className="px-5 py-2.5 rounded-xl font-semibold text-xs bg-white text-slate-800 border border-slate-200 hover:border-indigo-500/50 hover:bg-slate-50 dark:bg-[#121625] dark:text-white dark:border-[#23283B] dark:hover:border-[#818CF8]/50 flex items-center gap-2 text-decoration-none shadow-xs"
       >
-        <Mail className="w-3.5 h-3.5 text-[#818CF8]" />
+        <Mail className="w-3.5 h-3.5 text-indigo-600 dark:text-[#818CF8]" />
         <span>support@deneb-ui.dev</span>
       </a>
     </div>
@@ -895,16 +896,16 @@ function InteractiveEmailDemo() {
 
 function InteractiveFloatingWidgetDemo() {
   return (
-    <div className="relative h-40 w-full max-w-sm mx-auto border border-dashed border-[#23283B] rounded-2xl p-4 flex flex-col justify-between bg-[#0A0D1A]/50">
-      <span className="text-[11px] text-[#94A3B8]">Screen simulation area</span>
-      <div className="self-end flex items-center gap-2 p-2 rounded-2xl bg-[#0F1424] border border-[#23283B] shadow-xl">
-        <button className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center border-0">
+    <div className="relative h-40 w-full max-w-sm mx-auto border border-dashed border-slate-300 dark:border-[#23283B] rounded-2xl p-4 flex flex-col justify-between bg-slate-100/70 dark:bg-[#0A0D1A]/50">
+      <span className="text-[11px] text-slate-500 dark:text-[#94A3B8]">Screen simulation area</span>
+      <div className="self-end flex items-center gap-2 p-2 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] shadow-lg dark:shadow-xl">
+        <button className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center border-0 cursor-pointer">
           <MessageSquare className="w-4 h-4" />
         </button>
-        <button className="w-8 h-8 rounded-xl bg-[#818CF8] text-white flex items-center justify-center border-0">
+        <button className="w-8 h-8 rounded-xl bg-indigo-600 dark:bg-[#818CF8] text-white flex items-center justify-center border-0 cursor-pointer">
           <Phone className="w-4 h-4" />
         </button>
-        <span className="text-xs font-semibold text-white px-1">Need help?</span>
+        <span className="text-xs font-semibold text-slate-800 dark:text-white px-1">Need help?</span>
       </div>
     </div>
   );
@@ -917,7 +918,7 @@ function InteractiveLocationLinkDemo() {
         href="https://maps.google.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 text-xs text-[#818CF8] hover:underline font-semibold"
+        className="inline-flex items-center gap-1.5 text-xs text-indigo-600 dark:text-[#818CF8] hover:underline font-semibold"
       >
         <MapPin className="w-3.5 h-3.5" />
         <span>Visit Flagship Store in Colombo, LK ↗</span>
@@ -928,12 +929,12 @@ function InteractiveLocationLinkDemo() {
 
 function InteractiveMapEmbedDemo() {
   return (
-    <div className="w-full max-w-md mx-auto p-3 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-2">
-      <div className="w-full h-40 rounded-xl bg-[#141829] border border-[#23283B] flex items-center justify-center text-xs text-[#94A3B8]">
+    <div className="w-full max-w-md mx-auto p-3 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-2 shadow-xs">
+      <div className="w-full h-40 rounded-xl bg-slate-50 dark:bg-[#141829] border border-slate-200 dark:border-[#23283B] flex items-center justify-center text-xs text-slate-500 dark:text-[#94A3B8]">
         <div className="text-center space-y-1">
-          <MapPin className="w-6 h-6 text-[#818CF8] mx-auto animate-bounce" />
-          <p className="font-semibold text-white">Google Maps Interactive Embed</p>
-          <p className="text-[10px]">Embedded responsive iframe with custom coordinates</p>
+          <MapPin className="w-6 h-6 text-indigo-600 dark:text-[#818CF8] mx-auto animate-bounce" />
+          <p className="font-semibold text-slate-900 dark:text-white">Google Maps Interactive Embed</p>
+          <p className="text-[10px] text-slate-500 dark:text-[#94A3B8]">Embedded responsive iframe with custom coordinates</p>
         </div>
       </div>
     </div>
@@ -942,11 +943,11 @@ function InteractiveMapEmbedDemo() {
 
 function InteractiveAddressDemo() {
   return (
-    <div className="w-full max-w-sm mx-auto p-4 rounded-xl bg-[#0F1424] border border-[#23283B] text-left text-xs space-y-1">
-      <p className="font-bold text-white">Deneb Celestial HQ</p>
-      <p className="text-[#94A3B8]">No. 42 Lotus Tower Boulevard</p>
-      <p className="text-[#94A3B8]">Colombo 01, Sri Lanka</p>
-      <p className="text-[#818CF8] font-mono pt-1">Postal Code: 00100</p>
+    <div className="w-full max-w-sm mx-auto p-4 rounded-xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] text-left text-xs space-y-1 shadow-xs">
+      <p className="font-bold text-slate-900 dark:text-white">Deneb Celestial HQ</p>
+      <p className="text-slate-600 dark:text-[#94A3B8]">No. 42 Lotus Tower Boulevard</p>
+      <p className="text-slate-600 dark:text-[#94A3B8]">Colombo 01, Sri Lanka</p>
+      <p className="text-indigo-600 dark:text-[#818CF8] font-mono pt-1">Postal Code: 00100</p>
     </div>
   );
 }
@@ -954,10 +955,10 @@ function InteractiveAddressDemo() {
 function InteractiveSocialButtonDemo() {
   return (
     <div className="flex items-center justify-center gap-3 p-4">
-      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-pink-600 text-white flex items-center gap-1.5 border-0 cursor-pointer">
+      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-pink-600 text-white flex items-center gap-1.5 border-0 cursor-pointer shadow-xs">
         Follow on Instagram
       </button>
-      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] text-white border border-[#23283B] flex items-center gap-1.5 cursor-pointer">
+      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-800 border border-slate-200 hover:bg-slate-50 dark:bg-[#141829] dark:text-white dark:border-[#23283B] flex items-center gap-1.5 cursor-pointer shadow-xs">
         Join on YouTube
       </button>
     </div>
@@ -966,23 +967,23 @@ function InteractiveSocialButtonDemo() {
 
 function InteractiveServiceCardDemo() {
   return (
-    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
+    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left shadow-xs">
       <div className="flex items-center justify-between">
-        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#818CF8]/20 text-[#A5B4FC] border border-[#818CF8]/30">
+        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-[#818CF8]/20 dark:text-[#A5B4FC] dark:border-[#818CF8]/30">
           24/7 Service
         </span>
-        <span className="text-xs font-semibold text-emerald-400">From LKR 3,500 / hr</span>
+        <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">From LKR 3,500 / hr</span>
       </div>
-      <h4 className="font-bold text-white text-base">Custom Shoe Fitting & Conditioning</h4>
-      <p className="text-xs text-[#94A3B8] leading-relaxed">
+      <h4 className="font-bold text-slate-900 dark:text-white text-base">Custom Shoe Fitting & Conditioning</h4>
+      <p className="text-xs text-slate-600 dark:text-[#94A3B8] leading-relaxed">
         Professional hand conditioning, leather softening, and precise anatomical insole adjustments.
       </p>
-      <ul className="text-xs text-white/90 space-y-1 pl-4 list-disc">
+      <ul className="text-xs text-slate-700 dark:text-white/90 space-y-1 pl-4 list-disc">
         <li>Organic beeswax leather polish</li>
         <li>Custom arch support adjustment</li>
         <li>Same-day turnaround option</li>
       </ul>
-      <button className="w-full py-2 rounded-xl text-xs font-bold bg-[#818CF8] hover:bg-[#6366F1] text-white border-0 cursor-pointer">
+      <button className="w-full py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-[#818CF8] dark:hover:bg-[#6366F1] border-0 cursor-pointer shadow-xs">
         Request Free Consultation
       </button>
     </div>
@@ -991,22 +992,22 @@ function InteractiveServiceCardDemo() {
 
 function InteractiveTestimonialCardDemo() {
   return (
-    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
-      <div className="flex items-center gap-1 text-amber-400">
+    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left shadow-xs">
+      <div className="flex items-center gap-1 text-amber-500">
         {'★★★★★'.split('').map((s, i) => (
           <span key={i}>{s}</span>
         ))}
       </div>
-      <p className="text-xs text-white/90 italic leading-relaxed">
+      <p className="text-xs text-slate-700 dark:text-white/90 italic leading-relaxed">
         “The fit is remarkable right out of the box. Ordered directly via WhatsApp and received delivery within 24 hours!”
       </p>
-      <div className="flex items-center gap-2.5 pt-2 border-t border-[#23283B]">
-        <div className="w-8 h-8 rounded-full bg-[#818CF8]/20 flex items-center justify-center text-xs font-bold text-[#A5B4FC]">
+      <div className="flex items-center gap-2.5 pt-2 border-t border-slate-200 dark:border-[#23283B]">
+        <div className="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-[#818CF8]/20 dark:text-[#A5B4FC] flex items-center justify-center text-xs font-bold">
           JD
         </div>
         <div>
-          <h5 className="font-bold text-white text-xs">Janith Dhanushka</h5>
-          <p className="text-[10px] text-[#94A3B8]">Verified Buyer • Classic Oxford 42</p>
+          <h5 className="font-bold text-slate-900 dark:text-white text-xs">Janith Dhanushka</h5>
+          <p className="text-[10px] text-slate-500 dark:text-[#94A3B8]">Verified Buyer • Classic Oxford 42</p>
         </div>
       </div>
     </div>
@@ -1015,20 +1016,20 @@ function InteractiveTestimonialCardDemo() {
 
 function InteractiveNavbarDemo() {
   return (
-    <div className="w-full max-w-md mx-auto p-3 rounded-2xl bg-[#0F1424]/90 border border-[#23283B] flex items-center justify-between text-xs">
-      <div className="flex items-center gap-2 font-bold text-white">
-        <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#818CF8] to-amber-500 flex items-center justify-center text-white text-[10px]">
+    <div className="w-full max-w-md mx-auto p-3 rounded-2xl bg-white/95 border border-slate-200 dark:bg-[#0F1424]/90 dark:border-[#23283B] flex items-center justify-between text-xs shadow-xs">
+      <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
+        <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-amber-500 flex items-center justify-center text-white text-[10px]">
           ✦
         </span>
         <span>SoleCharm</span>
       </div>
-      <div className="hidden sm:flex items-center gap-3 text-[#94A3B8]">
-        <span className="text-white font-semibold">Home</span>
-        <span>Products</span>
-        <span>About</span>
-        <span>Contact</span>
+      <div className="hidden sm:flex items-center gap-3 text-slate-600 dark:text-[#94A3B8]">
+        <span className="text-slate-900 dark:text-white font-semibold">Home</span>
+        <span className="hover:text-slate-900 dark:hover:text-white cursor-pointer">Products</span>
+        <span className="hover:text-slate-900 dark:hover:text-white cursor-pointer">About</span>
+        <span className="hover:text-slate-900 dark:hover:text-white cursor-pointer">Contact</span>
       </div>
-      <button className="px-3 py-1 rounded-xl bg-[#818CF8] text-white font-semibold text-[11px] border-0">
+      <button className="px-3 py-1 rounded-xl bg-indigo-600 text-white font-semibold text-[11px] border-0 cursor-pointer dark:bg-[#818CF8]">
         Cart (2)
       </button>
     </div>
@@ -1037,18 +1038,18 @@ function InteractiveNavbarDemo() {
 
 function InteractiveFooterDemo() {
   return (
-    <div className="w-full max-w-md mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left text-xs">
+    <div className="w-full max-w-md mx-auto p-5 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left text-xs shadow-xs">
       <div className="flex justify-between items-start">
         <div className="space-y-1">
-          <p className="font-bold text-white text-sm">SoleCharm Footwear</p>
-          <p className="text-[11px] text-[#94A3B8]">Artisan craftsmanship with modern ergonomics.</p>
+          <p className="font-bold text-slate-900 dark:text-white text-sm">SoleCharm Footwear</p>
+          <p className="text-[11px] text-slate-500 dark:text-[#94A3B8]">Artisan craftsmanship with modern ergonomics.</p>
         </div>
-        <div className="text-right text-[#94A3B8] space-y-1 text-[11px]">
-          <p className="hover:text-white cursor-pointer">Products</p>
-          <p className="hover:text-white cursor-pointer">Support</p>
+        <div className="text-right text-slate-600 dark:text-[#94A3B8] space-y-1 text-[11px]">
+          <p className="hover:text-slate-900 dark:hover:text-white cursor-pointer">Products</p>
+          <p className="hover:text-slate-900 dark:hover:text-white cursor-pointer">Support</p>
         </div>
       </div>
-      <div className="pt-2 border-t border-[#23283B] flex justify-between text-[10px] text-[#64748B]">
+      <div className="pt-2 border-t border-slate-200 dark:border-[#23283B] flex justify-between text-[10px] text-slate-500 dark:text-[#64748B]">
         <span>© 2026 SoleCharm. Built with DENEB UI.</span>
         <span>Privacy • Terms</span>
       </div>
@@ -1058,15 +1059,15 @@ function InteractiveFooterDemo() {
 
 function InteractiveSiteDataDemo() {
   return (
-    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-2 text-left text-xs">
-      <div className="flex items-center gap-2 text-[#818CF8] font-bold">
+    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-2 text-left text-xs shadow-xs">
+      <div className="flex items-center gap-2 text-indigo-600 dark:text-[#818CF8] font-bold">
         <Database className="w-4 h-4" />
         <span>SiteDataProvider Engine</span>
       </div>
-      <p className="text-[#94A3B8] text-[11px]">
+      <p className="text-slate-600 dark:text-[#94A3B8] text-[11px]">
         Headless state layer receiving real-time window postMessage updates from Fivora visual editor without reloads.
       </p>
-      <div className="p-2.5 rounded-xl bg-[#0A0D1A] font-mono text-[10px] text-emerald-400 border border-[#1E233D]">
+      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] font-mono text-[10px] text-emerald-700 dark:text-emerald-400 border border-slate-200 dark:border-[#1E233D]">
         const products = useProducts(fallbackProducts);<br />
         const siteData = useSiteData();
       </div>
@@ -1077,40 +1078,38 @@ function InteractiveSiteDataDemo() {
 function InteractiveThemeStylesDemo() {
   const [activePreset, setActivePreset] = useState<'restaurant' | 'medical' | 'luxury'>('luxury');
   return (
-    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left text-xs">
+    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left text-xs shadow-xs">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[#818CF8] font-bold">
+        <div className="flex items-center gap-2 text-indigo-600 dark:text-[#818CF8] font-bold">
           <Palette className="w-4 h-4" />
           <span>Dynamic ThemeStyles Presets</span>
         </div>
-        <span className="font-mono text-[10px] text-[#A5B4FC] uppercase">{activePreset}</span>
+        <span className="font-mono text-[10px] text-indigo-600 dark:text-[#A5B4FC] uppercase font-semibold">{activePreset}</span>
       </div>
       <div className="flex gap-2">
         {(['restaurant', 'medical', 'luxury'] as const).map((p) => (
           <button
             key={p}
             onClick={() => setActivePreset(p)}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize border cursor-pointer ${
+            className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize border cursor-pointer transition-all ${
               activePreset === p
-                ? 'bg-[#818CF8] text-white border-[#818CF8]'
-                : 'bg-[#141829] text-[#94A3B8] border-[#23283B]'
+                ? 'bg-indigo-600 text-white border-indigo-600 dark:bg-[#818CF8] dark:border-[#818CF8]'
+                : 'bg-slate-100 text-slate-700 border-slate-200 hover:text-slate-950 dark:bg-[#141829] dark:text-[#94A3B8] dark:border-[#23283B] dark:hover:text-white'
             }`}
           >
             {p}
           </button>
         ))}
       </div>
-      <div className="p-3 rounded-xl bg-[#0A0D1A] border border-[#1E233D] flex items-center justify-between">
-        <span className="text-[11px] text-white font-medium">Primary Accent Token:</span>
-        <span className="font-mono text-xs px-2 py-0.5 rounded bg-black/50 text-[#818CF8]">
+      <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200 dark:border-[#1E233D] flex items-center justify-between">
+        <span className="text-[11px] text-slate-900 dark:text-white font-medium">Primary Accent Token:</span>
+        <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-200/70 text-indigo-700 dark:bg-black/50 dark:text-[#818CF8] font-semibold">
           {THEME_PRESETS[activePreset]?.primaryColor}
         </span>
       </div>
     </div>
   );
 }
-
-
 
 function InteractiveUseProductsDemo() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -1125,17 +1124,17 @@ function InteractiveUseProductsDemo() {
     : mockProducts.filter((p) => p.category === activeCategory);
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left text-xs">
+    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left text-xs shadow-xs">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[#818CF8] font-bold">
+        <div className="flex items-center gap-2 text-indigo-600 dark:text-[#818CF8] font-bold">
           <ShoppingBag className="w-4 h-4" />
           <span>useProducts() State Preview</span>
         </div>
-        <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-500/20 font-semibold">
           ● Rehydrated
         </span>
       </div>
-      <p className="text-[#94A3B8] text-[11px]">
+      <p className="text-slate-600 dark:text-[#94A3B8] text-[11px]">
         Simulated live catalog synchronization from <code>api.catalogUrl</code>.
       </p>
       <div className="flex gap-1.5 pt-1">
@@ -1145,8 +1144,8 @@ function InteractiveUseProductsDemo() {
             onClick={() => setActiveCategory(cat)}
             className={`px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-colors cursor-pointer ${
               activeCategory === cat
-                ? "bg-[#818CF8] text-white border-[#818CF8]"
-                : "bg-[#141829] text-[#94A3B8] border-[#23283B] hover:text-white"
+                ? "bg-indigo-600 text-white border-indigo-600 dark:bg-[#818CF8] dark:border-[#818CF8]"
+                : "bg-slate-100 text-slate-700 border-slate-200 hover:text-slate-950 dark:bg-[#141829] dark:text-[#94A3B8] dark:border-[#23283B] dark:hover:text-white"
             }`}
           >
             {cat}
@@ -1157,13 +1156,13 @@ function InteractiveUseProductsDemo() {
         {filtered.map((item) => (
           <div
             key={item.id}
-            className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] flex items-center justify-between"
+            className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200 dark:border-[#1E233D] flex items-center justify-between"
           >
             <div className="space-y-0.5">
-              <p className="text-white font-medium text-[11px]">{item.title}</p>
-              <span className="text-[10px] text-[#64748B]">{item.category}</span>
+              <p className="text-slate-900 dark:text-white font-medium text-[11px]">{item.title}</p>
+              <span className="text-[10px] text-slate-500 dark:text-[#64748B]">{item.category}</span>
             </div>
-            <span className="font-mono font-semibold text-[#A5B4FC] text-xs">{item.price}</span>
+            <span className="font-mono font-semibold text-indigo-600 dark:text-[#A5B4FC] text-xs">{item.price}</span>
           </div>
         ))}
       </div>
@@ -1186,15 +1185,15 @@ function InteractiveUseSiteApiDemo() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left text-xs">
+    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left text-xs shadow-xs">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[#818CF8] font-bold">
+        <div className="flex items-center gap-2 text-indigo-600 dark:text-[#818CF8] font-bold">
           <Database className="w-4 h-4" />
           <span>useSiteApi() Endpoints Explorer</span>
         </div>
-        <span className="text-[10px] text-[#A5B4FC] font-mono">api.*</span>
+        <span className="text-[10px] text-indigo-600 dark:text-[#A5B4FC] font-mono font-semibold">api.*</span>
       </div>
-      <p className="text-[#94A3B8] text-[11px]">
+      <p className="text-slate-600 dark:text-[#94A3B8] text-[11px]">
         Access official Fivora backend routes directly in components and custom forms.
       </p>
       <div className="space-y-2">
@@ -1202,15 +1201,15 @@ function InteractiveUseSiteApiDemo() {
           <div
             key={ep.label}
             onClick={() => handleCopy(ep.label, ep.url)}
-            className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] hover:border-[#818CF8]/40 transition-colors cursor-pointer group"
+            className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200 dark:border-[#1E233D] hover:border-indigo-400 dark:hover:border-[#818CF8]/40 transition-colors cursor-pointer group"
           >
             <div className="flex justify-between items-center">
-              <span className="font-mono text-[11px] text-emerald-400 font-semibold">{ep.label}</span>
-              <span className="text-[10px] text-[#64748B] group-hover:text-[#A5B4FC]">
+              <span className="font-mono text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">{ep.label}</span>
+              <span className="text-[10px] text-slate-500 dark:text-[#64748B] group-hover:text-indigo-600 dark:group-hover:text-[#A5B4FC]">
                 {copiedKey === ep.label ? "✓ Copied" : "Click to copy"}
               </span>
             </div>
-            <p className="font-mono text-[10px] text-[#94A3B8] truncate mt-1">{ep.url}</p>
+            <p className="font-mono text-[10px] text-slate-600 dark:text-[#94A3B8] truncate mt-1">{ep.url}</p>
           </div>
         ))}
       </div>
@@ -1220,35 +1219,35 @@ function InteractiveUseSiteApiDemo() {
 
 function InteractiveUseSiteCatalogDemo() {
   return (
-    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left text-xs">
+    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left text-xs shadow-xs">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[#818CF8] font-bold">
+        <div className="flex items-center gap-2 text-indigo-600 dark:text-[#818CF8] font-bold">
           <CheckCircle2 className="w-4 h-4" />
           <span>useSiteCatalog() Bundle</span>
         </div>
-        <span className="text-[10px] text-[#A5B4FC] font-mono">Metadata & Items</span>
+        <span className="text-[10px] text-indigo-600 dark:text-[#A5B4FC] font-mono font-semibold">Metadata & Items</span>
       </div>
-      <p className="text-[#94A3B8] text-[11px]">
+      <p className="text-slate-600 dark:text-[#94A3B8] text-[11px]">
         Complete state snapshot combining products, services, site identity, and active API routes.
       </p>
       <div className="grid grid-cols-2 gap-2 pt-1">
-        <div className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] space-y-1">
-          <span className="text-[10px] text-[#64748B]">Project Status</span>
-          <p className="text-white font-semibold text-xs flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span> APPROVED
+        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200 dark:border-[#1E233D] space-y-1">
+          <span className="text-[10px] text-slate-500 dark:text-[#64748B]">Project Status</span>
+          <p className="text-slate-900 dark:text-white font-semibold text-xs flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span> APPROVED
           </p>
         </div>
-        <div className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] space-y-1">
-          <span className="text-[10px] text-[#64748B]">Live Domain</span>
-          <p className="text-white font-semibold text-xs truncate">starter-demo.fivora.site</p>
+        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200 dark:border-[#1E233D] space-y-1">
+          <span className="text-[10px] text-slate-500 dark:text-[#64748B]">Live Domain</span>
+          <p className="text-slate-900 dark:text-white font-semibold text-xs truncate">starter-demo.fivora.site</p>
         </div>
-        <div className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] space-y-1">
-          <span className="text-[10px] text-[#64748B]">Active Products</span>
-          <p className="text-[#818CF8] font-bold text-sm">3 items</p>
+        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200 dark:border-[#1E233D] space-y-1">
+          <span className="text-[10px] text-slate-500 dark:text-[#64748B]">Active Products</span>
+          <p className="text-indigo-600 dark:text-[#818CF8] font-bold text-sm">3 items</p>
         </div>
-        <div className="p-2.5 rounded-xl bg-[#0A0D1A] border border-[#1E233D] space-y-1">
-          <span className="text-[10px] text-[#64748B]">Active Services</span>
-          <p className="text-[#818CF8] font-bold text-sm">2 items</p>
+        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200 dark:border-[#1E233D] space-y-1">
+          <span className="text-[10px] text-slate-500 dark:text-[#64748B]">Active Services</span>
+          <p className="text-indigo-600 dark:text-[#818CF8] font-bold text-sm">2 items</p>
         </div>
       </div>
     </div>
@@ -1348,14 +1347,14 @@ export default function CardDemo() {
     badge: 'Core',
     previewComponent: (
       <div className="flex flex-wrap gap-3 items-center justify-center">
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#818CF8]/20 text-[#A5B4FC] border border-[#818CF8]/40 flex items-center gap-1.5 shadow-[0_0_12px_rgba(129,140,248,0.3)]">
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-[#818CF8]/20 dark:text-[#A5B4FC] dark:border-[#818CF8]/40 flex items-center gap-1.5 shadow-xs dark:shadow-[0_0_12px_rgba(129,140,248,0.3)]">
           <DenebStarIcon className="w-3 h-3" />
           <span>Celestial Active</span>
         </span>
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30">
           Open Now
         </span>
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30">
           Free Shipping
         </span>
       </div>
@@ -1803,21 +1802,21 @@ export default function Demo() {
     badge: 'Layout',
     previewComponent: (
       <div className="p-8 text-center space-y-4 max-w-xl">
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#818CF8]/15 text-[#A5B4FC] border border-[#818CF8]/30 inline-flex items-center gap-1.5">
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-[#818CF8]/15 dark:text-[#A5B4FC] dark:border-[#818CF8]/30 inline-flex items-center gap-1.5 shadow-xs">
           <DenebStarIcon className="w-3 h-3" />
           <span>The Next Gen Commerce Stack</span>
         </span>
-        <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
           Supercharge Your Storefront with Celestial Speed
         </h2>
-        <p className="text-xs text-[#94A3B8]">
+        <p className="text-xs text-slate-600 dark:text-[#94A3B8]">
           Pre-configured action primitives designed to turn visitors into buyers within seconds.
         </p>
         <div className="flex justify-center gap-3 pt-2">
-          <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#818CF8] text-white shadow-md">
+          <button className="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-[#818CF8] dark:hover:bg-[#6366F1] shadow-md cursor-pointer">
             Explore Demo
           </button>
-          <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] text-white border border-[#23283B]">
+          <button className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-800 border border-slate-200 hover:bg-slate-50 dark:bg-[#141829] dark:text-white dark:border-[#23283B] shadow-xs cursor-pointer">
             Documentation
           </button>
         </div>

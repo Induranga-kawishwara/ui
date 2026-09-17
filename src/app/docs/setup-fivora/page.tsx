@@ -130,7 +130,7 @@ ${AI_MASTER_PROMPT}`;
 
         {/* Architecture & Stack Overview */}
         <section id="overview" className="space-y-5">
-          <div className="p-5 sm:p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] shadow-xl space-y-4">
+          <div className="p-5 sm:p-6 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none shadow-xl space-y-4">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-xl bg-[#818CF8]/10 text-[#818CF8] border border-[#818CF8]/25">
                 <Cpu className="w-5 h-5" />
@@ -145,7 +145,7 @@ ${AI_MASTER_PROMPT}`;
               A <strong className="text-white">Fivora Template</strong> is a modern Next.js static storefront. When a merchant purchases your template in Fivora, they can click directly on any headline, description, product card, or photo in a live iframe preview to customize it in real time, or use Fivora&apos;s AI assistant to restyle the site.
             </p>
 
-            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0E1220] font-mono text-xs text-[#94A3B8] overflow-x-auto space-y-1">
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 dark:border-[#23283B] dark:bg-[#0E1220] font-mono text-xs text-[#94A3B8] overflow-x-auto space-y-1">
               <div className="text-[#818CF8] font-bold">┌── Fivora Merchant Application / Website Agent</div>
               <div>│   └── Visual click-to-edit canvas (Iframe Parent)</div>
               <div>▼   (Bidirectional postMessage handshake: FIVORA_PREVIEW_READY)</div>
@@ -185,8 +185,8 @@ ${AI_MASTER_PROMPT}`;
               onClick={() => setActivePathway('convert')}
               className={`p-5 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${
                 activePathway === 'convert'
-                  ? 'border-[#818CF8] bg-[#121625] shadow-[0_0_24px_rgba(129,140,248,0.2)]'
-                  : 'border-[#23283B] bg-[#0A0D17] hover:border-[#818CF8]/40'
+                  ? 'border-indigo-600 bg-indigo-50/70 text-slate-900 dark:border-[#818CF8] dark:bg-[#121625] dark:text-white shadow-md dark:shadow-[0_0_24px_rgba(129,140,248,0.2)]'
+                  : 'border-slate-200 bg-white hover:border-indigo-400 dark:border-[#23283B] dark:bg-[#0A0D17] dark:hover:border-[#818CF8]/40 shadow-xs'
               }`}
             >
               {activePathway === 'convert' && (
@@ -203,7 +203,7 @@ ${AI_MASTER_PROMPT}`;
                   You already have a running Next.js / Tailwind storefront and want to integrate DENEB UI and wire it for Fivora live visual editing.
                 </p>
               </div>
-              <div className="mt-4 pt-3 border-t border-[#23283B] text-xs font-semibold text-[#818CF8] flex items-center gap-1">
+              <div className="mt-4 pt-3 border-t border-slate-200 dark:border-[#23283B] text-xs font-semibold text-[#818CF8] flex items-center gap-1">
                 <span>View Step-by-Step Conversion</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -213,8 +213,8 @@ ${AI_MASTER_PROMPT}`;
               onClick={() => setActivePathway('scratch')}
               className={`p-5 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${
                 activePathway === 'scratch'
-                  ? 'border-[#818CF8] bg-[#121625] shadow-[0_0_24px_rgba(129,140,248,0.2)]'
-                  : 'border-[#23283B] bg-[#0A0D17] hover:border-[#818CF8]/40'
+                  ? 'border-indigo-600 bg-indigo-50/70 text-slate-900 dark:border-[#818CF8] dark:bg-[#121625] dark:text-white shadow-md dark:shadow-[0_0_24px_rgba(129,140,248,0.2)]'
+                  : 'border-slate-200 bg-white hover:border-indigo-400 dark:border-[#23283B] dark:bg-[#0A0D17] dark:hover:border-[#818CF8]/40 shadow-xs'
               }`}
             >
               {activePathway === 'scratch' && (
@@ -231,7 +231,7 @@ ${AI_MASTER_PROMPT}`;
                   Scaffold a complete, pre-configured Next.js template in seconds using the official DENEB scaffolding CLI.
                 </p>
               </div>
-              <div className="mt-4 pt-3 border-t border-[#23283B] text-xs font-semibold text-emerald-400 flex items-center gap-1">
+              <div className="mt-4 pt-3 border-t border-slate-200 dark:border-[#23283B] text-xs font-semibold text-emerald-400 flex items-center gap-1">
                 <span>View Scaffolding Command</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -280,7 +280,7 @@ ${AI_MASTER_PROMPT}`;
           </div>
 
           {/* STEP 1 */}
-          <div className="p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4">
+          <div className="p-6 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-4">
             <div className="flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-[#818CF8]/20 text-[#818CF8] font-bold text-xs flex items-center justify-center border border-[#818CF8]/30">
                 1
@@ -305,7 +305,7 @@ ${AI_MASTER_PROMPT}`;
           </div>
 
           {/* STEP 2 */}
-          <div className="p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4">
+          <div className="p-6 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-4">
             <div className="flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-[#818CF8]/20 text-[#818CF8] font-bold text-xs flex items-center justify-center border border-[#818CF8]/30">
                 2
@@ -323,7 +323,7 @@ ${AI_MASTER_PROMPT}`;
           </div>
 
           {/* STEP 3 */}
-          <div className="p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4">
+          <div className="p-6 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-4">
             <div className="flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-[#818CF8]/20 text-[#818CF8] font-bold text-xs flex items-center justify-center border border-[#818CF8]/30">
                 3
@@ -341,7 +341,7 @@ ${AI_MASTER_PROMPT}`;
           </div>
 
           {/* STEP 4 */}
-          <div className="p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4">
+          <div className="p-6 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-4">
             <div className="flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-[#818CF8]/20 text-[#818CF8] font-bold text-xs flex items-center justify-center border border-[#818CF8]/30">
                 4
@@ -359,7 +359,7 @@ ${AI_MASTER_PROMPT}`;
           </div>
 
           {/* STEP 5 */}
-          <div className="p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4">
+          <div className="p-6 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-4">
             <div className="flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-[#818CF8]/20 text-[#818CF8] font-bold text-xs flex items-center justify-center border border-[#818CF8]/30">
                 5
@@ -377,7 +377,7 @@ ${AI_MASTER_PROMPT}`;
           </div>
 
           {/* STEP 6 */}
-          <div className="p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4">
+          <div className="p-6 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-4">
             <div className="flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-[#818CF8]/20 text-[#818CF8] font-bold text-xs flex items-center justify-center border border-[#818CF8]/30">
                 6
@@ -429,7 +429,7 @@ ${AI_MASTER_PROMPT}`;
         </section>
 
         {/* Visual Marker Rules */}
-        <section id="visual-markers" className="space-y-6 pt-6 border-t border-[#23283B]">
+        <section id="visual-markers" className="space-y-6 pt-6 border-t border-slate-200 dark:border-[#23283B]">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
               <Layers className="w-5 h-5 text-[#818CF8]" />
@@ -441,7 +441,7 @@ ${AI_MASTER_PROMPT}`;
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-2">
+            <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-2">
               <h4 className="text-xs font-bold text-[#818CF8] font-mono uppercase">1. Route Marker</h4>
               <p className="text-xs text-[#94A3B8]">
                 Place <code className="text-white font-mono bg-black/40 px-1 py-0.5 rounded">data-preview-page-key=&quot;&lt;id&gt;&quot;</code> on the root <code className="text-white font-mono bg-black/40 px-1 py-0.5 rounded">&lt;main&gt;</code> of each page:
@@ -449,7 +449,7 @@ ${AI_MASTER_PROMPT}`;
               <CodeBlock code={`<main data-preview-page-key="home">...</main>`} language="tsx" />
             </div>
 
-            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-2">
+            <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-2">
               <h4 className="text-xs font-bold text-[#818CF8] font-mono uppercase">2. Leaf Text / Media</h4>
               <p className="text-xs text-[#94A3B8]">
                 Place <code className="text-white font-mono bg-black/40 px-1 py-0.5 rounded">data-preview-field-path</code> on the leaf element (<code className="text-white font-mono">h1</code>, <code className="text-white font-mono">p</code>, <code className="text-white font-mono">img</code>), never on a broad <code className="text-white font-mono">div</code>:
@@ -457,7 +457,7 @@ ${AI_MASTER_PROMPT}`;
               <CodeBlock code={`<h2 data-preview-field-path="home.title">{home.title}</h2>`} language="tsx" />
             </div>
 
-            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-2">
+            <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-2">
               <h4 className="text-xs font-bold text-[#818CF8] font-mono uppercase">3. Repeatable Lists</h4>
               <p className="text-xs text-[#94A3B8]">
                 Wrap collections with <code className="text-white font-mono bg-black/40 px-1 py-0.5 rounded">data-preview-list-path</code>. <strong>Must stay mounted even if array is empty</strong>:
@@ -465,7 +465,7 @@ ${AI_MASTER_PROMPT}`;
               <CodeBlock code={`<div data-preview-list-path="home.products">\n  {products.map((p, i) => (\n    <div key={i} data-preview-item-path={\`home.products[\${i}]\`}>\n      <span data-preview-field-path={\`home.products[\${i}].name\`}>{p.name}</span>\n    </div>\n  ))}\n</div>`} language="tsx" />
             </div>
 
-            <div className="p-4 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-2">
+            <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-2">
               <h4 className="text-xs font-bold text-[#818CF8] font-mono uppercase">4. Decorative Elements</h4>
               <p className="text-xs text-[#94A3B8]">
                 Mark non-editable background icons or dividers with <code className="text-white font-mono bg-black/40 px-1 py-0.5 rounded">data-preview-static</code>. Never put editable children inside static ancestors:
@@ -477,7 +477,7 @@ ${AI_MASTER_PROMPT}`;
 
 
         {/* Platform Features & Additional Pages */}
-        <section id="platform-contract" className="space-y-6 pt-6 border-t border-[#23283B]">
+        <section id="platform-contract" className="space-y-6 pt-6 border-t border-slate-200 dark:border-[#23283B]">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-semibold text-[#818CF8] uppercase tracking-wider">
               <ShieldCheck className="w-4 h-4" />
@@ -494,7 +494,7 @@ ${AI_MASTER_PROMPT}`;
 
           {/* Explanation Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-5 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-3">
+            <div className="p-5 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-3">
               <h4 className="text-sm font-bold text-[#818CF8] flex items-center gap-2">
                 <Bookmark className="w-4 h-4" />
                 <span>What is additionalPages?</span>
@@ -512,7 +512,7 @@ ${AI_MASTER_PROMPT}`;
               </p>
             </div>
 
-            <div className="p-5 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-3">
+            <div className="p-5 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-3">
               <h4 className="text-sm font-bold text-[#818CF8] flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4" />
                 <span>What is the Template&apos;s Responsibility?</span>
@@ -568,7 +568,7 @@ export function StoreFooter() {
             </div>
 
             {/* Method B */}
-            <div className="p-5 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-3">
+            <div className="p-5 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-bold text-white flex items-center gap-2">
                   <Terminal className="w-4 h-4 text-[#94A3B8]" />
@@ -633,7 +633,7 @@ export function StoreFooter() {
           </div>
 
           {/* Platform Contract Protection */}
-          <div className="p-5 rounded-xl border border-[#23283B] bg-[#0A0D17] space-y-3">
+          <div className="p-5 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-3">
             <h4 className="text-sm font-bold text-white flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-[#818CF8]" />
               <span>Platform-Managed Fields &amp; controlOnlyPaths</span>
@@ -648,7 +648,7 @@ export function StoreFooter() {
         </section>
 
         {/* Master Component Catalog & Usage Guide (All 40 Components) */}
-        <section id="component-catalog" className="space-y-8 pt-8 border-t border-[#23283B]">
+        <section id="component-catalog" className="space-y-8 pt-8 border-t border-slate-200 dark:border-[#23283B]">
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-xs font-semibold text-[#818CF8] uppercase tracking-wider">
               <Cpu className="w-4 h-4" />
@@ -678,7 +678,7 @@ export function StoreFooter() {
 
               return (
                 <div key={catName} className="space-y-6">
-                  <div className="flex items-center gap-3 pb-3 border-b border-[#23283B]">
+                  <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-[#23283B]">
                     <h3 className="text-xl font-bold text-white tracking-tight">
                       {catName}
                     </h3>
@@ -692,7 +692,7 @@ export function StoreFooter() {
                       <div
                         key={slug}
                         id={`comp-${slug}`}
-                        className="p-5 sm:p-6 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4 shadow-xl hover:border-[#818CF8]/40 transition-all"
+                        className="p-5 sm:p-6 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-4 shadow-xl hover:border-[#818CF8]/40 transition-all"
                       >
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex items-center gap-3">
@@ -725,9 +725,9 @@ export function StoreFooter() {
                               <span className="w-1.5 h-1.5 rounded-full bg-[#818CF8]" />
                               <span>Props Reference</span>
                             </div>
-                            <div className="overflow-x-auto rounded-xl border border-[#23283B] bg-[#0E1220]/60">
+                            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-slate-50 dark:border-[#23283B] dark:bg-[#0E1220]/60">
                               <table className="w-full text-left text-xs">
-                                <thead className="border-b border-[#23283B] bg-[#0E1220] text-[#CBD5E1] uppercase font-mono tracking-wider text-[11px]">
+                                <thead className="border-b border-slate-200 dark:border-[#23283B] bg-slate-50 dark:bg-[#0E1220] text-slate-700 dark:text-[#CBD5E1] uppercase font-mono tracking-wider text-[11px]">
                                   <tr>
                                     <th className="px-3.5 py-2.5">Prop</th>
                                     <th className="px-3.5 py-2.5">Type</th>
@@ -772,7 +772,7 @@ export function StoreFooter() {
         </section>
 
         {/* Complete Storefront Architecture Examples */}
-        <section id="full-templates" className="space-y-8 pt-8 border-t border-[#23283B]">
+        <section id="full-templates" className="space-y-8 pt-8 border-t border-slate-200 dark:border-[#23283B]">
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 uppercase tracking-wider">
               <Sparkles className="w-4 h-4" />
@@ -917,7 +917,7 @@ export default function HomePage() {
       </section>
 
       {/* Reviews & Social Proof */}
-      <section id="reviews" className="bg-[#0C0F1A] py-16 border-y border-slate-800/60">
+      <section id="reviews" className="bg-slate-50 dark:bg-[#0C0F1A] py-16 border-y border-slate-200 dark:border-slate-800/60">
         <div className="max-w-7xl mx-auto px-4">
           <CustomerReviews />
         </div>
@@ -926,9 +926,9 @@ export default function HomePage() {
       {/* Business Hours & Support */}
       <section id="contact" className="max-w-7xl mx-auto px-4 py-16 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <BusinessHours schedule={content?.businessHours} />
-        <div className="p-8 rounded-2xl border border-slate-800 bg-[#0E1220] flex flex-col justify-center space-y-4">
-          <h3 className="text-xl font-bold text-white">Instant Concierge Support</h3>
-          <p className="text-sm text-slate-400">Order directly with our personal shoppers via WhatsApp or phone.</p>
+        <div className="p-8 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-slate-800 dark:bg-[#0E1220] flex flex-col justify-center space-y-4">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white">Instant Concierge Support</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Order directly with our personal shoppers via WhatsApp or phone.</p>
           <ContactActions
             whatsapp={siteData?.shop?.whatsapp}
             phone={siteData?.shop?.phone}
@@ -982,7 +982,7 @@ export default function ProductDetailPage() {
         </section>
 
         {/* Standard vs Premium */}
-        <section id="standard-vs-premium" className="space-y-6 pt-6 border-t border-[#23283B]">
+        <section id="standard-vs-premium" className="space-y-6 pt-6 border-t border-slate-200 dark:border-[#23283B]">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-white tracking-tight">
               Standard vs. Premium Tier: How to Decide
@@ -993,15 +993,15 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-xs sm:text-sm text-left border border-[#23283B] rounded-xl overflow-hidden">
-              <thead className="bg-[#0E1220] text-[#CBD5E1] font-mono uppercase text-[11px] border-b border-[#23283B]">
+            <table className="w-full text-xs sm:text-sm text-left border border-slate-200 dark:border-[#23283B] rounded-xl overflow-hidden bg-white dark:bg-[#0A0D17] shadow-xs">
+              <thead className="bg-slate-50 dark:bg-[#0E1220] text-slate-700 dark:text-[#CBD5E1] font-mono uppercase text-[11px] border-b border-slate-200 dark:border-[#23283B]">
                 <tr>
                   <th className="p-3 sm:p-4">Feature</th>
                   <th className="p-3 sm:p-4">Standard Template</th>
                   <th className="p-3 sm:p-4 text-[#818CF8]">Premium Template</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#23283B] text-[#94A3B8]">
+              <tbody className="divide-y divide-slate-200 dark:divide-[#23283B] text-slate-600 dark:text-[#94A3B8]">
                 <tr>
                   <td className="p-3 sm:p-4 font-semibold text-white">Aesthetic Goal</td>
                   <td className="p-3 sm:p-4">Fixed, opinionated composition</td>
@@ -1028,7 +1028,7 @@ export default function ProductDetailPage() {
         </section>
 
         {/* Local Visual Lab & Preflight Validation */}
-        <section id="testing-lab" className="space-y-6 pt-6 border-t border-[#23283B]">
+        <section id="testing-lab" className="space-y-6 pt-6 border-t border-slate-200 dark:border-[#23283B]">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
               <Terminal className="w-5 h-5 text-[#818CF8]" />
@@ -1040,7 +1040,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-5 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-3">
+            <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-3">
               <div className="flex items-center gap-2 text-[#818CF8] font-bold text-sm">
                 <Sparkles className="w-4 h-4" />
                 <span>1. Launch Visual Lab</span>
@@ -1051,7 +1051,7 @@ export default function ProductDetailPage() {
               <CodeBlock code="npm run lab\n# Or: deneb lab ." language="bash" />
             </div>
 
-            <div className="p-5 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-3">
+            <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-3">
               <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
                 <ShieldCheck className="w-4 h-4" />
                 <span>2. Run Preflight Validator</span>
@@ -1065,7 +1065,7 @@ export default function ProductDetailPage() {
         </section>
 
         {/* Packaging & Upload */}
-        <section id="packaging" className="space-y-6 pt-6 border-t border-[#23283B]">
+        <section id="packaging" className="space-y-6 pt-6 border-t border-slate-200 dark:border-[#23283B]">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
               <PackageCheck className="w-5 h-5 text-[#818CF8]" />
@@ -1076,7 +1076,7 @@ export default function ProductDetailPage() {
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl border border-[#23283B] bg-[#0A0D17] space-y-4">
+          <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none space-y-4">
             <div className="space-y-2">
               <div className="text-sm font-bold text-white">1-Step Preflight Validation & Clean Packaging (Recommended)</div>
               <p className="text-xs text-[#94A3B8] leading-relaxed">
@@ -1085,7 +1085,7 @@ export default function ProductDetailPage() {
               <CodeBlock code="npm run validate-and-zip\n# Or: deneb validate-and-zip .\n# Or: deneb validate and zip" language="bash" />
             </div>
 
-            <div className="pt-3 border-t border-[#23283B] space-y-2">
+            <div className="pt-3 border-t border-slate-200 dark:border-[#23283B] space-y-2">
               <div className="text-sm font-bold text-white">Quick Clean ZIP (Fast packaging without sandbox)</div>
               <p className="text-xs text-[#94A3B8] leading-relaxed">
                 Quickly strips <code className="text-white font-mono">node_modules</code>, <code className="text-white font-mono">.next</code>, <code className="text-white font-mono">.git</code>, and <code className="text-white font-mono">.env*</code> to generate <code className="text-white font-mono">fivora-template.zip</code>:
@@ -1093,7 +1093,7 @@ export default function ProductDetailPage() {
               <CodeBlock code="npm run zip\n# Or: deneb zip ." language="bash" />
             </div>
 
-            <div className="pt-3 border-t border-[#23283B] space-y-2">
+            <div className="pt-3 border-t border-slate-200 dark:border-[#23283B] space-y-2">
               <div className="text-sm font-bold text-white">Developer Portal Submission Steps:</div>
               <ol className="list-decimal list-inside text-xs text-[#94A3B8] space-y-1.5 leading-relaxed">
                 <li>Log in to the <strong className="text-white">Fivora Developer Portal</strong>.</li>
@@ -1108,22 +1108,22 @@ export default function ProductDetailPage() {
         </section>
 
         {/* Troubleshooting */}
-        <section id="troubleshooting" className="space-y-4 pt-6 border-t border-[#23283B]">
+        <section id="troubleshooting" className="space-y-4 pt-6 border-t border-slate-200 dark:border-[#23283B]">
           <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
             <HelpCircle className="w-5 h-5 text-[#818CF8]" />
             <span>Troubleshooting Common Preflight Errors</span>
           </h2>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-xs sm:text-sm text-left border border-[#23283B] rounded-xl overflow-hidden">
-              <thead className="bg-[#0E1220] text-[#CBD5E1] font-mono uppercase text-[11px] border-b border-[#23283B]">
+            <table className="w-full text-xs sm:text-sm text-left border border-slate-200 dark:border-[#23283B] rounded-xl overflow-hidden bg-white dark:bg-[#0A0D17] shadow-xs">
+              <thead className="bg-slate-50 dark:bg-[#0E1220] text-slate-700 dark:text-[#CBD5E1] font-mono uppercase text-[11px] border-b border-slate-200 dark:border-[#23283B]">
                 <tr>
                   <th className="p-3">Error Message</th>
                   <th className="p-3">Cause</th>
                   <th className="p-3">Solution</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#23283B] text-[#94A3B8]">
+              <tbody className="divide-y divide-slate-200 dark:divide-[#23283B] text-slate-600 dark:text-[#94A3B8]">
                 <tr>
                   <td className="p-3 font-mono text-rose-300">Editable marker has static ancestor</td>
                   <td className="p-3">An editable field is inside an element marked <code className="text-white font-mono">data-preview-static</code>.</td>
@@ -1145,7 +1145,7 @@ export default function ProductDetailPage() {
         </section>
 
         {/* Navigation Footer */}
-        <div className="pt-8 border-t border-[#23283B] flex items-center justify-between">
+        <div className="pt-8 border-t border-slate-200 dark:border-[#23283B] flex items-center justify-between">
           <Link
             href="/docs/installation"
             className="text-xs font-semibold text-[#94A3B8] hover:text-white transition-colors"

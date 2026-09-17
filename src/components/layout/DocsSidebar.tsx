@@ -37,6 +37,7 @@ export const SIDEBAR_NAV: NavSection[] = [
       { title: 'Responsive Design', href: '/docs/responsive-design', badge: 'New', isNew: true },
       { title: 'CLI Reference', href: '/docs/cli' },
       { title: 'Storefront Scaffolding', href: '/docs/templates' },
+      { title: 'E-Commerce Architecture', href: '/docs/templates/e-commerce', badge: 'Static Export', isNew: true },
     ],
   },
   {

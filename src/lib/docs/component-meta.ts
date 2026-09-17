@@ -320,9 +320,9 @@ export const COMPONENT_META: Record<string, ComponentMeta> = {
   'product-grid': {
     slug: 'product-grid',
     title: "ProductGrid",
-    description: "Responsive commerce catalog grid with category filter tabs and configurable columns per device (mobile / tablet / desktop). Includes quick-view hook.",
+    description: "Responsive commerce catalog grid with live backend search, debounced input, smart multi-variant pagination (numbers, simple, load-more), category filter tabs, strict empty-state preservation, and configurable columns per device. Includes quick-view trigger.",
     category: "Storefront Sections",
-    keywords: ["ProductGrid","ProductGrid component","React component","Tailwind CSS","Deneb UI","Storefront Sections","visual-first","storefront UI","headless e-commerce"],
+    keywords: ["ProductGrid","ProductGrid component","React component","Tailwind CSS","Deneb UI","Storefront Sections","visual-first","storefront UI","headless e-commerce","search bar","backend search","pagination","load more"],
   },
   'customer-reviews': {
     slug: 'customer-reviews',

@@ -119,6 +119,29 @@ export default function TemplatesPage() {
           </div>
         </section>
 
+        {/* E-Commerce Architecture Spotlight */}
+        <section className="p-6 rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/40 dark:from-indigo-950/20 dark:via-[#0A0D17] dark:to-[#0F1424] space-y-3 shadow-xs">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 dark:text-[#818CF8] uppercase tracking-wider">
+            <DenebStarIcon className="w-3.5 h-3.5" />
+            <span>Architecture Deep Dive</span>
+          </div>
+          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+            E-Commerce &amp; Static Export Architecture
+          </h3>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-[#94A3B8] leading-relaxed">
+            Understand how DENEB UI resolves live merchant products in Next.js static exports (<code className="font-mono text-indigo-600 dark:text-indigo-300">output: &apos;export&apos;</code>) using <code className="font-mono">PlatformProductDetail</code>, live backend search in <code className="font-mono">EditableProductGrid</code>, and strict empty-state preservation.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/docs/templates/e-commerce"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-[#818CF8] dark:hover:bg-indigo-500 dark:text-slate-950 transition-colors shadow-xs"
+            >
+              <span>Read Architecture Guide</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </section>
+
         <div className="pt-8 border-t border-slate-200 dark:border-[#23283B] flex justify-end">
           <Link
             href="/docs/components/button"

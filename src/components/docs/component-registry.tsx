@@ -2,11 +2,6 @@
 
 import React, { useState } from 'react';
 import {
-  ContactActions,
-  WhatsAppButton,
-  PhoneButton,
-  EmailButton,
-  LocationCard,
   ProductCard,
   ProductDetail,
   PlatformProductDetail,
@@ -31,9 +26,7 @@ import {
   MessageSquare,
   MapPin,
   Clock,
-  Star,
   ShoppingBag,
-  ChevronRight,
   CheckCircle2,
   Maximize2,
   Mail,
@@ -59,11 +52,11 @@ function InteractiveButtonDemo() {
         <span>{clicked ? 'Active Selected!' : 'Primary Celestial'}</span>
       </button>
 
-      <button className="px-5 py-2.5 rounded-xl font-semibold text-sm bg-[#121625] text-white border border-[#23283B] hover:border-[#818CF8]/50 hover:bg-[#818CF8]/10 transition-all cursor-pointer">
+      <button className="px-5 py-2.5 rounded-xl font-semibold text-sm bg-slate-100 text-slate-900 border border-slate-200 dark:bg-[#121625] dark:text-white dark:border-[#23283B] hover:border-indigo-500/50 dark:hover:border-[#818CF8]/50 hover:bg-indigo-50 dark:hover:bg-[#818CF8]/10 transition-all cursor-pointer">
         Secondary Cosmic
       </button>
 
-      <button className="px-5 py-2.5 rounded-xl font-semibold text-sm bg-transparent text-[#A5B4FC] border border-[#818CF8]/30 hover:bg-[#818CF8]/15 transition-all cursor-pointer">
+      <button className="px-5 py-2.5 rounded-xl font-semibold text-sm bg-transparent text-indigo-600 dark:text-[#A5B4FC] border border-indigo-200 dark:border-[#818CF8]/30 hover:bg-indigo-50 dark:hover:bg-[#818CF8]/15 transition-all cursor-pointer">
         Periwinkle Outline
       </button>
     </div>
@@ -77,12 +70,12 @@ function InteractiveContactActionsDemo() {
         <MessageSquare className="w-3.5 h-3.5" />
         <span>WhatsApp (1-Click)</span>
       </button>
-      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] hover:bg-[#1E233D] text-white border border-[#23283B] flex items-center gap-2 cursor-pointer">
-        <Phone className="w-3.5 h-3.5 text-[#818CF8]" />
+      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 dark:bg-[#141829] dark:hover:bg-[#1E233D] dark:text-white dark:border-[#23283B] flex items-center gap-2 cursor-pointer">
+        <Phone className="w-3.5 h-3.5 text-indigo-600 dark:text-[#818CF8]" />
         <span>Call: +1 (555) 019-2834</span>
       </button>
-      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-[#141829] hover:bg-[#1E233D] text-white border border-[#23283B] flex items-center gap-2 cursor-pointer">
-        <Mail className="w-3.5 h-3.5 text-[#818CF8]" />
+      <button className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 dark:bg-[#141829] dark:hover:bg-[#1E233D] dark:text-white dark:border-[#23283B] flex items-center gap-2 cursor-pointer">
+        <Mail className="w-3.5 h-3.5 text-indigo-600 dark:text-[#818CF8]" />
         <span>Email Us</span>
       </button>
     </div>
@@ -105,17 +98,17 @@ function InteractiveWhatsAppDemo() {
 
 function InteractiveLocationCardDemo() {
   return (
-    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
-      <div className="flex items-center gap-2 text-xs font-semibold text-[#818CF8]">
-        <MapPin className="w-4 h-4 text-[#818CF8]" />
+    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left shadow-sm dark:shadow-none">
+      <div className="flex items-center gap-2 text-xs font-semibold text-indigo-600 dark:text-[#818CF8]">
+        <MapPin className="w-4 h-4 text-indigo-600 dark:text-[#818CF8]" />
         <span>Flagship Storefront</span>
       </div>
-      <p className="text-xs text-white/90">742 Evergreen Celestial Way, Suite 100, San Francisco, CA</p>
-      <div className="pt-2 flex items-center justify-between border-t border-[#23283B] text-xs">
-        <span className="text-emerald-400 font-medium">Open Today until 8 PM</span>
+      <p className="text-xs text-slate-800 dark:text-white/90">742 Evergreen Celestial Way, Suite 100, San Francisco, CA</p>
+      <div className="pt-2 flex items-center justify-between border-t border-slate-100 dark:border-[#23283B] text-xs">
+        <span className="text-emerald-600 dark:text-emerald-400 font-medium">Open Today until 8 PM</span>
         <button
           onClick={() => alert('Opens Google Maps directions!')}
-          className="text-[#818CF8] font-bold hover:underline bg-transparent border-0 cursor-pointer"
+          className="text-indigo-600 dark:text-[#818CF8] font-bold hover:underline bg-transparent border-0 cursor-pointer"
         >
           Get Directions ↗
         </button>
@@ -126,28 +119,28 @@ function InteractiveLocationCardDemo() {
 
 function InteractiveBusinessHoursDemo() {
   return (
-    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left">
+    <div className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left shadow-sm dark:shadow-none">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#818CF8]" />
-          <span className="text-xs font-bold text-white">Business Hours</span>
+          <Clock className="w-4 h-4 text-indigo-600 dark:text-[#818CF8]" />
+          <span className="text-xs font-bold text-slate-900 dark:text-white">Business Hours</span>
         </div>
-        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/30">
           ● Open Now
         </span>
       </div>
       <div className="space-y-1.5 text-xs">
-        <div className="flex justify-between text-white font-medium">
+        <div className="flex justify-between text-slate-800 dark:text-white font-medium">
           <span>Monday – Friday</span>
-          <span className="text-[#94A3B8]">09:00 AM – 08:00 PM</span>
+          <span className="text-slate-500 dark:text-[#94A3B8]">09:00 AM – 08:00 PM</span>
         </div>
-        <div className="flex justify-between text-white font-medium">
+        <div className="flex justify-between text-slate-800 dark:text-white font-medium">
           <span>Saturday</span>
-          <span className="text-[#94A3B8]">10:00 AM – 06:00 PM</span>
+          <span className="text-slate-500 dark:text-[#94A3B8]">10:00 AM – 06:00 PM</span>
         </div>
-        <div className="flex justify-between text-white font-medium">
+        <div className="flex justify-between text-slate-800 dark:text-white font-medium">
           <span>Sunday</span>
-          <span className="text-amber-400">Closed</span>
+          <span className="text-amber-600 dark:text-amber-400">Closed</span>
         </div>
       </div>
     </div>
@@ -160,7 +153,7 @@ function InteractiveSocialDemo() {
       {['Instagram', 'WhatsApp', 'Facebook', 'YouTube', 'TikTok', 'X'].map((plat) => (
         <button
           key={plat}
-          className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-[#141829] text-white border border-[#23283B] hover:border-[#818CF8] hover:text-[#818CF8] transition-all cursor-pointer"
+          className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200 hover:border-indigo-500 hover:text-indigo-600 dark:bg-[#141829] dark:text-white dark:border-[#23283B] dark:hover:border-[#818CF8] dark:hover:text-[#818CF8] transition-all cursor-pointer"
         >
           {plat}
         </button>
@@ -171,26 +164,26 @@ function InteractiveSocialDemo() {
 
 function InteractivePricingCardDemo() {
   return (
-    <div className="w-full max-w-xs mx-auto p-6 rounded-2xl bg-[#0F1424] border-2 border-[#818CF8] shadow-[0_0_30px_rgba(129,140,248,0.2)] space-y-4 text-left">
+    <div className="w-full max-w-xs mx-auto p-6 rounded-2xl bg-white dark:bg-[#0F1424] border-2 border-indigo-600 dark:border-[#818CF8] shadow-md dark:shadow-[0_0_30px_rgba(129,140,248,0.2)] space-y-4 text-left">
       <div className="flex justify-between items-center">
-        <h4 className="font-bold text-white text-base">Storefront Pro</h4>
-        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#818CF8] text-white">
+        <h4 className="font-bold text-slate-900 dark:text-white text-base">Storefront Pro</h4>
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-600 dark:bg-[#818CF8] text-white">
           POPULAR
         </span>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-3xl font-black text-white">$49</span>
-        <span className="text-xs text-[#94A3B8]">/ month</span>
+        <span className="text-3xl font-black text-slate-900 dark:text-white">$49</span>
+        <span className="text-xs text-slate-500 dark:text-[#94A3B8]">/ month</span>
       </div>
-      <ul className="text-xs text-[#CBD5E1] space-y-2">
+      <ul className="text-xs text-slate-600 dark:text-[#CBD5E1] space-y-2">
         <li className="flex items-center gap-2">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Full DENEB UI Primitives
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Full DENEB UI Primitives
         </li>
         <li className="flex items-center gap-2">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Live WhatsApp Checkout
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Live WhatsApp Checkout
         </li>
         <li className="flex items-center gap-2">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Instant Visual Editor Sync
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Instant Visual Editor Sync
         </li>
       </ul>
       <button className="w-full py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white border-0 cursor-pointer shadow-md">
@@ -210,16 +203,16 @@ function InteractiveFAQDemo() {
   return (
     <div className="w-full max-w-md mx-auto space-y-2 text-left">
       {faqs.map((f, idx) => (
-        <div key={idx} className="rounded-xl bg-[#0F1424] border border-[#23283B] overflow-hidden">
+        <div key={idx} className="rounded-xl bg-slate-50 border border-slate-200 dark:bg-[#0F1424] dark:border-[#23283B] overflow-hidden">
           <button
             onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
-            className="w-full p-3.5 text-xs font-semibold text-white flex justify-between items-center bg-transparent border-0 cursor-pointer text-left"
+            className="w-full p-3.5 text-xs font-semibold text-slate-900 dark:text-white flex justify-between items-center bg-transparent border-0 cursor-pointer text-left"
           >
             <span>{f.q}</span>
-            <span className="text-[#818CF8]">{openIdx === idx ? '−' : '+'}</span>
+            <span className="text-indigo-600 dark:text-[#818CF8]">{openIdx === idx ? '−' : '+'}</span>
           </button>
           {openIdx === idx && (
-            <div className="px-3.5 pb-3.5 text-xs text-[#94A3B8] leading-relaxed border-t border-[#23283B]/50 pt-2">
+            <div className="px-3.5 pb-3.5 text-xs text-slate-600 dark:text-[#94A3B8] leading-relaxed border-t border-slate-200/50 dark:border-[#23283B]/50 pt-2">
               {f.a}
             </div>
           )}
@@ -246,7 +239,7 @@ function InteractiveProductDetailDemo() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden shadow-2xl">
+    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-slate-200 bg-white dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden shadow-sm dark:shadow-2xl">
       <ProductDetail
         product={sampleProduct}
         sectionPath="demo-product"
@@ -268,7 +261,7 @@ function InteractivePlatformProductDetailDemo() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden shadow-2xl">
+    <div className="w-full max-w-4xl mx-auto rounded-3xl border border-slate-200 bg-white dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden shadow-sm dark:shadow-2xl">
       <PlatformProductDetail
         productId={sampleProduct.id}
         products={[sampleProduct]}
@@ -304,7 +297,7 @@ function InteractiveProductQuickViewDemo() {
         <ShoppingBag className="w-4 h-4" />
         <span>Open Product Quick View Modal</span>
       </button>
-      <span className="text-xs text-[#94A3B8]">Click to trigger the instant lightbox modal with live visual editing</span>
+      <span className="text-xs text-slate-500 dark:text-[#94A3B8]">Click to trigger the instant lightbox modal with live visual editing</span>
       <ProductQuickView
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
@@ -349,7 +342,7 @@ function InteractiveProductGridDemo() {
   ];
 
   return (
-    <div className="w-full rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full rounded-3xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
       <ProductGrid
         title="New Arrivals"
         subtitle="Just Dropped"
@@ -364,11 +357,11 @@ function InteractiveProductGridDemo() {
           isOpen={Boolean(selectedQuickView)}
           onClose={() => setSelectedQuickView(null)}
           product={{
-            id: String(selectedQuickView.id),
-            title: selectedQuickView.name,
-            price: selectedQuickView.price,
-            imageUrl: selectedQuickView.imageUrl,
-            badge: selectedQuickView.badge,
+            id: String(selectedQuickView.id || 'quick-view'),
+            title: String(selectedQuickView.name || ''),
+            price: (selectedQuickView.price as string | number) || '0',
+            imageUrl: selectedQuickView.imageUrl ? String(selectedQuickView.imageUrl) : undefined,
+            badge: selectedQuickView.badge ? String(selectedQuickView.badge) : undefined,
             description: 'Precision-engineered storefront product ready for high conversion.',
           }}
         />
@@ -379,7 +372,7 @@ function InteractiveProductGridDemo() {
 
 function InteractiveCustomerReviewsDemo() {
   return (
-    <div className="w-full rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full rounded-3xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
       <CustomerReviews
         title="Runner Verified Feedback"
         subtitle="Authentic Athlete Reviews"
@@ -401,8 +394,8 @@ function InteractiveTrustBadgesDemo() {
 
 function InteractiveStickyMobileBarDemo() {
   return (
-    <div className="w-full max-w-sm mx-auto p-4 rounded-2xl border border-[#23283B] bg-[#0E111C]">
-      <span className="text-[11px] text-[#94A3B8] block mb-3 text-center">Mobile bottom floating checkout & WhatsApp trigger:</span>
+    <div className="w-full max-w-sm mx-auto p-4 rounded-2xl border border-slate-200 bg-slate-50 dark:border-[#23283B] dark:bg-[#0E111C]">
+      <span className="text-[11px] text-slate-500 dark:text-[#94A3B8] block mb-3 text-center">Mobile bottom floating checkout & WhatsApp trigger:</span>
       <StickyMobileBar
         whatsapp="15550192834"
         primaryActionLabel="Order via WhatsApp"
@@ -438,8 +431,8 @@ function InteractiveCategoryPillsDemo() {
           onClick={() => setActive(c)}
           className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border cursor-pointer ${
             active === c
-              ? 'bg-[#818CF8] text-white border-[#818CF8] shadow-md font-bold'
-              : 'bg-[#121625] text-[#94A3B8] border-[#23283B] hover:text-white'
+              ? 'bg-indigo-600 text-white border-indigo-600 dark:bg-[#818CF8] dark:border-[#818CF8] shadow-md font-bold'
+              : 'bg-slate-100 text-slate-600 border-slate-200 hover:text-slate-950 dark:bg-[#121625] dark:text-[#94A3B8] dark:border-[#23283B] dark:hover:text-white'
           }`}
         >
           {c}
@@ -457,29 +450,29 @@ function InteractiveContactFormDemo() {
         e.preventDefault();
         setSent(true);
       }}
-      className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-[#0F1424] border border-[#23283B] space-y-3 text-left"
+      className="w-full max-w-sm mx-auto p-5 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left shadow-sm dark:shadow-none"
     >
-      <h4 className="font-bold text-white text-sm">Send us a Message</h4>
+      <h4 className="font-bold text-slate-900 dark:text-white text-sm">Send us a Message</h4>
       <input
         placeholder="Your Full Name"
         required
-        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
+        className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#141829] border border-slate-200 dark:border-[#23283B] text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#64748B] focus:outline-none focus:border-indigo-500 dark:focus:border-[#818CF8]"
       />
       <input
         type="email"
         placeholder="email@example.com"
         required
-        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
+        className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#141829] border border-slate-200 dark:border-[#23283B] text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#64748B] focus:outline-none focus:border-indigo-500 dark:focus:border-[#818CF8]"
       />
       <textarea
         rows={2}
         placeholder="How can we assist your order?"
         required
-        className="w-full px-3 py-2 rounded-xl bg-[#141829] border border-[#23283B] text-xs text-white placeholder-[#64748B] focus:outline-none focus:border-[#818CF8]"
+        className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#141829] border border-slate-200 dark:border-[#23283B] text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#64748B] focus:outline-none focus:border-indigo-500 dark:focus:border-[#818CF8]"
       />
       <button
         type="submit"
-        className="w-full py-2 rounded-xl text-xs font-bold bg-[#818CF8] hover:bg-[#6366F1] text-white border-0 cursor-pointer"
+        className="w-full py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 dark:bg-[#818CF8] dark:hover:bg-[#6366F1] text-white border-0 cursor-pointer shadow-md"
       >
         {sent ? 'Message Sent Successfully! ✓' : 'Send Message'}
       </button>
@@ -720,7 +713,7 @@ function InteractiveFilterSidebarDemo() {
 
 function InteractiveGoogleFeedbackDemo() {
   return (
-    <div className="w-full rounded-3xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full rounded-3xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
       <GoogleFeedback
         basePath="feedback"
         badgeTitle="Google Reviews"
@@ -735,7 +728,7 @@ function InteractiveGoogleFeedbackDemo() {
 
 function InteractiveTestimonialSectionDemo() {
   return (
-    <div className="w-full rounded-2xl border border-[#23283B] bg-[#0A0D17] p-2 sm:p-4 md:p-6 overflow-hidden shadow-2xl">
+    <div className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 md:p-6 overflow-hidden shadow-sm dark:shadow-2xl">
       <TestimonialSection
         basePath="testimonials"
         badge="Critic Acclaim"
@@ -749,7 +742,7 @@ function InteractiveTestimonialSectionDemo() {
 
 function InteractiveMapDemo() {
   return (
-    <div className="w-full max-w-3xl mx-auto h-[360px] rounded-2xl border border-[#23283B] overflow-hidden shadow-2xl bg-[#0A0D17]">
+    <div className="w-full max-w-3xl mx-auto h-[360px] rounded-2xl border border-slate-200 dark:border-[#23283B] overflow-hidden shadow-sm dark:shadow-2xl bg-white dark:bg-[#0A0D17]">
       <DenebMap
         data-preview-field-path="contact.mapUrl"
         mapUrl="https://maps.google.com/maps?q=San+Francisco,+CA&output=embed"
@@ -1315,13 +1308,13 @@ export default function Page() {
     category: 'Core Primitives',
     badge: 'Core',
     previewComponent: (
-      <div className="max-w-sm w-full p-6 rounded-2xl border border-[#23283B] bg-[#0E111C] space-y-3 shadow-xl hover:border-[#818CF8]/40 transition-all">
-        <div className="flex items-center gap-2 text-[#818CF8] font-bold text-xs uppercase tracking-wider">
+      <div className="max-w-sm w-full p-6 rounded-2xl border border-slate-200 bg-white dark:border-[#23283B] dark:bg-[#0E111C] space-y-3 shadow-md dark:shadow-xl hover:border-indigo-400/40 dark:hover:border-[#818CF8]/40 transition-all">
+        <div className="flex items-center gap-2 text-indigo-600 dark:text-[#818CF8] font-bold text-xs uppercase tracking-wider">
           <DenebStarIcon className="w-3.5 h-3.5" />
           <span>Cosmic Card Container</span>
         </div>
-        <h3 className="font-bold text-lg text-white">Starlight Glass Panel</h3>
-        <p className="text-xs text-[#94A3B8] leading-relaxed">
+        <h3 className="font-bold text-lg text-slate-900 dark:text-white">Starlight Glass Panel</h3>
+        <p className="text-xs text-slate-600 dark:text-[#94A3B8] leading-relaxed">
           Pre-styled container with subtle inner gradients and backdrop blur for clean storefront composition.
         </p>
       </div>

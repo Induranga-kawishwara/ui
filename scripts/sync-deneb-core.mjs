@@ -36,6 +36,19 @@ function findCoreComponentsDir() {
   return null;
 }
 
+function findCorePkgDir() {
+  const candidates = [
+    path.join(uiRoot, '..', 'deneb-core', 'packages', 'deneb-core'),
+    path.join(uiRoot, '..', 'core', 'packages', 'deneb-core'),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c) && fs.statSync(c).isDirectory()) {
+      return c;
+    }
+  }
+  return null;
+}
+
 function findCoreCliDir() {
   const candidates = [
     path.join(uiRoot, 'node_modules', '@deneb-ui', 'cli'),
@@ -85,6 +98,15 @@ async function sync() {
     console.log('✔ Component source files synchronized successfully.');
   } else {
     console.log('ℹ No external core components directory found, using local component bundle.');
+  }
+
+  const corePkgDir = findCorePkgDir();
+  const destCorePkgDir = path.join(uiRoot, 'node_modules', '@deneb-ui', 'core');
+  if (corePkgDir && fs.existsSync(path.join(corePkgDir, 'dist')) && fs.existsSync(destCorePkgDir)) {
+    console.log(`📦 Found @deneb-ui/core source: ${corePkgDir}`);
+    copyDirectoryRecursive(path.join(corePkgDir, 'dist'), path.join(destCorePkgDir, 'dist'));
+    fs.copyFileSync(path.join(corePkgDir, 'package.json'), path.join(destCorePkgDir, 'package.json'));
+    console.log('✔ @deneb-ui/core dist synchronized successfully.');
   }
 
   // 1. Detect all component files in src/components/deneb-ui

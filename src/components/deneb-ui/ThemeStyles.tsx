@@ -1,4 +1,5 @@
 import React from 'react';
+import { isDarkColor, getAutoContrastTextColor } from '@deneb-ui/core';
 import { ResponsiveBaseStyles } from './ResponsiveBaseStyles';
 
 export interface TemplateTheme {
@@ -17,6 +18,10 @@ export interface TemplateTheme {
   bodyFont?: string;
   borderRadius?: string;
   align?: 'left' | 'center' | 'right';
+  buttonBackgroundColor?: string;
+  buttonTextColor?: string;
+  dark?: Partial<TemplateTheme>;
+  light?: Partial<TemplateTheme>;
   [key: string]: unknown;
 }
 
@@ -159,22 +164,39 @@ export function getThemeCssProperties(theme?: TemplateTheme | null): React.CSSPr
 
   if (theme) {
     for (const [key, val] of Object.entries(theme)) {
-      if (typeof val === 'string' || typeof val === 'number') {
+      if (key !== 'dark' && key !== 'light' && (typeof val === 'string' || typeof val === 'number')) {
         const cssVarName = `--${key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()}`;
         customVars[cssVarName] = String(val);
       }
     }
   }
 
+  const isDark = isDarkColor(theme?.backgroundColor);
+  const bgColor = theme?.backgroundColor || (isDark ? '#090d1a' : '#ffffff');
+  const textColor = theme?.textColor || (isDark ? '#f8fafc' : '#0f172a');
+  const mutedColor = theme?.mutedTextColor || (isDark ? 'rgba(248, 250, 252, 0.7)' : '#64748b');
+  const borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0';
+  const cardBg = isDark ? '#111a2e' : '#ffffff';
+  const cardBorder = isDark ? 'rgba(255, 255, 255, 0.09)' : '#e2e8f0';
+
+  const primaryColor = theme?.primaryColor || '#2563eb';
+  const buttonBg = String(theme?.buttonBackgroundColor || primaryColor || '#2563eb');
+  const autoButtonText = getAutoContrastTextColor(buttonBg);
+  const buttonText = String(theme?.buttonTextColor || autoButtonText);
+  const buttonSecondaryBg = isDark
+    ? 'rgba(255, 255, 255, 0.08)'
+    : (theme?.secondaryColor && !isDarkColor(theme.secondaryColor) ? theme.secondaryColor : '#f1f5f9');
+  const buttonSecondaryText = isDark ? '#f8fafc' : '#0f172a';
+
   return {
-    '--brand-color': theme?.primaryColor || '#2563eb',
-    '--brand-secondary': theme?.secondaryColor || '#0f172a',
+    '--brand-color': primaryColor,
+    '--brand-secondary': theme?.secondaryColor || (isDark ? '#1e293b' : '#0f172a'),
     '--brand-accent': theme?.accentColor || '#14b8a6',
-    '--page-background': theme?.backgroundColor || '#ffffff',
-    '--page-text': theme?.textColor || '#0f172a',
-    '--heading-color': theme?.headingColor || theme?.secondaryColor || '#0f172a',
-    '--muted-text': theme?.mutedTextColor || '#64748b',
-    '--link-color': theme?.linkColor || theme?.primaryColor || '#2563eb',
+    '--page-background': bgColor,
+    '--page-text': textColor,
+    '--heading-color': theme?.headingColor || (isDark ? '#ffffff' : theme?.secondaryColor || '#0f172a'),
+    '--muted-text': mutedColor,
+    '--link-color': theme?.linkColor || primaryColor,
     '--hero-min-height': theme?.heroMinHeight || '72vh',
     '--section-padding': theme?.sectionPadding || '5rem',
     '--base-size': theme?.baseSize || '16px',
@@ -182,6 +204,35 @@ export function getThemeCssProperties(theme?: TemplateTheme | null): React.CSSPr
     '--body-font': theme?.bodyFont || 'Inter, sans-serif',
     '--border-radius': theme?.borderRadius || '8px',
     '--content-align': theme?.align || 'left',
+    // Canonical color system tokens for light & dark mode harmony
+    '--color-primary': primaryColor,
+    '--color-secondary': buttonSecondaryBg,
+    '--color-accent': theme?.accentColor || '#14b8a6',
+    '--color-text': textColor,
+    '--color-text-muted': mutedColor,
+    '--color-border': borderColor,
+    '--color-surface': isDark ? 'rgba(255,255,255,0.05)' : '#ffffff',
+    '--card-bg': cardBg,
+    '--card-border': cardBorder,
+    '--product-card-bg': cardBg,
+    '--product-card-border': cardBorder,
+    '--tag-bg': isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(241, 245, 249, 0.9)',
+    '--tag-color': mutedColor,
+    '--card-shadow': isDark ? '0 10px 25px -5px rgba(0, 0, 0, 0.4)' : '0 10px 25px -5px rgba(0, 0, 0, 0.05)',
+    '--header-bg': isDark ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.82)',
+    '--input-bg': isDark ? '#1e293b' : '#ffffff',
+    '--input-border': isDark ? 'rgba(255, 255, 255, 0.15)' : '#cbd5e1',
+    '--input-color': textColor,
+    // Dedicated Button Design Tokens
+    '--button-bg': buttonBg,
+    '--button-text': buttonText,
+    '--button-primary-bg': buttonBg,
+    '--button-primary-text': buttonText,
+    '--button-secondary-bg': buttonSecondaryBg,
+    '--button-secondary-text': buttonSecondaryText,
+    '--button-outline-border': isDark ? 'rgba(255, 255, 255, 0.22)' : 'currentColor',
+    '--button-outline-text': isDark ? '#f8fafc' : textColor,
+    '--button-ghost-text': isDark ? '#f8fafc' : textColor,
     fontFamily: theme?.bodyFont || 'Inter, sans-serif',
     ...customVars,
   } as React.CSSProperties;
@@ -194,10 +245,17 @@ export interface ThemeStylesProps {
   defaultAccent?: string;
   defaultBg?: string;
   defaultText?: string;
+  /**
+   * Automatically generate opposite mode selectors (.dark / .light or [data-theme="..."])
+   * so templates with theme switchers transition without writing manual CSS.
+   * Default: true.
+   */
+  enableDualMode?: boolean;
 }
 
 /**
  * Automatically injects standard and custom fivora theme variables into the document.
+ * Supports light-only, dark-only, and dual-mode (light & dark toggle) templates.
  */
 export function ThemeStyles({
   theme,
@@ -206,18 +264,64 @@ export function ThemeStyles({
   defaultAccent = '#14b8a6',
   defaultBg = '#ffffff',
   defaultText = '#0f172a',
+  enableDualMode = true,
 }: ThemeStylesProps) {
   const styleProps = getThemeCssProperties(theme);
-  const cssLines = Object.entries(styleProps)
+  const baseLines = Object.entries(styleProps)
     .filter(([key]) => key.startsWith('--'))
     .map(([key, value]) => `  ${key}: ${value};`)
     .join('\n');
 
-  const css = `
+  let css = `
     :root {
-${cssLines}
+${baseLines}
     }
   `;
+
+  if (enableDualMode) {
+    const isDarkBase = isDarkColor(theme?.backgroundColor);
+    if (isDarkBase) {
+      // Base theme is dark. Generate light mode rules for .light or [data-theme="light"]
+      const lightTheme: TemplateTheme = {
+        ...theme,
+        backgroundColor: '#ffffff',
+        textColor: '#0f172a',
+        mutedTextColor: '#64748b',
+        ...(theme?.light || {}),
+      };
+      const lightProps = getThemeCssProperties(lightTheme);
+      const lightLines = Object.entries(lightProps)
+        .filter(([key]) => key.startsWith('--'))
+        .map(([key, value]) => `  ${key}: ${value};`)
+        .join('\n');
+
+      css += `
+    .light, [data-theme="light"] {
+${lightLines}
+    }
+      `;
+    } else {
+      // Base theme is light. Generate dark mode rules for .dark or [data-theme="dark"]
+      const darkTheme: TemplateTheme = {
+        ...theme,
+        backgroundColor: '#090d1a',
+        textColor: '#f8fafc',
+        mutedTextColor: 'rgba(248, 250, 252, 0.7)',
+        ...(theme?.dark || {}),
+      };
+      const darkProps = getThemeCssProperties(darkTheme);
+      const darkLines = Object.entries(darkProps)
+        .filter(([key]) => key.startsWith('--'))
+        .map(([key, value]) => `  ${key}: ${value};`)
+        .join('\n');
+
+      css += `
+    .dark, [data-theme="dark"] {
+${darkLines}
+    }
+      `;
+    }
+  }
 
   return (
     <>

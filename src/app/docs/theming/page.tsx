@@ -1,11 +1,43 @@
-'use client';
-
+import type { Metadata } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
+import { SITE_CONFIG } from '@/lib/site-config';
+
+export const metadata: Metadata = {
+  title: 'Celestial Theming & Color Tokens — DENEB UI',
+  description:
+    'Master the DENEB UI celestial palette, CSS variables, ThemeStyles component, dynamic dark/light mode switching, and responsive spacing tokens.',
+  keywords: [
+    'deneb ui theming',
+    'celestial dark mode',
+    'CSS variables React',
+    'Tailwind color tokens',
+    'ThemeStyles component',
+    'customizable storefront themes',
+  ],
+  alternates: {
+    canonical: `${SITE_CONFIG.url}/docs/theming`,
+  },
+  openGraph: {
+    title: 'Celestial Theming & Color Tokens — DENEB UI',
+    description:
+      'Master the DENEB UI celestial palette, CSS variables, ThemeStyles component, dynamic dark/light mode switching, and responsive spacing tokens.',
+    url: `${SITE_CONFIG.url}/docs/theming`,
+    type: 'article',
+    images: [SITE_CONFIG.ogImage],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Celestial Theming & Color Tokens — DENEB UI',
+    description:
+      'Master the DENEB UI celestial palette, CSS variables, ThemeStyles component, dynamic dark/light mode switching, and responsive spacing tokens.',
+    images: [SITE_CONFIG.ogImage],
+  },
+};
 
 export default function ThemingPage() {
   const tocItems: TocItem[] = [

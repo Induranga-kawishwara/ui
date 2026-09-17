@@ -1,5 +1,4 @@
-'use client';
-
+import type { Metadata } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { 
@@ -10,6 +9,38 @@ import {
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
+import { SITE_CONFIG } from '@/lib/site-config';
+
+export const metadata: Metadata = {
+  title: 'Production Storefront Templates — DENEB UI',
+  description:
+    'Pre-built, validated, and high-converting modern e-commerce storefront templates. Scaffold fully styled Next.js storefronts in seconds.',
+  keywords: [
+    'storefront templates',
+    'Next.js e-commerce template',
+    'React shop starter',
+    'Fivora storefront template',
+    'modern commerce theme',
+  ],
+  alternates: {
+    canonical: `${SITE_CONFIG.url}/docs/templates`,
+  },
+  openGraph: {
+    title: 'Production Storefront Templates — DENEB UI',
+    description:
+      'Pre-built, validated, and high-converting modern e-commerce storefront templates. Scaffold fully styled Next.js storefronts in seconds.',
+    url: `${SITE_CONFIG.url}/docs/templates`,
+    type: 'article',
+    images: [SITE_CONFIG.ogImage],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Production Storefront Templates — DENEB UI',
+    description:
+      'Pre-built, validated, and high-converting modern e-commerce storefront templates.',
+    images: [SITE_CONFIG.ogImage],
+  },
+};
 
 export default function TemplatesPage() {
   const tocItems: TocItem[] = [

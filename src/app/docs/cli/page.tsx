@@ -1,11 +1,45 @@
-'use client';
-
+import type { Metadata } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { Terminal, Sparkles, Check, ArrowRight, ShieldCheck, Box, RefreshCw, FolderArchive, PackageCheck, Zap, Activity } from 'lucide-react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
+import { SITE_CONFIG } from '@/lib/site-config';
+
+export const metadata: Metadata = {
+  title: 'CLI Reference & Storefront Scaffolding — DENEB UI',
+  description:
+    'Complete CLI reference for @deneb-ui/cli. Master deneb init, validate, doctor, zip, ARC flags, AI modes, and automated storefront scaffolding.',
+  keywords: [
+    'deneb cli',
+    'deneb init',
+    'storefront cli',
+    'scaffold react store',
+    'deneb doctor',
+    'deneb validate',
+    'ARC flags',
+    'AI storefront generator',
+  ],
+  alternates: {
+    canonical: `${SITE_CONFIG.url}/docs/cli`,
+  },
+  openGraph: {
+    title: 'CLI Reference & Storefront Scaffolding — DENEB UI',
+    description:
+      'Complete CLI reference for @deneb-ui/cli. Commands for deneb init, validate, update, doctor, zip, ARC flags, AI modes, and automated storefront scaffolding.',
+    url: `${SITE_CONFIG.url}/docs/cli`,
+    type: 'article',
+    images: [SITE_CONFIG.ogImage],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CLI Reference & Storefront Scaffolding — DENEB UI',
+    description:
+      'Complete CLI reference for @deneb-ui/cli. Commands for deneb init, validate, update, doctor, zip, ARC flags, AI modes, and automated storefront scaffolding.',
+    images: [SITE_CONFIG.ogImage],
+  },
+};
 
 export default function CliReferencePage() {
   const tocItems: TocItem[] = [

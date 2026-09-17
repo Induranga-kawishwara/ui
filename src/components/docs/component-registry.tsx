@@ -2340,6 +2340,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       { name: 'defaultAccent', type: 'string', defaultValue: '"#14b8a6"', description: 'Fallback accent color if undefined in theme.' },
       { name: 'defaultBg', type: 'string', defaultValue: '"#ffffff"', description: 'Fallback canvas background color if undefined in theme.' },
       { name: 'defaultText', type: 'string', defaultValue: '"#0f172a"', description: 'Fallback body text color if undefined in theme.' },
+      { name: 'enableDualMode', type: 'boolean', defaultValue: 'true', description: 'Automatically outputs opposite-mode CSS variables (.dark or .light / [data-theme]) so templates with theme toggles seamlessly switch without custom CSS.' },
     ],
     variants: [
       {
@@ -2465,6 +2466,41 @@ export function ProductFeatureCard() {
             <span className="text-[10px] font-mono text-indigo-600 dark:text-[#818CF8] uppercase font-bold tracking-wider">Semantic CSS Variables</span>
             <p className="text-slate-600 dark:text-[#94A3B8]">
               All components and custom HTML cleanly resolve <code className="text-slate-900 dark:text-white">var(--card-bg)</code>, <code className="text-slate-900 dark:text-white">var(--card-border)</code>, and <code className="text-slate-900 dark:text-white">var(--color-primary)</code> for instant theme harmony.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: '5. Dual-Mode (Light & Dark) with Theme Switcher',
+        description: 'Supports light-only, dark-only, or dual-mode templates with automatic .dark and [data-theme="dark"] variable transitions.',
+        code: `// Custom dark overrides in site-data.json theme:
+const dualTheme = {
+  primaryColor: "#6366f1",
+  backgroundColor: "#ffffff", // Default light mode
+  textColor: "#0f172a",
+  dark: {
+    backgroundColor: "#090d1a", // Overrides when .dark is active
+    textColor: "#f8fafc",
+    cardBg: "#121627"
+  }
+};
+
+// Navbar theme switcher component
+export function ThemeToggleButton() {
+  const toggleDark = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+  return (
+    <button onClick={toggleDark} className="px-3 py-1.5 rounded-lg border text-xs font-semibold">
+      Toggle Light / Dark
+    </button>
+  );
+}`,
+        preview: (
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-[#23283B] bg-slate-50 dark:bg-[#0E111C] space-y-2 text-xs">
+            <div className="font-semibold text-slate-800 dark:text-slate-200">Zero-Config Dual-Theming</div>
+            <p className="text-slate-600 dark:text-[#94A3B8]">
+              Whether a developer builds a <strong className="text-slate-900 dark:text-white">light-only</strong> template, a <strong className="text-slate-900 dark:text-white">dark-only</strong> template, or a <strong className="text-slate-900 dark:text-white">toggleable dual-mode</strong> template, <code className="text-indigo-600 dark:text-[#818CF8]">ThemeStyles</code> automatically adapts without breaking layout styles.
             </p>
           </div>
         ),

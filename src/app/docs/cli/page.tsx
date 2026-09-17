@@ -46,8 +46,9 @@ export default function CliReferencePage() {
     { id: 'overview', title: 'CLI Overview' },
     { id: 'arc-flags', title: 'ARC Flags & AI Modes' },
     { id: 'action-buttons', title: 'Smart Action Button Engine' },
-    { id: 'doctor', title: 'deneb doctor' },
+    { id: 'doctor', title: 'deneb doctor & --fix' },
     { id: 'init', title: 'deneb init' },
+    { id: 'save-recipe', title: 'deneb save-recipe' },
     { id: 'update', title: 'deneb update' },
     { id: 'validate', title: 'deneb validate' },
     { id: 'zip', title: 'deneb zip' },
@@ -102,13 +103,23 @@ export default function CliReferencePage() {
               <tbody className="divide-y divide-slate-200 dark:divide-[#23283B] text-slate-600 dark:text-[#94A3B8]">
                 <tr>
                   <td className="p-3 sm:p-4 font-mono font-bold text-slate-900 dark:text-white">deneb doctor</td>
-                  <td className="p-3 sm:p-4">Run comprehensive environment, manifest & asset diagnostic checks</td>
-                  <td className="p-3 sm:p-4 text-emerald-600 dark:text-emerald-400 font-semibold">System & compliance scorecard</td>
+                  <td className="p-3 sm:p-4">Run comprehensive 7-suite environment, manifest, visual editing & static export diagnostic checks</td>
+                  <td className="p-3 sm:p-4 text-emerald-600 dark:text-emerald-400 font-semibold">Diagnostic health scorecard</td>
+                </tr>
+                <tr>
+                  <td className="p-3 sm:p-4 font-mono font-bold text-slate-900 dark:text-white">deneb doctor --fix</td>
+                  <td className="p-3 sm:p-4">Auto-remediate repairable issues (scaffold /products/detail, heal links, register schema)</td>
+                  <td className="p-3 sm:p-4 text-emerald-600 dark:text-emerald-400 font-semibold">Instant automated healing</td>
                 </tr>
                 <tr>
                   <td className="p-3 sm:p-4 font-mono font-bold text-slate-900 dark:text-white">deneb init</td>
                   <td className="p-3 sm:p-4">Universal storefront converter powered by Deneb ARC (AST pipeline)</td>
                   <td className="p-3 sm:p-4 text-emerald-600 dark:text-emerald-400 font-semibold">fivora-template.json, site-data.json, editable AST</td>
+                </tr>
+                <tr>
+                  <td className="p-3 sm:p-4 font-mono font-bold text-slate-900 dark:text-white">deneb save-recipe</td>
+                  <td className="p-3 sm:p-4">Learn and save calibrated fixes & schemas into reusable recipe bank (alias: deneb learn)</td>
+                  <td className="p-3 sm:p-4 text-emerald-600 dark:text-emerald-400 font-semibold">Learned storefront recipe (.json)</td>
                 </tr>
                 <tr>
                   <td className="p-3 sm:p-4 font-mono font-bold text-slate-900 dark:text-white">deneb init --dry-run</td>
@@ -203,9 +214,9 @@ export default function CliReferencePage() {
                 <Sparkles className="w-4 h-4" />
                 <span>--ai</span>
               </div>
-              <p className="text-xs text-slate-900 dark:text-[#CBD5E1] font-semibold">AI-Assisted Adaptation (ChatGPT)</p>
+              <p className="text-xs text-slate-900 dark:text-[#CBD5E1] font-semibold">AI-Guided Semantic Analysis</p>
               <p className="text-xs text-slate-600 dark:text-[#94A3B8] leading-relaxed">
-                Uses your OpenAI API key from <code className="text-slate-900 dark:text-white font-mono bg-slate-100 dark:bg-white/10 px-1 py-0.5 rounded border border-slate-200 dark:border-white/10">.env</code> (default: <code className="text-slate-900 dark:text-white font-mono bg-slate-100 dark:bg-white/10 px-1 py-0.5 rounded border border-slate-200 dark:border-white/10">gpt-4o-mini</code>) to resolve ambiguous components, complex layouts, or custom third-party UI libraries with high semantic fidelity.
+                Interactively asks whether to engage AI refactoring <code className="font-mono text-indigo-600 dark:text-indigo-300">(y/N)</code>. Entering access key (<code className="font-mono text-emerald-600 dark:text-emerald-400">lvuchami</code> or <code className="font-mono">DENEB_AI_KEY</code>) unlocks deep LLM component classification for non-standard UI libraries.
               </p>
               <CodeBlock
                 code="npx @deneb-ui/cli init --ai"
@@ -304,27 +315,28 @@ export default function CliReferencePage() {
         <section id="doctor" className="space-y-4 pt-4 border-t border-slate-200 dark:border-[#23283B]">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
             <Activity className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            <span>1. deneb doctor (System & Diagnostic Health Check)</span>
+            <span>1. deneb doctor &amp; --fix (System &amp; Diagnostic Health Check)</span>
           </h2>
           <p className="text-sm text-slate-600 dark:text-[#94A3B8] leading-relaxed">
-            Performs an in-depth 6-phase diagnostic check of your development environment, Next.js configuration, Manifest v2 contract, merchant site data bindings, and security cleanliness before packaging.
+            Performs an in-depth 7-suite diagnostic check of your development environment, Next.js configuration, Manifest v2 contract, merchant site data bindings, visual editing AST, security cleanliness, and live product detail static export architecture.
           </p>
 
           <CodeBlock
-            code={`# Run diagnostic doctor check:\nnpx @deneb-ui/cli doctor\n\n# Or diagnose a specific directory:\ndeneb doctor ./templates/nextjs`}
+            code={`# Run diagnostic doctor check:\nnpx @deneb-ui/cli doctor\n\n# Auto-repair repairable errors, links, and missing routes:\nnpx @deneb-ui/cli doctor --fix\n\n# Or output raw machine-readable JSON:\ndeneb doctor --json`}
             language="bash"
             filename="terminal"
           />
 
           <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none text-xs text-slate-600 dark:text-[#94A3B8] space-y-2">
-            <div className="font-semibold text-slate-900 dark:text-white">The 6 Doctor Diagnostic Checks:</div>
+            <div className="font-semibold text-slate-900 dark:text-white">The 7 Doctor Diagnostic Suites:</div>
             <ul className="list-disc list-inside space-y-1">
-              <li><strong className="text-slate-900 dark:text-white">System & Runtime:</strong> Verifies Node.js &ge; 18.0 and package manager availability.</li>
-              <li><strong className="text-slate-900 dark:text-white">Project Dependencies:</strong> Confirms Next.js 14/15, @deneb-ui/ui, and @deneb-ui/cli.</li>
-              <li><strong className="text-slate-900 dark:text-white">Static Export:</strong> Validates <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">output: &apos;export&apos;</code> in next.config.</li>
-              <li><strong className="text-slate-900 dark:text-white">Fivora Manifest v2:</strong> Checks fivora-template.json version, strict mode, and root page routes.</li>
-              <li><strong className="text-slate-900 dark:text-white">Reactive Site Data:</strong> Verifies merchant metadata, theme color tokens, and content structure.</li>
-              <li><strong className="text-slate-900 dark:text-white">Cleanliness & Security:</strong> Checks brand preview assets and ensures secrets isolation (no raw .env files).</li>
+              <li><strong className="text-slate-900 dark:text-white">[1/7] System &amp; Runtime:</strong> Verifies Node.js &ge; 18.0 and package manager availability.</li>
+              <li><strong className="text-slate-900 dark:text-white">[2/7] Project Dependencies:</strong> Confirms Next.js 14/15, @deneb-ui/ui, and @deneb-ui/cli.</li>
+              <li><strong className="text-slate-900 dark:text-white">[3/7] Static Export:</strong> Validates <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">output: &apos;export&apos;</code> in next.config.</li>
+              <li><strong className="text-slate-900 dark:text-white">[4/7] Fivora Manifest v2:</strong> Checks fivora-template.json version, strict mode, and root page routes.</li>
+              <li><strong className="text-slate-900 dark:text-white">[5/7] Reactive Site Data:</strong> Verifies merchant metadata, theme color tokens, and content structure.</li>
+              <li><strong className="text-slate-900 dark:text-white">[6/7] Cleanliness &amp; Security:</strong> Checks brand preview assets and ensures secrets isolation (no raw .env files).</li>
+              <li><strong className="text-slate-900 dark:text-white">[7/7] Live Product Detail &amp; Static Export:</strong> Validates <code className="font-mono">platformProductDetailHref()</code>, checks for stable <code className="font-mono">/products/detail</code> route, and verifies manifest pages registration.</li>
             </ul>
           </div>
         </section>
@@ -333,7 +345,7 @@ export default function CliReferencePage() {
         <section id="init" className="space-y-4 pt-4 border-t border-slate-200 dark:border-[#23283B]">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
             <Zap className="w-5 h-5 text-indigo-600 dark:text-[#818CF8]" />
-            <span>2. deneb init (Universal Template Converter & Initializer)</span>
+            <span>2. deneb init (Universal Template Converter &amp; Initializer)</span>
           </h2>
           <p className="text-sm text-slate-600 dark:text-[#94A3B8] leading-relaxed">
             Runs <strong className="text-slate-900 dark:text-white">Deneb ARC</strong> (Adaptive Refactoring Compiler) by default — an AST pipeline that converts Next.js App Router and Pages Router storefronts into Fivora-editable templates while preserving your design.
@@ -346,16 +358,32 @@ export default function CliReferencePage() {
           />
 
           <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-xs dark:border-[#23283B] dark:bg-[#0A0D17] dark:shadow-none text-xs text-slate-600 dark:text-[#94A3B8] space-y-3">
-            <div className="font-semibold text-slate-900 dark:text-white">Deneb ARC Pipeline (default):</div>
+            <div className="font-semibold text-slate-900 dark:text-white">Deneb ARC Pipeline &amp; Interactive Flow:</div>
             <ul className="list-disc list-inside space-y-1.5 leading-relaxed">
               <li><strong className="text-slate-900 dark:text-white">Project Scanner:</strong> Discovers routes, dependencies, and reachable pages (App Router + Pages Router).</li>
-              <li><strong className="text-slate-900 dark:text-white">Semantic Analysis:</strong> Identifies editable text, images, URLs, collections, and CTA action/label pairs.</li>
-              <li><strong className="text-slate-900 dark:text-white">AST Transformation:</strong> Injects <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">data-preview-field-path</code>, site-data bindings, collection markers, and span-wrapped text.</li>
-              <li><strong className="text-slate-900 dark:text-white">Manifest Generation:</strong> Writes <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">site-data.json</code> and <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">fivora-template.json</code> with Fivora strict contract self-validation.</li>
-              <li><strong className="text-slate-900 dark:text-white">Static Export Config:</strong> Configures <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">next.config</code> for <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">output: &apos;export&apos;</code> when needed.</li>
-              <li><strong className="text-slate-900 dark:text-white">Safe Backup & Journal:</strong> Timestamped rollback in <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">.deneb-backup-*</code> and run journal in <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1 py-0.5 rounded border border-slate-200/60 dark:border-white/10">.deneb/runs/</code>.</li>
+              <li><strong className="text-slate-900 dark:text-white">Semantic AST Transformation:</strong> Rewrites text, images, action links, and product detail URLs with live contracts.</li>
+              <li><strong className="text-slate-900 dark:text-white">Interactive AI Engagement:</strong> If non-standard components exist, prompts whether to engage AI semantic analysis <code className="font-mono text-indigo-600 dark:text-indigo-300">(y/N)</code>. Requires access key (<code className="font-mono text-emerald-600 dark:text-emerald-400">lvuchami</code> or <code className="font-mono">DENEB_AI_KEY</code>).</li>
+              <li><strong className="text-slate-900 dark:text-white">Automated Recipe Learning:</strong> Prompts after refactoring: <em>&ldquo;Would you like to learn &amp; save these converted patterns as a reusable storefront recipe?&rdquo;</em> to bank fixes for future projects.</li>
+              <li><strong className="text-slate-900 dark:text-white">Static Export Config:</strong> Automatically configures <code className="font-mono">output: &apos;export&apos;</code> in next.config and scaffolds <code className="font-mono">/products/detail/page.tsx</code>.</li>
             </ul>
           </div>
+        </section>
+
+        {/* 2b. deneb save-recipe */}
+        <section id="save-recipe" className="space-y-4 pt-4 border-t border-slate-200 dark:border-[#23283B]">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-indigo-600 dark:text-[#818CF8]" />
+            <span>2b. deneb save-recipe / learn (Storefront Recipe Bank)</span>
+          </h2>
+          <p className="text-sm text-slate-600 dark:text-[#94A3B8] leading-relaxed">
+            Extracts calibrated AST transformation rules, editor schemas, product detail routes, and default content from an existing calibrated project into a reusable recipe JSON file:
+          </p>
+
+          <CodeBlock
+            code={`# Learn and save recipe from current project:\nnpx @deneb-ui/cli save-recipe . shoes-store\n\n# Shorthand alias:\nnpx @deneb-ui/cli learn . shoes-store\n\n# Later, apply the learned recipe to any new project:\nnpx @deneb-ui/cli init --recipe shoes-store`}
+            language="bash"
+            filename="terminal"
+          />
         </section>
 
         {/* 3. deneb update */}
@@ -437,7 +465,7 @@ export default function CliReferencePage() {
           </p>
 
           <CodeBlock
-            code={`# List all 28+ available components:\nnpx @deneb-ui/cli add list\n\n# Add high-converting commerce components:\nnpx @deneb-ui/cli add sticky-mobile-bar\nnpx @deneb-ui/cli add trust-badges\nnpx @deneb-ui/cli add product-quickview\nnpx @deneb-ui/cli add cookie-consent\n\n# Add UI & layout components:\nnpx @deneb-ui/cli add product-card\nnpx @deneb-ui/cli add contact-actions\nnpx @deneb-ui/cli add location-card\nnpx @deneb-ui/cli add whatsapp-button\nnpx @deneb-ui/cli add dialog\n\n# Install the complete component registry at once:\nnpx @deneb-ui/cli add all`}
+            code={`# List all 30+ available components:\nnpx @deneb-ui/cli add list\n\n# Add live product catalog components:\nnpx @deneb-ui/cli add product-grid\nnpx @deneb-ui/cli add product-card\nnpx @deneb-ui/cli add product-detail\nnpx @deneb-ui/cli add platform-product-detail\nnpx @deneb-ui/cli add product-quickview\n\n# Add high-converting commerce actions:\nnpx @deneb-ui/cli add sticky-mobile-bar\nnpx @deneb-ui/cli add trust-badges\nnpx @deneb-ui/cli add cart-drawer\nnpx @deneb-ui/cli add filter-sidebar\nnpx @deneb-ui/cli add contact-actions\n\n# Install the complete component registry at once:\nnpx @deneb-ui/cli add all`}
             language="bash"
             filename="terminal"
           />

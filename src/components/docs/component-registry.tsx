@@ -339,6 +339,46 @@ function InteractiveProductGridDemo() {
       badge: 'SALE',
       imageUrl: '/products/vanta-stealth-pro.jpg',
     },
+    {
+      id: 4,
+      name: 'VANTA Orbit Runner',
+      category: 'Performance',
+      price: 'LKR 29,400',
+      badge: 'HOT',
+      imageUrl: '/products/vanta-flux-01.jpg',
+    },
+    {
+      id: 5,
+      name: 'VANTA Echo Minimal',
+      category: 'Sneakers',
+      price: 'LKR 24,000',
+      badge: 'POPULAR',
+      imageUrl: '/products/vanta-aero-x.jpg',
+    },
+    {
+      id: 6,
+      name: 'VANTA Apex Carbon',
+      category: 'Performance',
+      price: 'LKR 38,000',
+      badge: 'LIMITED',
+      imageUrl: '/products/vanta-stealth-pro.jpg',
+    },
+    {
+      id: 7,
+      name: 'VANTA Cloud Cushion',
+      category: 'Lifestyle',
+      price: 'LKR 19,500',
+      badge: 'COMFORT',
+      imageUrl: '/products/vanta-flux-01.jpg',
+    },
+    {
+      id: 8,
+      name: 'VANTA Speed Trainer',
+      category: 'Performance',
+      price: 'LKR 26,800',
+      badge: 'TRAINING',
+      imageUrl: '/products/vanta-aero-x.jpg',
+    },
   ];
 
   return (
@@ -347,9 +387,13 @@ function InteractiveProductGridDemo() {
         title="New Arrivals"
         subtitle="Just Dropped"
         products={sampleProducts}
-        categories={['All', 'Performance', 'Sneakers']}
+        categories={['All', 'Performance', 'Sneakers', 'Lifestyle']}
         sectionPath="demo-grid"
         columns={{ mobile: 1, tablet: 2, desktop: 3 }}
+        pageSize={3}
+        enablePagination={true}
+        showPageSizeSelector={true}
+        pageSizeOptions={[3, 6, 9]}
         onQuickView={(p) => setSelectedQuickView(p)}
       />
       {selectedQuickView && (
@@ -2385,19 +2429,21 @@ export default function QuickViewDemo() {
 
   'product-grid': {
     title: 'ProductGrid',
-    description: 'Responsive commerce catalog grid with category filter tabs and configurable columns per device (mobile / tablet / desktop). Includes quick-view hook.',
+    description: 'Responsive commerce catalog grid with live backend search, debounced input, category filter tabs, strict empty-state preservation, and configurable columns per device. Includes quick-view trigger.',
     category: 'Storefront Sections',
     badge: 'Commerce',
     previewComponent: <InteractiveProductGridDemo />,
     previewCode: `import { ProductGrid } from "@deneb-ui/ui";
 
 export default function Catalog() {
-  // Zero-Config: Automatically fetches products via useProducts()
-  // and auto-derives category filter pills!
+  // Live Backend Search + Zero-Config Category Filter Pills!
   return (
     <ProductGrid
       title="Trending Collection"
       subtitle="Just Dropped"
+      showSearch={true}
+      searchPlaceholder="Search sneakers by name or tag..."
+      enableBackendSearch={true}
       columns={{ mobile: 1, tablet: 2, desktop: 3 }}
       onQuickView={(p, itemPath) => console.log("Quick view:", p)}
     />
@@ -2408,9 +2454,14 @@ export default function Catalog() {
     props: [
       { name: 'products', type: 'ProductItem[]', required: false, defaultValue: 'useProducts()', description: 'Optional. If omitted, automatically fetches live products from site data and backend.' },
       { name: 'sectionPath', type: 'string', defaultValue: '"home"', description: 'Fivora section key for live editing.' },
+      { name: 'listPath', type: 'string', defaultValue: '"products"', description: 'Array path for collection items. Preserved in empty states for visual editing.' },
       { name: 'title', type: 'string', defaultValue: '"Featured Collection"', description: 'Heading for the product grid.' },
       { name: 'subtitle', type: 'string', defaultValue: '"Just Dropped"', description: 'Badge or category subtitle above heading.' },
       { name: 'categories', type: 'string[]', defaultValue: "['All']", description: 'Filter pills rendered above the grid.' },
+      { name: 'showSearch', type: 'boolean', defaultValue: 'true', description: 'Displays live interactive search bar with results counter pill above products.' },
+      { name: 'searchPlaceholder', type: 'string', defaultValue: '"Search products by name, brand, or tag..."', description: 'Custom placeholder text for search input.' },
+      { name: 'enableBackendSearch', type: 'boolean', defaultValue: 'true', description: 'Enables debounced remote catalog querying via siteApi.catalogUrl.' },
+      { name: 'onSearchChange', type: '(query: string) => void', description: 'Callback fired whenever search query changes.' },
       { name: 'columns', type: '{ mobile?: number; tablet?: number; desktop?: number }', description: 'Responsive column counts.' },
       { name: 'onQuickView', type: '(product, itemPath) => void', description: 'Callback triggered when user hovers and clicks Quick View.' },
     ],

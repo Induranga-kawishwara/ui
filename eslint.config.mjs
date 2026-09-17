@@ -11,7 +11,7 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-explicit-any": "warn",
       "react-hooks/set-state-in-effect": "off",
       "react-hooks/exhaustive-deps": "warn",
-      "@next/next/no-img-element": "off",
+      "@next/next/no-img-element": "warn",
       "react-hooks/preserve-manual-memoization": "warn",
       "@typescript-eslint/no-empty-object-type": "warn",
     },

@@ -51,7 +51,7 @@ export function EditableTestimonialCard({
       data-preview-item-path={itemPath}
       style={cardStyle}
       className={`editable-testimonial-card ${className}`.trim()}
-      {...(props as React.HTMLAttributes<HTMLElement>)}
+      {...(props as Record<string, unknown>)}
     >
       <div>
         {/* Star Rating */}

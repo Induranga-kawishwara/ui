@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 
 export interface FeedbackItem {
@@ -96,14 +97,12 @@ function GoogleStarSvg({ filled = true, size = 18 }: { filled?: boolean; size?: 
 function FeedbackCard({
   item,
   index,
-  basePath,
   maxStars,
   badgeIcon,
   cardClassName,
 }: {
   item: FeedbackItem;
   index: number;
-  basePath: string;
   maxStars: number;
   badgeIcon?: string;
   cardClassName?: string;
@@ -157,7 +156,7 @@ function FeedbackCard({
 
   return (
     <div
-      data-preview-item-path={`${basePath}.feedbacks[${index}]`}
+      data-preview-item-path={`feedback.feedbacks[${index}]`}
       className={`p-6 sm:p-7 rounded-2xl bg-gradient-to-b from-slate-900/60 to-slate-950/80 border border-slate-800/80 hover:border-slate-700 shadow-md transition-all duration-300 flex flex-col justify-between space-y-4 ${cardClassName || ''}`.trim()}
     >
       <div className="space-y-3.5">
@@ -167,18 +166,18 @@ function FeedbackCard({
             <img
               src={reviewerAvatar}
               alt={reviewerName}
-              data-preview-field-path={`${basePath}.feedbacks[${index}].avatar`}
+              data-preview-field-path={`feedback.feedbacks[${index}].avatar`}
               className="w-11 h-11 rounded-full object-cover border border-slate-700 shadow-sm"
             />
             <div>
               <span
-                data-preview-field-path={`${basePath}.feedbacks[${index}].name`}
+                data-preview-field-path={`feedback.feedbacks[${index}].name`}
                 className="block text-sm font-black text-white"
               >
                 {reviewerName}
               </span>
               <span
-                data-preview-field-path={`${basePath}.feedbacks[${index}].date`}
+                data-preview-field-path={`feedback.feedbacks[${index}].date`}
                 className="block text-xs text-slate-400"
               >
                 {reviewerDate}
@@ -207,7 +206,7 @@ function FeedbackCard({
             </div>
             <span
               ref={ratingRef}
-              data-preview-field-path={`${basePath}.feedbacks[${index}].rating`}
+              data-preview-field-path={`feedback.feedbacks[${index}].rating`}
               data-fivora-rating-text="true"
               className="text-xs font-black text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-md border border-amber-400/20 group-hover:bg-amber-400/20 transition-colors tabular-nums"
               title="Star count (1-5)"
@@ -227,7 +226,7 @@ function FeedbackCard({
 
         {/* Comment / Review text */}
         <p
-          data-preview-field-path={`${basePath}.feedbacks[${index}].comment`}
+          data-preview-field-path={`feedback.feedbacks[${index}].comment`}
           className="text-sm sm:text-base text-slate-300 leading-relaxed italic font-normal pt-1"
         >
           &ldquo;{reviewerComment}&rdquo;
@@ -287,11 +286,11 @@ export function EditableGoogleFeedback({
               <img
                 src={badgeIcon || DEFAULT_GOOGLE_ICON}
                 alt="Google"
-                data-preview-field-path={`${basePath}.badgeIcon`}
+                data-preview-field-path={`feedback.badgeIcon`}
                 className="w-4 h-4 object-contain"
               />
               <span
-                data-preview-field-path={`${basePath}.badgeTitle`}
+                data-preview-field-path={`feedback.badgeTitle`}
                 className="text-xs uppercase tracking-widest font-black text-white"
               >
                 {badgeTitle}
@@ -299,7 +298,7 @@ export function EditableGoogleFeedback({
               <span className="w-1 h-1 rounded-full bg-slate-700" />
               <div className="flex items-center gap-1.5">
                 <span
-                  data-preview-field-path={`${basePath}.badgeRating`}
+                  data-preview-field-path={`feedback.badgeRating`}
                   className="text-xs font-black text-amber-400"
                 >
                   {badgeRating}
@@ -311,18 +310,18 @@ export function EditableGoogleFeedback({
                 </div>
               </div>
               <span className="text-[11px] text-slate-400 font-medium sm:inline">
-                (<span data-preview-field-path={`${basePath}.badgeReviewsCount`}>{badgeReviewsCount}</span>)
+                (<span data-preview-field-path={`feedback.badgeReviewsCount`}>{badgeReviewsCount}</span>)
               </span>
             </div>
 
             <h2
-              data-preview-field-path={`${basePath}.heading`}
+              data-preview-field-path={`feedback.heading`}
               className="font-heading text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight"
             >
               {heading}
             </h2>
             <p
-              data-preview-field-path={`${basePath}.subheading`}
+              data-preview-field-path={`feedback.subheading`}
               className="text-xs sm:text-base text-slate-400 leading-relaxed"
             >
               {subheading}
@@ -333,7 +332,7 @@ export function EditableGoogleFeedback({
           <div className="flex flex-col items-end text-right md:flex">
             <div className="flex items-center gap-2">
               <span
-                data-preview-field-path={`${basePath}.badgeRating`}
+                data-preview-field-path={`feedback.badgeRating`}
                 className="font-heading text-4xl font-black text-amber-400"
               >
                 {badgeRating}
@@ -345,7 +344,7 @@ export function EditableGoogleFeedback({
                   ))}
                 </div>
                 <span
-                  data-preview-field-path={`${basePath}.badgeReviewsCount`}
+                  data-preview-field-path={`feedback.badgeReviewsCount`}
                   className="text-xs text-slate-400 font-bold"
                 >
                   {badgeReviewsCount}
@@ -357,15 +356,14 @@ export function EditableGoogleFeedback({
 
         {/* Feedback Cards List */}
         <div
-          data-preview-list-path={`${basePath}.feedbacks`}
+          data-preview-list-path={`feedback.feedbacks`}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {items.map((item, index) => (
             <FeedbackCard
-              key={item.id || `feedback-${index}`}
+              key={item.id || String(index)}
               item={item}
               index={index}
-              basePath={basePath}
               maxStars={maxStars}
               badgeIcon={badgeIcon}
               cardClassName={cardClassName}

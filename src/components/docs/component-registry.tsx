@@ -2,11 +2,15 @@
 
 import React, { useState } from 'react';
 import {
+  ContactActions,
+  WhatsAppButton,
+  PhoneButton,
+  EmailButton,
+  LocationCard,
   ProductCard,
   ProductDetail,
   ProductGrid,
   ProductQuickView,
-  ProductItem,
   CustomerReviews,
   TrustBadges,
   StickyMobileBar,
@@ -26,6 +30,7 @@ import {
   MessageSquare,
   MapPin,
   Clock,
+  Star,
   ShoppingBag,
   ChevronRight,
   CheckCircle2,
@@ -292,8 +297,8 @@ function InteractiveProductQuickViewDemo() {
 }
 
 function InteractiveProductGridDemo() {
-  const [selectedQuickView, setSelectedQuickView] = useState<ProductItem | null>(null);
-  const sampleProducts: ProductItem[] = [
+  const [selectedQuickView, setSelectedQuickView] = useState<Record<string, unknown> | null>(null);
+  const sampleProducts = [
     {
       id: 1,
       name: 'VANTA Aero X',
@@ -336,9 +341,9 @@ function InteractiveProductGridDemo() {
           isOpen={Boolean(selectedQuickView)}
           onClose={() => setSelectedQuickView(null)}
           product={{
-            id: String(selectedQuickView.id ?? '1'),
-            title: String(selectedQuickView.name || selectedQuickView.title || 'Product'),
-            price: selectedQuickView.price ?? 'LKR 0',
+            id: String(selectedQuickView.id),
+            title: selectedQuickView.name,
+            price: selectedQuickView.price,
             imageUrl: selectedQuickView.imageUrl,
             badge: selectedQuickView.badge,
             description: 'Precision-engineered storefront product ready for high conversion.',
@@ -734,49 +739,7 @@ function InteractiveMapDemo() {
 
 // Registry database mapping slug -> ComponentDocPageProps
 
-function InteractiveCardDemo() {
-  return (
-    <div className="w-full max-w-sm p-6 rounded-2xl bg-[#0D111F]/80 backdrop-blur-md border border-[#23283B] hover:border-[#818CF8]/50 shadow-xl transition-all space-y-4">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-[#818CF8] bg-[#818CF8]/15 px-2.5 py-0.5 rounded-full border border-[#818CF8]/30">
-          Pro Feature
-        </span>
-        <span className="text-xs text-[#94A3B8]">Deneb Nebula</span>
-      </div>
-      <h3 className="text-lg font-bold text-white">Smart Architecture Card</h3>
-      <p className="text-xs text-[#94A3B8] leading-relaxed">
-        Container card with built-in visual editing bindings, responsive hover elevations, and dynamic theme tokens.
-      </p>
-      <div className="pt-2 flex items-center justify-between border-t border-[#23283B]">
-        <span className="text-sm font-semibold text-white">$89 / mo</span>
-        <button className="text-xs font-semibold text-[#818CF8] hover:text-[#A5B4FC] flex items-center gap-1 bg-transparent border-0 cursor-pointer">
-          Learn More <ChevronRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
-    </div>
-  );
-}
 
-function InteractiveBadgeDemo() {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-3 p-4">
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#818CF8]/15 text-[#A5B4FC] border border-[#818CF8]/30 flex items-center gap-1.5">
-        <Sparkles className="w-3.5 h-3.5" />
-        <span>Celestial Glow</span>
-      </span>
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
-        <CheckCircle2 className="w-3.5 h-3.5" />
-        <span>Verified Store</span>
-      </span>
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
-        Sale -30%
-      </span>
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
-        Best Seller
-      </span>
-    </div>
-  );
-}
 
 function InteractiveTypographyDemo() {
   return (
@@ -872,6 +835,7 @@ function InteractiveImageDemo() {
   return (
     <div className="w-full max-w-xs p-4 mx-auto">
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#23283B] shadow-lg group">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
           alt="Product sample"
@@ -1327,7 +1291,18 @@ export default function Page() {
     description: 'A versatile container card with obsidian glass styling, luminous borders, and structured content slots.',
     category: 'Core Primitives',
     badge: 'Core',
-    previewComponent: <InteractiveCardDemo />,
+    previewComponent: (
+      <div className="max-w-sm w-full p-6 rounded-2xl border border-[#23283B] bg-[#0E111C] space-y-3 shadow-xl hover:border-[#818CF8]/40 transition-all">
+        <div className="flex items-center gap-2 text-[#818CF8] font-bold text-xs uppercase tracking-wider">
+          <DenebStarIcon className="w-3.5 h-3.5" />
+          <span>Cosmic Card Container</span>
+        </div>
+        <h3 className="font-bold text-lg text-white">Starlight Glass Panel</h3>
+        <p className="text-xs text-[#94A3B8] leading-relaxed">
+          Pre-styled container with subtle inner gradients and backdrop blur for clean storefront composition.
+        </p>
+      </div>
+    ),
     previewCode: `import { Card } from "@deneb-ui/ui";
 
 export default function CardDemo() {
@@ -1355,7 +1330,20 @@ export default function CardDemo() {
     description: 'Status pills and indicator tags with celestial starlight glows.',
     category: 'Core Primitives',
     badge: 'Core',
-    previewComponent: <InteractiveBadgeDemo />,
+    previewComponent: (
+      <div className="flex flex-wrap gap-3 items-center justify-center">
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#818CF8]/20 text-[#A5B4FC] border border-[#818CF8]/40 flex items-center gap-1.5 shadow-[0_0_12px_rgba(129,140,248,0.3)]">
+          <DenebStarIcon className="w-3 h-3" />
+          <span>Celestial Active</span>
+        </span>
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+          Open Now
+        </span>
+        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+          Free Shipping
+        </span>
+      </div>
+    ),
     previewCode: `import { Badge } from "@deneb-ui/ui";\n\n<Badge variant="glow">Celestial Active</Badge>`,
     usageCode: `import { Badge } from "@deneb-ui/ui";`,
     props: [

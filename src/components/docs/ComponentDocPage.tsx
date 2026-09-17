@@ -3,12 +3,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
+  Sparkles,
   Copy,
   Check,
+  Terminal,
+  ExternalLink,
   ChevronLeft,
   ChevronRight,
   Code2,
   Eye,
+  Info,
 } from 'lucide-react';
 import { CodeBlock } from './CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
@@ -62,17 +66,18 @@ export function ComponentDocPage({
   const [packageManager, setPackageManager] = useState<'npm' | 'pnpm' | 'yarn' | 'bun'>('npm');
   const [copiedPage, setCopiedPage] = useState(false);
 
+  const finalCliCommand = cliCommand || `npx @deneb-ui/cli add ${title.toLowerCase()}`;
+
   const getInstallSnippet = (pm: 'npm' | 'pnpm' | 'yarn' | 'bun') => {
-    const base = cliCommand || `npx @deneb-ui/cli add ${title.toLowerCase()}`;
     switch (pm) {
       case 'pnpm':
-        return cliCommand ? cliCommand.replace(/^npx\s+/, 'pnpm dlx ') : `pnpm dlx @deneb-ui/cli add ${title.toLowerCase()}`;
+        return `pnpm dlx @deneb-ui/cli add ${title.toLowerCase()}`;
       case 'yarn':
-        return cliCommand ? cliCommand.replace(/^npx\s+/, 'yarn dlx ') : `yarn dlx @deneb-ui/cli add ${title.toLowerCase()}`;
+        return `yarn dlx @deneb-ui/cli add ${title.toLowerCase()}`;
       case 'bun':
-        return cliCommand ? cliCommand.replace(/^npx\s+/, 'bunx ') : `bunx @deneb-ui/cli add ${title.toLowerCase()}`;
+        return `bunx @deneb-ui/cli add ${title.toLowerCase()}`;
       default:
-        return base;
+        return `npx @deneb-ui/cli add ${title.toLowerCase()}`;
     }
   };
 

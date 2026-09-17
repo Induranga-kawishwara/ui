@@ -80,9 +80,33 @@ When a merchant views your storefront inside Fivora:
 
 ## Installation & Setup
 
-### 1. Install Dependencies
+### 1. Instant Template Scaffolding (Recommended)
 
-Install the core packages and peer dependencies in your Next.js App Router project:
+To scaffold a production-ready, fully compliant DENEB storefront template in seconds with interactive theme selection (Dual-Mode, Pure Light, Obsidian Dark, etc.):
+
+```bash
+# Interactive template creation
+npx create-deneb my-store
+
+# Or using the scoped package
+npx @deneb-ui/create-template my-store
+
+# Or specify theme flag directly
+npx create-deneb my-store --theme=dual
+```
+
+This automatically configures:
+- Next.js 15 App Router + Static Export (`output: "export"`)
+- Dynamic Theming Engine (`<ThemeStyles />` + Zero-FOUC)
+- Dual-Mode Ready (`<ThemeToggle />` pre-installed with Sun/Moon switch)
+- Strict Fivora Manifest v2 contract
+- 28+ Visual-First editable components pre-configured
+
+---
+
+### 2. Manual Installation (Existing Projects)
+
+If adding DENEB UI to an existing Next.js App Router project:
 
 ```bash
 npm install @deneb-ui/ui @deneb-ui/core lucide-react

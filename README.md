@@ -80,9 +80,33 @@ When a merchant views your storefront inside Fivora:
 
 ## Installation & Setup
 
-### 1. Install Dependencies
+### 1. Instant Template Scaffolding (Recommended)
 
-Install the core packages and peer dependencies in your Next.js App Router project:
+To scaffold a production-ready, fully compliant DENEB storefront template in seconds with interactive theme selection (Dual-Mode, Pure Light, Obsidian Dark, etc.):
+
+```bash
+# Interactive template creation
+npx create-deneb my-store
+
+# Or using the scoped package
+npx @deneb-ui/create-template my-store
+
+# Or specify theme flag directly
+npx create-deneb my-store --theme=dual
+```
+
+This automatically configures:
+- Next.js 15 App Router + Static Export (`output: "export"`)
+- Dynamic Theming Engine (`<ThemeStyles />` + Zero-FOUC)
+- Dual-Mode Ready (`<ThemeToggle />` pre-installed with Sun/Moon switch)
+- Strict Fivora Manifest v2 contract
+- 28+ Visual-First editable components pre-configured
+
+---
+
+### 2. Manual Installation (Existing Projects)
+
+If adding DENEB UI to an existing Next.js App Router project:
 
 ```bash
 npm install @deneb-ui/ui @deneb-ui/core lucide-react
@@ -279,18 +303,20 @@ All dynamic business details, hero text, products, and contact info must be stor
 Wrap the entire storefront inside `<SiteDataProvider>` and `<CartProvider>`:
 ```tsx
 import "./globals.css";
-import { SiteDataProvider, ThemeStyles, ResponsiveBaseStyles, CartProvider } from "@deneb-ui/ui";
+import { SiteDataProvider, ThemeStyles, CartProvider, THEME_PRESETS } from "@deneb-ui/ui";
 import initialSiteData from "@/data/site-data.json";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const activeTheme = initialSiteData.theme || THEME_PRESETS.luxury;
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <ThemeStyles theme={initialSiteData.theme} />
-        <ResponsiveBaseStyles />
+        {/* Injects CSS variables and responsive base rules before page paint */}
+        <ThemeStyles theme={activeTheme} />
       </head>
-      <body className="bg-[#090D1A] text-slate-100 antialiased min-h-screen">
-        <SiteDataProvider initialSiteData={initialSiteData}>
+      <body className="bg-[var(--page-background)] text-[var(--page-text)] antialiased min-h-screen">
+        <SiteDataProvider initialData={initialSiteData}>
           <CartProvider>
             {children}
           </CartProvider>
@@ -1645,22 +1671,64 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 #### 40. `ThemeStyles`
 
-**Import**: `import { ThemeStyles } from "@deneb-ui/ui";`  
+**Import**: `import { ThemeStyles, THEME_PRESETS, getCategoryTheme } from "@deneb-ui/ui";`  
 **Category**: `Data & Theme Engine`  
-**Description**: Dynamic CSS variable injector resolving primary accents, backgrounds, glows, and typography tokens.
+**Description**: Runtime CSS Custom Properties injector connecting Fivora Studio's Visual Editor and theme presets to storefronts. Generates semantic design tokens (`--color-primary`, `--button-bg`, `--card-bg`, `--page-text`), resolves WCAG-compliant high-contrast button typography, and automatically propagates real-time postMessage theme updates across components without page reloads.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `theme` | `ThemeTokens` | `required` | Theme configuration object. |
+| `theme` | `TemplateTheme \| null` | `required` | Theme configuration object containing brand colors, typography, dimensions, buttons, and custom camelCase tokens. |
+| `defaultPrimary` | `string` | `"#2563eb"` | Fallback primary brand color if undefined in theme. |
+| `defaultSecondary` | `string` | `"#0f172a"` | Fallback secondary brand color if undefined in theme. |
+| `defaultAccent` | `string` | `"#14b8a6"` | Fallback highlight color if undefined in theme. |
+| `defaultBg` | `string` | `"#ffffff"` | Fallback page background color if undefined in theme. |
+| `defaultText` | `string` | `"#0f172a"` | Fallback body text color if undefined in theme. |
 
-##### Copy-Paste Usage Example
+##### Theme Schema Keys (`TemplateTheme`)
+- **Colors**: `primaryColor`, `secondaryColor`, `accentColor`, `backgroundColor`, `textColor`, `headingColor`, `mutedTextColor`, `linkColor`
+- **Buttons**: `buttonBackgroundColor`, `buttonTextColor` (automatically WCAG AA/AAA contrast tuned if omitted)
+- **Typography**: `headingFont`, `bodyFont`, `baseSize`
+- **Dimensions**: `borderRadius` (e.g. `"8px"`), `heroMinHeight`, `sectionPadding`, `align`
+- **Custom Tokens**: Any custom `camelCase` property (e.g. `cardBg: "#111"`, `badgeRadius: "9999px"`) is automatically converted to a CSS variable (`--card-bg`, `--badge-radius`).
+
+##### Pre-Configured Industry Presets (`THEME_PRESETS`)
+DENEB UI ships with 10 built-in industry palettes:
+`"luxury"` | `"emeraldGold"` | `"tech"` | `"retail"` | `"restaurant"` | `"cyberpunk"` | `"minimalDark"` | `"nordicPastel"` | `"medical"` | `"corporate"`
+
+Extend any preset using `getCategoryTheme(presetName, overrides)`:
 ```tsx
-import { ThemeStyles } from "@deneb-ui/ui";
+import { getCategoryTheme } from "@deneb-ui/ui";
+
+const customTheme = getCategoryTheme("restaurant", {
+  primaryColor: "#d97706",
+  borderRadius: "16px",
+});
+```
+
+##### Copy-Paste Usage Example (Next.js App Router)
+```tsx
+// app/layout.tsx
+import { ThemeStyles, SiteDataProvider, THEME_PRESETS } from "@deneb-ui/ui";
 import initialSiteData from "@/data/site-data.json";
 
-export function ThemeInjector() {
-  return <ThemeStyles theme={initialSiteData.theme} />;
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const activeTheme = initialSiteData.theme || THEME_PRESETS.luxury;
+
+  return (
+    <html lang="en">
+      <head>
+        {/* Injects CSS variables into :root before page paint */}
+        <ThemeStyles theme={activeTheme} />
+      </head>
+      <body className="bg-[var(--page-background)] text-[var(--page-text)] antialiased">
+        {/* Listens to live Fivora Visual Editor updates without page reloads */}
+        <SiteDataProvider initialData={initialSiteData}>
+          {children}
+        </SiteDataProvider>
+      </body>
+    </html>
+  );
 }
 ```
 

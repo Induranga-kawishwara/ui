@@ -18,7 +18,10 @@ import {
   TestimonialSection,
   Map as DenebMap,
   THEME_PRESETS,
+  getThemeCssProperties,
+  getCategoryTheme,
 } from '@/components/deneb-ui';
+import { isDarkColor, getAutoContrastTextColor } from '@deneb-ui/core';
 import { ComponentDocPageProps } from './ComponentDocPage';
 import {
   Sparkles,
@@ -32,6 +35,10 @@ import {
   Mail,
   Database,
   Palette,
+  Check,
+  Copy,
+  Contrast,
+  Sliders,
 } from 'lucide-react';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
 
@@ -1120,36 +1127,182 @@ function InteractiveSiteDataDemo() {
 }
 
 function InteractiveThemeStylesDemo() {
-  const [activePreset, setActivePreset] = useState<'restaurant' | 'medical' | 'luxury'>('luxury');
+  const [activePreset, setActivePreset] = useState<string>('luxury');
+  const [copiedToken, setCopiedToken] = useState<string | null>(null);
+
+  const presetsList = [
+    { key: 'luxury', label: 'Luxury' },
+    { key: 'emeraldGold', label: 'Emerald' },
+    { key: 'tech', label: 'Tech' },
+    { key: 'retail', label: 'Retail' },
+    { key: 'restaurant', label: 'Dining' },
+    { key: 'cyberpunk', label: 'Cyber' },
+    { key: 'minimalDark', label: 'Minimal' },
+    { key: 'nordicPastel', label: 'Nordic' },
+    { key: 'medical', label: 'Medical' },
+    { key: 'corporate', label: 'Corporate' },
+  ];
+
+  const preset = THEME_PRESETS[activePreset] || THEME_PRESETS.luxury;
+  const primary = preset.primaryColor || '#6366f1';
+  const buttonBg = String(preset.buttonBackgroundColor || primary);
+  const buttonText = String(preset.buttonTextColor || getAutoContrastTextColor(buttonBg));
+  const isDarkCanvas = isDarkColor(preset.backgroundColor);
+
+  const tokens = [
+    { name: '--color-primary', value: primary },
+    { name: '--button-bg', value: buttonBg },
+    { name: '--button-text', value: buttonText },
+    { name: '--border-radius', value: preset.borderRadius || '8px' },
+    { name: '--page-background', value: preset.backgroundColor || '#ffffff' },
+  ];
+
+  const copyToClipboard = (tokenName: string, val: string) => {
+    navigator.clipboard?.writeText?.(`${tokenName}: ${val};`);
+    setCopiedToken(tokenName);
+    setTimeout(() => setCopiedToken(null), 1800);
+  };
+
   return (
-    <div className="w-full max-w-md mx-auto p-4 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-3 text-left text-xs shadow-xs">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-indigo-600 dark:text-[#818CF8] font-bold">
+    <div className="w-full max-w-lg mx-auto p-5 rounded-2xl bg-white dark:bg-[#0F1424] border border-slate-200 dark:border-[#23283B] space-y-4 text-left text-xs shadow-md">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#1E233D] pb-3">
+        <div className="flex items-center gap-2 text-indigo-600 dark:text-[#818CF8] font-bold text-sm">
           <Palette className="w-4 h-4" />
-          <span>Dynamic ThemeStyles Presets</span>
+          <span>Universal ThemeStyles Studio</span>
         </div>
-        <span className="font-mono text-[10px] text-indigo-600 dark:text-[#A5B4FC] uppercase font-semibold">{activePreset}</span>
-      </div>
-      <div className="flex gap-2">
-        {(['restaurant', 'medical', 'luxury'] as const).map((p) => (
-          <button
-            key={p}
-            onClick={() => setActivePreset(p)}
-            className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize border cursor-pointer transition-all ${
-              activePreset === p
-                ? 'bg-indigo-600 text-white border-indigo-600 dark:bg-[#818CF8] dark:border-[#818CF8]'
-                : 'bg-slate-100 text-slate-700 border-slate-200 hover:text-slate-950 dark:bg-[#141829] dark:text-[#94A3B8] dark:border-[#23283B] dark:hover:text-white'
-            }`}
-          >
-            {p}
-          </button>
-        ))}
-      </div>
-      <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200 dark:border-[#1E233D] flex items-center justify-between">
-        <span className="text-[11px] text-slate-900 dark:text-white font-medium">Primary Accent Token:</span>
-        <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-200/70 text-indigo-700 dark:bg-black/50 dark:text-[#818CF8] font-semibold">
-          {THEME_PRESETS[activePreset]?.primaryColor}
+        <span className="flex items-center gap-1.5 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-full font-semibold border border-emerald-200 dark:border-emerald-500/20">
+          <CheckCircle2 className="w-3 h-3" /> Auto-Contrast AA/AAA
         </span>
+      </div>
+
+      {/* Preset Selector */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-[#94A3B8]">
+          <span>Select Curated Theme Preset:</span>
+          <span className="font-mono text-[10px] text-indigo-600 dark:text-[#A5B4FC] uppercase font-bold">{activePreset}</span>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {presetsList.map((p) => {
+            const isSelected = activePreset === p.key;
+            return (
+              <button
+                key={p.key}
+                type="button"
+                onClick={() => setActivePreset(p.key)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold capitalize border cursor-pointer transition-all ${
+                  isSelected
+                    ? 'bg-indigo-600 text-white border-indigo-600 dark:bg-[#818CF8] dark:border-[#818CF8] shadow-xs'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:text-slate-950 dark:bg-[#141829] dark:text-[#94A3B8] dark:border-[#23283B] dark:hover:text-white'
+                }`}
+              >
+                {p.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Dynamic Storefront Preview Box */}
+      <div
+        className="p-4 rounded-xl border transition-all space-y-3"
+        style={{
+          backgroundColor: preset.backgroundColor || (isDarkCanvas ? '#0c0a09' : '#ffffff'),
+          borderColor: isDarkCanvas ? 'rgba(255,255,255,0.12)' : '#e2e8f0',
+          color: preset.textColor || (isDarkCanvas ? '#f8fafc' : '#0f172a'),
+          borderRadius: preset.borderRadius || '8px',
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <span
+            className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded"
+            style={{
+              backgroundColor: isDarkCanvas ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+              color: primary,
+            }}
+          >
+            {activePreset} preset preview
+          </span>
+          <span className="w-3 h-3 rounded-full border border-black/10 dark:border-white/20" style={{ backgroundColor: primary }} />
+        </div>
+
+        <div>
+          <h4
+            className="text-base font-bold tracking-tight"
+            style={{
+              color: preset.headingColor || (isDarkCanvas ? '#ffffff' : '#0f172a'),
+              fontFamily: preset.headingFont || 'inherit',
+            }}
+          >
+            Artisan Storefront Header
+          </h4>
+          <p
+            className="text-[11px] mt-0.5 line-clamp-2"
+            style={{
+              color: preset.mutedTextColor || (isDarkCanvas ? 'rgba(248, 250, 252, 0.7)' : '#64748b'),
+              fontFamily: preset.bodyFont || 'inherit',
+            }}
+          >
+            Real-time theme variables inject instantly on layout load with zero page flicker.
+          </p>
+        </div>
+
+        {/* Buttons Row with dynamic auto-contrast */}
+        <div className="flex items-center gap-2 pt-1">
+          <button
+            type="button"
+            className="px-4 py-2 text-xs font-bold transition-transform active:scale-95 shadow-sm"
+            style={{
+              backgroundColor: buttonBg,
+              color: buttonText,
+              borderRadius: preset.borderRadius || '8px',
+            }}
+          >
+            Primary CTA Button
+          </button>
+          <button
+            type="button"
+            className="px-3 py-2 text-xs font-semibold border transition-all"
+            style={{
+              borderColor: isDarkCanvas ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)',
+              color: preset.textColor || (isDarkCanvas ? '#f8fafc' : '#0f172a'),
+              backgroundColor: 'transparent',
+              borderRadius: preset.borderRadius || '8px',
+            }}
+          >
+            Outline Secondary
+          </button>
+        </div>
+      </div>
+
+      {/* Live CSS Tokens Inspector */}
+      <div className="space-y-1.5 pt-1">
+        <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 dark:text-[#CBD5E1]">
+          <span className="flex items-center gap-1.5">
+            <Sliders className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Generated :root CSS Tokens</span>
+          </span>
+          <span className="text-[10px] text-slate-400 font-normal">Click to copy</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-1.5 font-mono text-[10px]">
+          {tokens.map((t) => (
+            <button
+              key={t.name}
+              type="button"
+              onClick={() => copyToClipboard(t.name, t.value)}
+              className="p-2 rounded-lg bg-slate-50 dark:bg-[#0A0D1A] border border-slate-200/80 dark:border-[#1E233D] hover:border-indigo-400 dark:hover:border-[#818CF8] flex items-center justify-between transition-colors text-left cursor-pointer group"
+            >
+              <div className="truncate">
+                <span className="text-slate-500 dark:text-[#64748B] block truncate">{t.name}</span>
+                <span className="font-semibold text-slate-900 dark:text-[#E2E8F0]">{t.value}</span>
+              </div>
+              <div className="ml-1 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-[#818CF8]">
+                {copiedToken === t.name ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -2156,19 +2309,202 @@ export default function RootLayout({ children }) {
 
   'theme-styles': {
     title: 'ThemeStyles',
-    description: 'Runtime CSS custom properties injector for dynamic color palettes, typography, and border radii with pre-configured industry presets.',
+    description: "Runtime CSS Custom Properties injector connecting Fivora Studio's Visual Editor and theme presets to storefronts. Generates semantic design tokens (--color-primary, --button-bg, --card-bg, --page-text), resolves WCAG-compliant high-contrast button typography, and automatically propagates real-time postMessage theme updates across components without page reloads.",
     category: 'Data & State Engine',
     badge: 'Design System',
     previewComponent: <InteractiveThemeStylesDemo />,
-    previewCode: `import { ThemeStyles, THEME_PRESETS } from "@deneb-ui/ui";
+    previewCode: `import { ThemeStyles, SiteDataProvider, THEME_PRESETS } from "@deneb-ui/ui";
+import siteData from "@/data/site-data.json";
 
-export default function App() {
-  return <ThemeStyles theme={THEME_PRESETS.luxury} />;
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // ThemeStyles injects CSS variables (--color-primary, --button-bg, --card-bg, etc.)
+  // and automatically recalculates WCAG AA/AAA contrast for button typography.
+  return (
+    <html lang="en">
+      <head>
+        <ThemeStyles theme={siteData.theme || THEME_PRESETS.luxury} />
+      </head>
+      <body>
+        <SiteDataProvider initialData={siteData}>
+          {children}
+        </SiteDataProvider>
+      </body>
+    </html>
+  );
 }`,
-    usageCode: `import { ThemeStyles } from "@deneb-ui/ui";`,
+    usageCode: `import { ThemeStyles, THEME_PRESETS, getCategoryTheme } from "@deneb-ui/ui";`,
     props: [
-      { name: 'theme', type: 'TemplateTheme', description: 'Theme configuration object.' },
-      { name: 'preset', type: '"restaurant" | "medical" | "luxury"', description: 'Pre-configured preset name.' },
+      { name: 'theme', type: 'TemplateTheme | null', description: 'Complete theme tokens configuration object (colors, typography, dimensions, buttons, and custom camelCase tokens).' },
+      { name: 'defaultPrimary', type: 'string', defaultValue: '"#2563eb"', description: 'Fallback primary brand color if undefined in theme.' },
+      { name: 'defaultSecondary', type: 'string', defaultValue: '"#0f172a"', description: 'Fallback secondary color if undefined in theme.' },
+      { name: 'defaultAccent', type: 'string', defaultValue: '"#14b8a6"', description: 'Fallback accent color if undefined in theme.' },
+      { name: 'defaultBg', type: 'string', defaultValue: '"#ffffff"', description: 'Fallback canvas background color if undefined in theme.' },
+      { name: 'defaultText', type: 'string', defaultValue: '"#0f172a"', description: 'Fallback body text color if undefined in theme.' },
+      { name: 'enableDualMode', type: 'boolean', defaultValue: 'true', description: 'Automatically outputs opposite-mode CSS variables (.dark or .light / [data-theme]) so templates with theme toggles seamlessly switch without custom CSS.' },
+    ],
+    variants: [
+      {
+        title: '1. Next.js App Router Root Layout Integration',
+        description: 'Place ThemeStyles inside <head> or at the root of app/layout.tsx to inject design tokens before hydration.',
+        code: `// app/layout.tsx
+import { ThemeStyles, SiteDataProvider, THEME_PRESETS } from "@deneb-ui/ui";
+import initialSiteData from "@/data/site-data.json";
+import "./globals.css";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        {/* Inject CSS variables into :root before page paints */}
+        <ThemeStyles theme={initialSiteData.theme || THEME_PRESETS.luxury} />
+      </head>
+      <body className="bg-[var(--page-background)] text-[var(--page-text)] antialiased">
+        {/* SiteDataProvider automatically syncs live theme updates from Fivora Studio */}
+        <SiteDataProvider initialData={initialSiteData}>
+          {children}
+        </SiteDataProvider>
+      </body>
+    </html>
+  );
+}`,
+        preview: (
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-[#23283B] bg-slate-50 dark:bg-[#0E111C] space-y-2 text-xs">
+            <div className="font-semibold text-slate-800 dark:text-slate-200">Zero-FOUC Token Injection</div>
+            <p className="text-slate-600 dark:text-[#94A3B8]">
+              Rendering <code className="text-indigo-600 dark:text-[#818CF8]">&lt;ThemeStyles /&gt;</code> in Next.js <code className="text-indigo-600 dark:text-[#818CF8]">&lt;head&gt;</code> ensures all CSS variables are initialized before first paint, eliminating Flash of Unstyled Content (FOUC).
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: '2. Curated Industry Presets with getCategoryTheme()',
+        description: 'Kickstart client stores with pre-balanced color harmony and typography suited for specific business verticals.',
+        code: `import { ThemeStyles, getCategoryTheme, THEME_PRESETS } from "@deneb-ui/ui";
+
+// Choose from 10 industry palettes:
+// "luxury" | "emeraldGold" | "tech" | "retail" | "restaurant" | 
+// "cyberpunk" | "minimalDark" | "nordicPastel" | "medical" | "corporate"
+
+const customTheme = getCategoryTheme("restaurant", {
+  primaryColor: "#d97706", // override amber
+  borderRadius: "16px",    // custom softer corners
+  cardBg: "#1c1917",       // custom camelCase token -> becomes --card-bg
+});
+
+export function StorefrontTheme() {
+  return <ThemeStyles theme={customTheme} />;
+}`,
+        preview: (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+            {['luxury', 'tech', 'retail', 'restaurant', 'emeraldGold', 'cyberpunk'].map((key) => {
+              const p = THEME_PRESETS[key];
+              return (
+                <div key={key} className="p-2.5 rounded-lg border border-slate-200 dark:border-[#23283B] bg-white dark:bg-[#0A0D17] space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold capitalize text-slate-900 dark:text-white text-[11px]">{key}</span>
+                    <span className="w-3 h-3 rounded-full border border-black/10 dark:border-white/20" style={{ backgroundColor: p?.primaryColor }} />
+                  </div>
+                  <div className="text-[10px] font-mono text-slate-500 dark:text-[#94A3B8] truncate">{p?.primaryColor}</div>
+                </div>
+              );
+            })}
+          </div>
+        ),
+      },
+      {
+        title: '3. WCAG AAA/AA Auto-Contrast Dynamic Button Tokens',
+        description: 'Buttons automatically calculate optimal text contrast based on primary or custom button background colors.',
+        code: `// ThemeStyles automatically computes high-contrast text:
+// --button-bg: #facc15 (Bright Yellow)   => --button-text: #0f172a (Dark Slate)
+// --button-bg: #1e3a8a (Deep Navy)       => --button-text: #ffffff (Pure White)
+
+<button
+  style={{
+    backgroundColor: "var(--button-bg)",
+    color: "var(--button-text)",
+    borderRadius: "var(--border-radius)",
+  }}
+  className="px-6 py-2.5 font-semibold text-sm transition-all hover:opacity-90 shadow-xs"
+>
+  Shop Exclusive Collection
+</button>`,
+        preview: (
+          <div className="flex flex-wrap items-center gap-3 p-4 rounded-xl border border-slate-200 dark:border-[#23283B] bg-slate-50 dark:bg-[#0E111C]">
+            <button className="px-4 py-2 rounded-lg text-xs font-bold bg-[#facc15] text-[#0f172a] shadow-xs">
+              Bright Yellow CTA (Dark Text)
+            </button>
+            <button className="px-4 py-2 rounded-lg text-xs font-bold bg-[#1e3a8a] text-[#ffffff] shadow-xs">
+              Deep Navy CTA (White Text)
+            </button>
+            <button className="px-4 py-2 rounded-lg text-xs font-bold bg-[#10b981] text-[#ffffff] shadow-xs">
+              Emerald CTA (White Text)
+            </button>
+          </div>
+        ),
+      },
+      {
+        title: '4. Tailwind CSS v3 / v4 Token Integration',
+        description: 'Map DENEB UI runtime CSS variables directly to Tailwind utility classes in your components or CSS.',
+        code: `/* In components or layout */
+export function ProductFeatureCard() {
+  return (
+    <div className="p-6 rounded-[var(--border-radius)] bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--color-text)]">
+      <h3 className="font-[var(--heading-font)] text-xl font-bold text-[var(--heading-color)]">
+        Handcrafted Ceramics
+      </h3>
+      <p className="text-[var(--color-text-muted)] text-sm mt-1">
+        Locally sourced and fired with obsidian glaze.
+      </p>
+      <button className="mt-4 px-4 py-2 rounded-[var(--border-radius)] bg-[var(--color-primary)] text-[var(--button-text)] font-semibold text-sm">
+        Add to Cart
+      </button>
+    </div>
+  );
+}`,
+        preview: (
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-[#23283B] bg-white dark:bg-[#0F1424] max-w-sm space-y-2 text-xs">
+            <span className="text-[10px] font-mono text-indigo-600 dark:text-[#818CF8] uppercase font-bold tracking-wider">Semantic CSS Variables</span>
+            <p className="text-slate-600 dark:text-[#94A3B8]">
+              All components and custom HTML cleanly resolve <code className="text-slate-900 dark:text-white">var(--card-bg)</code>, <code className="text-slate-900 dark:text-white">var(--card-border)</code>, and <code className="text-slate-900 dark:text-white">var(--color-primary)</code> for instant theme harmony.
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: '5. Dual-Mode (Light & Dark) with Theme Switcher',
+        description: 'Supports light-only, dark-only, or dual-mode templates with automatic .dark and [data-theme="dark"] variable transitions.',
+        code: `// Custom dark overrides in site-data.json theme:
+const dualTheme = {
+  primaryColor: "#6366f1",
+  backgroundColor: "#ffffff", // Default light mode
+  textColor: "#0f172a",
+  dark: {
+    backgroundColor: "#090d1a", // Overrides when .dark is active
+    textColor: "#f8fafc",
+    cardBg: "#121627"
+  }
+};
+
+// Navbar theme switcher component
+export function ThemeToggleButton() {
+  const toggleDark = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+  return (
+    <button onClick={toggleDark} className="px-3 py-1.5 rounded-lg border text-xs font-semibold">
+      Toggle Light / Dark
+    </button>
+  );
+}`,
+        preview: (
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-[#23283B] bg-slate-50 dark:bg-[#0E111C] space-y-2 text-xs">
+            <div className="font-semibold text-slate-800 dark:text-slate-200">Zero-Config Dual-Theming</div>
+            <p className="text-slate-600 dark:text-[#94A3B8]">
+              Whether a developer builds a <strong className="text-slate-900 dark:text-white">light-only</strong> template, a <strong className="text-slate-900 dark:text-white">dark-only</strong> template, or a <strong className="text-slate-900 dark:text-white">toggleable dual-mode</strong> template, <code className="text-indigo-600 dark:text-[#818CF8]">ThemeStyles</code> automatically adapts without breaking layout styles.
+            </p>
+          </div>
+        ),
+      },
     ],
     prevPage: { title: 'SiteDataProvider', href: '/docs/components/site-data-provider' },
     nextPage: { title: 'useProducts', href: '/docs/components/use-products' },

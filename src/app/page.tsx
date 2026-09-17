@@ -4,10 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { DocsHeader } from '@/components/layout/DocsHeader';
 import { DenebLogo, DenebStarIcon } from '@/components/brand/DenebLogo';
-import { CodeBlock } from '@/components/docs/CodeBlock';
 import {
   ContactActions,
-  WhatsAppButton,
   LocationCard,
   BusinessHours,
   SocialLinks,

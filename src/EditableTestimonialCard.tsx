@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { EditableText } from './components/deneb-ui';
 import { EditableImage } from './components/deneb-ui';
 
@@ -51,7 +51,7 @@ export function EditableTestimonialCard({
       data-preview-item-path={itemPath}
       style={cardStyle}
       className={`editable-testimonial-card ${className}`.trim()}
-      {...(props as any)}
+      {...(props as Record<string, unknown>)}
     >
       <div>
         {/* Star Rating */}

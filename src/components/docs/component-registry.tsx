@@ -7,16 +7,6 @@ import {
   PhoneButton,
   EmailButton,
   LocationCard,
-  LocationLink,
-  Address,
-  SocialLinks,
-  SocialButton,
-  BusinessHours,
-  FloatingContactWidget,
-  Button as DenebButton,
-  Card as DenebCard,
-  Badge as DenebBadge,
-  Heading as DenebHeading,
   ProductCard,
   ProductDetail,
   PlatformProductDetail,
@@ -25,13 +15,6 @@ import {
   CustomerReviews,
   TrustBadges,
   StickyMobileBar,
-  PricingCard,
-  TestimonialCard,
-  ServiceCard,
-  Accordion as FAQAccordion,
-  AnnouncementBar,
-  CategoryPills,
-  ContactForm,
   CartDrawer,
   FilterSidebar,
   CartProvider,
@@ -50,7 +33,6 @@ import {
   Clock,
   Star,
   ShoppingBag,
-  ShieldCheck,
   ChevronRight,
   CheckCircle2,
   Maximize2,
@@ -338,7 +320,7 @@ function InteractiveProductQuickViewDemo() {
 }
 
 function InteractiveProductGridDemo() {
-  const [selectedQuickView, setSelectedQuickView] = useState<any>(null);
+  const [selectedQuickView, setSelectedQuickView] = useState<Record<string, unknown> | null>(null);
   const sampleProducts = [
     {
       id: 1,
@@ -780,49 +762,7 @@ function InteractiveMapDemo() {
 
 // Registry database mapping slug -> ComponentDocPageProps
 
-function InteractiveCardDemo() {
-  return (
-    <div className="w-full max-w-sm p-6 rounded-2xl bg-[#0D111F]/80 backdrop-blur-md border border-[#23283B] hover:border-[#818CF8]/50 shadow-xl transition-all space-y-4">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-[#818CF8] bg-[#818CF8]/15 px-2.5 py-0.5 rounded-full border border-[#818CF8]/30">
-          Pro Feature
-        </span>
-        <span className="text-xs text-[#94A3B8]">Deneb Nebula</span>
-      </div>
-      <h3 className="text-lg font-bold text-white">Smart Architecture Card</h3>
-      <p className="text-xs text-[#94A3B8] leading-relaxed">
-        Container card with built-in visual editing bindings, responsive hover elevations, and dynamic theme tokens.
-      </p>
-      <div className="pt-2 flex items-center justify-between border-t border-[#23283B]">
-        <span className="text-sm font-semibold text-white">$89 / mo</span>
-        <button className="text-xs font-semibold text-[#818CF8] hover:text-[#A5B4FC] flex items-center gap-1 bg-transparent border-0 cursor-pointer">
-          Learn More <ChevronRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
-    </div>
-  );
-}
 
-function InteractiveBadgeDemo() {
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-3 p-4">
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#818CF8]/15 text-[#A5B4FC] border border-[#818CF8]/30 flex items-center gap-1.5">
-        <Sparkles className="w-3.5 h-3.5" />
-        <span>Celestial Glow</span>
-      </span>
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
-        <CheckCircle2 className="w-3.5 h-3.5" />
-        <span>Verified Store</span>
-      </span>
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
-        Sale -30%
-      </span>
-      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
-        Best Seller
-      </span>
-    </div>
-  );
-}
 
 function InteractiveTypographyDemo() {
   return (
@@ -918,6 +858,7 @@ function InteractiveImageDemo() {
   return (
     <div className="w-full max-w-xs p-4 mx-auto">
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#23283B] shadow-lg group">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
           alt="Product sample"

@@ -11,7 +11,6 @@ import {
   Clock,
   LayoutGrid,
   ChevronRight,
-  Flame,
   Palette,
 } from 'lucide-react';
 

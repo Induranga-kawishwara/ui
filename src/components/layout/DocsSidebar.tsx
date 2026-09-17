@@ -138,7 +138,7 @@ export function DocsSidebar({
       <div className="space-y-6">
         {SIDEBAR_NAV.map((section) => (
           <div key={section.title} className="space-y-1.5">
-            <div className="flex items-center gap-2 px-3 text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+            <div className="flex items-center gap-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#94A3B8]">
               {section.icon}
               <span>{section.title}</span>
             </div>
@@ -152,23 +152,23 @@ export function DocsSidebar({
                       onClick={onItemClick}
                       className={`group flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                         isActive
-                          ? 'text-[#818CF8] bg-[#818CF8]/10 font-semibold border-l-2 border-[#818CF8]'
-                          : 'text-[#CBD5E1] hover:text-white hover:bg-white/5'
+                          ? 'text-indigo-600 bg-indigo-50/80 border-l-2 border-indigo-600 font-semibold dark:text-[#818CF8] dark:bg-[#818CF8]/10 dark:border-[#818CF8]'
+                          : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/80 dark:text-[#CBD5E1] dark:hover:text-white dark:hover:bg-white/5'
                       }`}
                     >
                       <span className="truncate">{item.title}</span>
                       <div className="flex items-center gap-1.5 shrink-0">
                         {item.badge ? (
-                          <span className="text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded bg-[#818CF8]/20 text-[#A5B4FC] border border-[#818CF8]/30">
+                          <span className="text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-[#818CF8]/20 dark:text-[#A5B4FC] dark:border-[#818CF8]/30">
                             {item.badge}
                           </span>
                         ) : item.isNew ? (
-                          <span className="text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          <span className="text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30">
                             New
                           </span>
                         ) : null}
                         {isActive && (
-                          <ChevronRight className="w-3 h-3 text-[#818CF8]" />
+                          <ChevronRight className="w-3 h-3 text-indigo-600 dark:text-[#818CF8]" />
                         )}
                       </div>
                     </Link>

@@ -85,6 +85,17 @@
   --color-surface: #ffffff;
   --color-text: #0f172a;
   --color-text-muted: #64748b;
+  --color-primary: #0f172a;
+  --color-secondary: #f1f5f9;
+  --color-border: #e2e8f0;
+  --brand-color: #6366f1;
+  --brand-secondary: #0f172a;
+  --brand-accent: #818cf8;
+  --heading-color: #0f172a;
+  --page-text: #334155;
+  --muted-text: #64748b;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
 }
 
 .dark {
@@ -122,6 +133,17 @@
   --color-surface: #0E111C;
   --color-text: #F1F5F9;
   --color-text-muted: #94A3B8;
+  --color-primary: #818CF8;
+  --color-secondary: #141829;
+  --color-border: #23283B;
+  --brand-color: #818cf8;
+  --brand-secondary: #f1f5f9;
+  --brand-accent: #a5b4fc;
+  --heading-color: #f1f5f9;
+  --page-text: #cbd5e1;
+  --muted-text: #94a3b8;
+  --card-bg: #0e111c;
+  --card-border: #23283b;
 }
 
 @layer base {
@@ -146,23 +168,46 @@
 .cosmic-grid {
   background-size: 32px 32px;
   background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+.dark .cosmic-grid {
+  background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 .cosmic-radial-glow {
+  background: radial-gradient(circle 600px at 50% -10%, rgba(99, 102, 241, 0.06), transparent 70%),
+              radial-gradient(circle 400px at 80% 20%, rgba(129, 140, 248, 0.04), transparent 60%);
+}
+
+.dark .cosmic-radial-glow {
   background: radial-gradient(circle 600px at 50% -10%, rgba(129, 140, 248, 0.15), transparent 70%),
               radial-gradient(circle 400px at 80% 20%, rgba(99, 102, 241, 0.08), transparent 60%);
 }
 
 .glass-panel {
-  background: rgba(13, 16, 26, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dark .glass-panel {
+  background: rgba(13, 16, 26, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-panel-glow {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15);
+}
+
+.dark .glass-panel-glow {
   background: rgba(13, 16, 26, 0.85);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(129, 140, 248, 0.2);

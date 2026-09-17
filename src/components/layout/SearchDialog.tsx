@@ -54,6 +54,7 @@ export const SEARCH_INDEX: SearchItem[] = [
   { title: 'CartDrawer', category: 'Components', slug: '/docs/components/cart-drawer', description: 'Slide-over shopping cart drawer with quantity steppers, free shipping progress bar, and WhatsApp checkout.' },
   { title: 'FilterSidebar', category: 'Components', slug: '/docs/components/filter-sidebar', description: 'Faceted catalog filtering sidebar with category chips, price range slider, and size swatches.' },
   { title: 'ProductDetail', category: 'Components', slug: '/docs/components/product-detail', description: 'Complete single product view with multi-image gallery, size/color selector, WhatsApp CTA, and policy tabs.' },
+  { title: 'PlatformProductDetail', category: 'Components', slug: '/docs/components/platform-product-detail', description: 'Stable static-export product route controller with live catalog lookup, retries, and customizable rendering.' },
   { title: 'ProductQuickView', category: 'Components', slug: '/docs/components/product-quickview', description: 'Instant lightbox modal product inspection with quantity counter and live editing.' },
   { title: 'ProductGrid', category: 'Components', slug: '/docs/components/product-grid', description: 'Responsive commerce product showcase grid with category filter tabs and quick-view hook.' },
   { title: 'ProductCard', category: 'Components', slug: '/docs/components/product-card', description: 'E-commerce product display with pricing, badge, and quick buy.' },

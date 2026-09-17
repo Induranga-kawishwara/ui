@@ -24,6 +24,7 @@ export const COMPONENT_SLUGS = [
   'hero',
   'product-card',
   'product-detail',
+  'platform-product-detail',
   'product-quickview',
   'product-grid',
   'product-showcase',

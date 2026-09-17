@@ -13,6 +13,7 @@ on:
 jobs:
   sync:
     name: Sync Components, Docs & Rebuild
+    if: github.repository == 'deneb-ui/ui'
     runs-on: ubuntu-latest
 
     permissions:

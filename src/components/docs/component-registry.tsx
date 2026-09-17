@@ -372,7 +372,7 @@ function InteractiveProductGridDemo() {
 
 function InteractiveCustomerReviewsDemo() {
   return (
-    <div className="w-full rounded-3xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full overflow-hidden">
       <CustomerReviews
         title="Runner Verified Feedback"
         subtitle="Authentic Athlete Reviews"
@@ -713,7 +713,7 @@ function InteractiveFilterSidebarDemo() {
 
 function InteractiveGoogleFeedbackDemo() {
   return (
-    <div className="w-full rounded-3xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 overflow-hidden">
+    <div className="w-full overflow-hidden">
       <GoogleFeedback
         basePath="feedback"
         badgeTitle="Google Reviews"
@@ -721,6 +721,7 @@ function InteractiveGoogleFeedbackDemo() {
         badgeReviewsCount="128 verified reviews"
         heading="Loved by Customers Worldwide"
         subheading="Real stories and verified 5-star reviews from our official Google Business profile."
+        className="py-1 sm:py-2 px-0"
       />
     </div>
   );
@@ -728,13 +729,13 @@ function InteractiveGoogleFeedbackDemo() {
 
 function InteractiveTestimonialSectionDemo() {
   return (
-    <div className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 dark:border-[#23283B] dark:bg-[#0A0D17] p-2 sm:p-4 md:p-6 overflow-hidden shadow-sm dark:shadow-2xl">
+    <div className="w-full overflow-hidden">
       <TestimonialSection
         basePath="testimonials"
         badge="Critic Acclaim"
         heading="What Connoisseurs Say"
         subheading="Unfiltered sensory impressions and reviews from sommeliers, culinary critics, and world sensory judges."
-        className="py-6 sm:py-10 px-2 sm:px-4"
+        className="py-1 sm:py-2 px-0"
       />
     </div>
   );

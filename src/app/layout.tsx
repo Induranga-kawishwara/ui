@@ -47,7 +47,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${inter.className} font-sans min-h-full flex flex-col bg-white text-slate-900 dark:bg-[#08090E] dark:text-[#F1F5F9] transition-colors duration-150 selection:bg-[#818CF8]/30 selection:text-white`}
+        className={`${inter.className} font-sans min-h-full flex flex-col bg-white text-slate-900 dark:bg-[#08090E] dark:text-[#F1F5F9] selection:bg-[#818CF8]/30 selection:text-white`}
       >
         <Providers>{children}</Providers>
       </body>

@@ -1,10 +1,34 @@
-'use client';
-
+import type { Metadata } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, ShieldCheck, Zap, Star, Smartphone } from 'lucide-react';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
+import { SITE_CONFIG } from '@/lib/site-config';
+
+export const metadata: Metadata = {
+  title: 'Introduction — Visual-First React Framework & Storefront Ecosystem',
+  description:
+    'Discover DENEB UI: a visual-first React component suite developed in collaboration with FIVORA. Featuring shadcn-style primitives, smart commerce actions, and responsive-by-default architecture.',
+  alternates: {
+    canonical: `${SITE_CONFIG.url}/docs/introduction`,
+  },
+  openGraph: {
+    title: 'Introduction to DENEB UI — Visual-First React Framework',
+    description:
+      'Learn why DENEB UI bridges the gap between bare unstyled primitives and heavy monolithic UI kits. Visual-first architecture, smart commerce actions, and native Fivora storefront sync.',
+    url: `${SITE_CONFIG.url}/docs/introduction`,
+    type: 'article',
+    images: [SITE_CONFIG.ogImage],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Introduction to DENEB UI — Visual-First React Framework',
+    description:
+      'Learn why DENEB UI bridges the gap between bare unstyled primitives and heavy monolithic UI kits.',
+    images: [SITE_CONFIG.ogImage],
+  },
+};
 
 export default function IntroductionPage() {
   const tocItems: TocItem[] = [

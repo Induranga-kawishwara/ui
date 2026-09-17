@@ -1,5 +1,4 @@
-'use client';
-
+import type { Metadata } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import {
@@ -15,6 +14,38 @@ import {
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
+import { SITE_CONFIG } from '@/lib/site-config';
+
+export const metadata: Metadata = {
+  title: 'Responsive Design & Mobile-First Commerce — DENEB UI',
+  description:
+    'Built-in mobile-first viewport architecture, ResponsiveBaseStyles, auto-injecting CSS, and responsive commerce primitives across mobile, tablet, and desktop.',
+  keywords: [
+    'responsive storefront design',
+    'mobile-first React components',
+    'ResponsiveBaseStyles',
+    'fluid grid commerce',
+    'mobile commerce bar',
+  ],
+  alternates: {
+    canonical: `${SITE_CONFIG.url}/docs/responsive-design`,
+  },
+  openGraph: {
+    title: 'Responsive Design & Mobile-First Commerce — DENEB UI',
+    description:
+      'Built-in mobile-first viewport architecture, ResponsiveBaseStyles, auto-injecting CSS, and responsive commerce primitives across mobile, tablet, and desktop.',
+    url: `${SITE_CONFIG.url}/docs/responsive-design`,
+    type: 'article',
+    images: [SITE_CONFIG.ogImage],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Responsive Design & Mobile-First Commerce — DENEB UI',
+    description:
+      'Built-in mobile-first viewport architecture, ResponsiveBaseStyles, auto-injecting CSS, and responsive commerce primitives across mobile, tablet, and desktop.',
+    images: [SITE_CONFIG.ogImage],
+  },
+};
 
 export default function ResponsiveDesignPage() {
   const tocItems: TocItem[] = [

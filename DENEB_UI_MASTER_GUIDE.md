@@ -2168,24 +2168,75 @@ Before submitting your template or testing in the local studio:
 
 ## 8. Step-by-Step AI Conversion Workflow
 
-### ⚡ Golden Rule: Never Hardcode Store Contact Numbers or Map URLs
-Always use `@deneb-ui/ui` auto-hydrating smart contact and location components (`WhatsAppButton`, `PhoneButton`, `EmailButton`, `LocationCard`, `MapLink`, `BusinessHours`) or `useShop()`.
-**NEVER** hardcode static phone numbers, WhatsApp URLs (`https://wa.me/9477...`), or static Google Maps iframe embeds into template JSX!
-Using auto-hydrating components guarantees that when the shop owner modifies their phone, WhatsApp, location, or hours in the Fivora Portal, their live website reflects changes instantaneously without requiring any code edits or rebuilds.
+> **Copyable AI Prompt**: Use `prompts/fivora-template-master-prompt.md` in the `deneb-core` repo as the standalone prompt to paste directly into ChatGPT, Claude, Cursor, or Antigravity. It contains the complete Golden Rule, all component tables, replacement rules, and verification steps in one block.
+
+### ⚡ Golden Rule: Never Hardcode Store Contact Numbers, Map URLs, or Hours
+
+**NEVER** write static contact info directly into JSX:
+```tsx
+// ❌ WRONG — these will NOT update when the merchant changes their profile:
+<a href="https://wa.me/94771234567">WhatsApp</a>
+<a href="tel:+94771234567">Call Us</a>
+<iframe src="https://maps.google.com/...?q=Colombo" />
+<p>Open Mon–Fri 9am–6pm</p>
+```
+
+**ALWAYS** use auto-hydrating `@deneb-ui/ui` components instead:
+```tsx
+// ✅ CORRECT — these self-populate from live merchant profile:
+<WhatsAppButton />     // auto-uses live registered WhatsApp number
+<PhoneButton />        // auto-uses live primary phone
+<LocationCard />       // auto-uses live address + Google Maps link
+<BusinessHours />      // auto-uses live hours + shows "Open Now / Closed"
+```
+When the merchant changes their phone, WhatsApp, address, or hours in the Fivora Portal, their live storefront updates **instantly** — zero code rebuilds, zero re-exports.
+
+### Component Replacement Checklist
+
+When converting an existing storefront into a Fivora template:
+
+| Found in existing code | Replace with |
+|---|---|
+| Raw `wa.me/...` link | `<WhatsAppButton />` |
+| Raw `tel:` link | `<PhoneButton />` |
+| Raw `mailto:` link | `<EmailButton />` |
+| Map iframe / directions link | `<LocationCard />` or `<MapEmbed />` or `<MapLink />` |
+| Hardcoded hours text | `<BusinessHours />` |
+| Custom WhatsApp + Phone + Email bar | `<ContactActions />` |
+| Fixed-corner contact widget | `<FloatingContactWidget />` |
+| Custom social icon row | `<SocialLinks />` or `<SocialButton />` |
+| Custom product grid | `<ProductGrid />` + `<ProductCard />` |
+| Custom cart / drawer | `<CartDrawer />` + `useCart()` |
+| Custom review section | `<CustomerReviews />` or `<GoogleFeedback />` |
+| Custom testimonials | `<TestimonialSection />` or `<TestimonialCarousel />` |
+| Custom category chips | `<CategoryPills />` |
+| Custom filter sidebar | `<FilterSidebar />` |
+| Custom hero section | `<Hero />` |
+| Custom service card | `<ServiceCard />` |
+| Custom pricing table | `<PricingCard />` |
+| Custom FAQ | `<FAQAccordion />` |
+| Custom contact form | `<ContactForm />` |
+| Bottom mobile action bar | `<StickyMobileBar />` |
+| Trust / payment badges | `<TrustBadges />` |
+| About / heritage collage | `<HeritageCollage />` |
+| Before/after image comparison | `<BeforeAfterSlider />` |
+| Cookie/GDPR banner | `<CookieConsentBanner />` |
 
 When using an AI assistant (ChatGPT, Claude, Cursor, Antigravity) to convert an existing storefront into a Fivora template:
 
 1. **Step 1: Content Extraction**:
    Extract all static store text, photos, categories, and products into `src/data/site-data.json`.
 2. **Step 2: Component Replacement**:
-   Replace custom buttons, cards, headers, grids, drawers, reviews, and filters with the corresponding `@deneb-ui/ui` components from the Master Catalog above.
-3. **Step 3: Attach Visual Markers**:
+   Apply the Component Replacement Checklist above. Replace every custom UI element with the corresponding `@deneb-ui/ui` component. Follow the Golden Rule — never leave raw contact URLs or static hours in JSX.
+3. **Step 3: Wrap with SiteDataProvider & ThemeStyles**:
+   Add `<SiteDataProvider>` wrapping the entire app in root layout. Place `<ThemeStyles />` immediately inside it.
+4. **Step 4: Attach Visual Markers**:
    Add `data-preview-field-path`, `data-preview-list-path`, and `data-preview-item-path` to all editable text and lists.
-4. **Step 4: Dynamic State Binding**:
-   Replace static hardcoded data with `useProducts()`, `useSiteData()`, or `siteData.content.*`.
-5. **Step 5: Static Export Validation**:
+5. **Step 5: Dynamic State Binding**:
+   Replace static hardcoded data with `useProducts()`, `useSiteData()`, or `siteData.content.*`. Use `useShop()` for merchant profile data.
+6. **Step 6: Static Export Validation**:
    Ensure `output: 'export'` in `next.config.ts`, export the stable `/products/detail/` page, use `platformProductDetailHref(product.id)`, and include no server-side secrets.
-6. **Step 6: Preflight & Package**:
+7. **Step 7: Preflight & Package**:
    ```bash
    npx @deneb-ui/cli validate
 

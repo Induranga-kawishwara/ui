@@ -266,6 +266,7 @@ export function EditableProductGrid({
     setInternalPage(1);
     setLoadedCount(activePageSize);
     onPageChange?.(1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, activeCategory, activePageSize]);
 
   const filteredProducts = useMemo(() => {

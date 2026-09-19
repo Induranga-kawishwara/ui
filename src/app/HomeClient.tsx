@@ -8,7 +8,6 @@ import {
   ContactActions,
   LocationCard,
   BusinessHours,
-  SocialLinks,
 } from '@/components/deneb-ui';
 import {
   ArrowRight,
@@ -16,13 +15,9 @@ import {
   Zap,
   ShieldCheck,
   Terminal,
-  ShoppingBag,
   Layers,
   Copy,
   Check,
-  Star,
-  ExternalLink,
-  Code2,
 } from 'lucide-react';
 
 export function HomeClient() {

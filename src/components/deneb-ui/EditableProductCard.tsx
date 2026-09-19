@@ -217,8 +217,6 @@ export function EditableProductCard({
   whatsappActionLabel = 'Inquire on WhatsApp',
   addToCartLabel = 'Add to Cart',
   actionSlot,
-  actionLabel,
-  actionLabelPath,
   onAddToCart,
   onWhatsAppClick,
   className = '',

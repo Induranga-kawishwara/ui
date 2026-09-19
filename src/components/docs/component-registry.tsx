@@ -18,8 +18,6 @@ import {
   TestimonialSection,
   Map as DenebMap,
   THEME_PRESETS,
-  getThemeCssProperties,
-  getCategoryTheme,
 } from '@/components/deneb-ui';
 import { isDarkColor, getAutoContrastTextColor } from '@deneb-ui/core';
 import { ComponentDocPageProps } from './ComponentDocPage';
@@ -37,7 +35,6 @@ import {
   Palette,
   Check,
   Copy,
-  Contrast,
   Sliders,
 } from 'lucide-react';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
@@ -903,7 +900,6 @@ function InteractiveImageDemo() {
   return (
     <div className="w-full max-w-xs p-4 mx-auto">
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 dark:border-[#23283B] shadow-lg group">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
           alt="Product sample"
@@ -2332,7 +2328,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }`,
-    usageCode: `import { ThemeStyles, THEME_PRESETS, getCategoryTheme } from "@deneb-ui/ui";`,
+    usageCode: `import { ThemeStyles, THEME_PRESETS } from "@deneb-ui/ui";`,
     props: [
       { name: 'theme', type: 'TemplateTheme | null', description: 'Complete theme tokens configuration object (colors, typography, dimensions, buttons, and custom camelCase tokens).' },
       { name: 'defaultPrimary', type: 'string', defaultValue: '"#2563eb"', description: 'Fallback primary brand color if undefined in theme.' },
@@ -2379,7 +2375,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {
         title: '2. Curated Industry Presets with getCategoryTheme()',
         description: 'Kickstart client stores with pre-balanced color harmony and typography suited for specific business verticals.',
-        code: `import { ThemeStyles, getCategoryTheme, THEME_PRESETS } from "@deneb-ui/ui";
+        code: `import { ThemeStyles, THEME_PRESETS } from "@deneb-ui/ui";
 
 // Choose from 10 industry palettes:
 // "luxury" | "emeraldGold" | "tech" | "retail" | "restaurant" | 

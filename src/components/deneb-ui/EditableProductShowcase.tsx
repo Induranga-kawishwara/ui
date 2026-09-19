@@ -533,6 +533,7 @@ export function EditableProductShowcase({
                       onClick={(e) => {
                         e.stopPropagation();
                         if (onQuickView) onQuickView(phone, idx);
+                        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
                         else if (typeof window !== 'undefined') window.location.href = detailUrl;
                       }}
                       className="flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-black/[0.02] text-zinc-600 hover:text-cyan-600 hover:border-cyan-400/50 hover:bg-cyan-50/50 transition-all cursor-pointer"

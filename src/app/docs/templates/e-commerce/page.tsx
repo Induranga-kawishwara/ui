@@ -2,12 +2,9 @@ import type { Metadata } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import {
-  ShoppingBag,
   Layers,
   ArrowRight,
-  CheckCircle2,
   AlertTriangle,
-  RefreshCw,
   Search,
   ShieldCheck,
   Zap,

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Layers, Sliders, Palette, Code2 } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Sparkles, Layers, Sliders, Palette, Code2 } from 'lucide-react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { TableOfContents, TocItem } from '@/components/layout/TableOfContents';
 import { DenebStarIcon } from '@/components/brand/DenebLogo';
@@ -79,7 +79,7 @@ export default function ThemingPage() {
           </div>
           <p className="text-base sm:text-lg text-slate-600 dark:text-[#94A3B8] leading-relaxed">
             DENEB UI powers dynamic storefront branding through a high-performance runtime CSS Custom Properties engine.
-            Featuring WCAG AAA auto-contrast resolution, 10 curated industry presets, and real-time live synchronization with Fivora Studio's Visual Editor.
+            Featuring WCAG AAA auto-contrast resolution, 10 curated industry presets, and real-time live synchronization with Fivora Studio&apos;s Visual Editor.
           </p>
         </div>
 
@@ -146,7 +146,7 @@ export default function ThemingPage() {
               <div className="p-3 rounded-lg bg-white dark:bg-[#121627] border border-slate-200 dark:border-[#1E233D] space-y-1">
                 <span className="font-mono text-[10px] text-indigo-600 dark:text-[#818CF8] font-bold uppercase">1. Site Data</span>
                 <div className="font-semibold text-slate-900 dark:text-white">site-data.json</div>
-                <p className="text-slate-500 dark:text-[#94A3B8] text-[11px]">Stores the merchant's active theme configuration object.</p>
+                <p className="text-slate-500 dark:text-[#94A3B8] text-[11px]">Stores the merchant&apos;s active theme configuration object.</p>
               </div>
 
               <div className="p-3 rounded-lg bg-white dark:bg-[#121627] border border-slate-200 dark:border-[#1E233D] space-y-1">
@@ -179,7 +179,7 @@ export default function ThemingPage() {
             </h2>
           </div>
           <p className="text-sm text-slate-600 dark:text-[#94A3B8]">
-            The <code className="text-slate-900 dark:text-white">TemplateTheme</code> interface defines all standard brand tokens. Furthermore, any custom camelCase property you include (e.g. <code className="text-slate-900 dark:text-white">cardBg: "#111"</code>) is automatically transformed into a corresponding CSS variable (e.g. <code className="text-slate-900 dark:text-white">--card-bg: #111</code>):
+            The <code className="text-slate-900 dark:text-white">TemplateTheme</code> interface defines all standard brand tokens. Furthermore, any custom camelCase property you include (e.g. <code className="text-slate-900 dark:text-white">cardBg: &quot;#111&quot;</code>) is automatically transformed into a corresponding CSS variable (e.g. <code className="text-slate-900 dark:text-white">--card-bg: #111</code>):
           </p>
 
           <div className="overflow-x-auto border border-slate-200 dark:border-[#23283B] rounded-xl">
@@ -251,7 +251,7 @@ export default function ThemingPage() {
                   <td className="p-3 font-mono font-bold text-indigo-600 dark:text-[#818CF8]">headingFont / bodyFont</td>
                   <td className="p-3 font-mono text-[11px]">string</td>
                   <td className="p-3 font-mono text-[11px]">--heading-font / --body-font</td>
-                  <td className="p-3">Font family declarations (e.g. "Outfit, sans-serif", "Playfair Display, serif").</td>
+                  <td className="p-3">Font family declarations (e.g. &quot;Outfit, sans-serif&quot;, &quot;Playfair Display, serif&quot;).</td>
                 </tr>
                 <tr>
                   <td className="p-3 font-mono font-bold text-indigo-600 dark:text-[#818CF8]">borderRadius</td>
@@ -263,7 +263,7 @@ export default function ThemingPage() {
                   <td className="p-3 font-mono font-bold text-indigo-600 dark:text-[#818CF8]">[customCamelCase]</td>
                   <td className="p-3 font-mono text-[11px]">string | number</td>
                   <td className="p-3 font-mono text-[11px]">--[kebab-case]</td>
-                  <td className="p-3">Any custom token (e.g. <code className="text-slate-900 dark:text-white">cardBorder: "#222"</code>) becomes <code className="text-slate-900 dark:text-white">--card-border</code>.</td>
+                  <td className="p-3">Any custom token (e.g. <code className="text-slate-900 dark:text-white">cardBorder: &quot;#222&quot;</code>) becomes <code className="text-slate-900 dark:text-white">--card-border</code>.</td>
                 </tr>
               </tbody>
             </table>

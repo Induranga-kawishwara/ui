@@ -24,6 +24,50 @@ A Fivora template is a modern Next.js App Router storefront that renders inside 
   const products = content?.products ?? [];
   ```
 
+### 1.3 Real-Time Store Profile & Live Contact Synchronization (`useShop`, `useReviews`)
+
+In Fivora DENEB UI storefronts, template components are **live-synchronized in real-time** with merchant profile updates in the Shop Owner portal.
+When a store owner changes their store name, WhatsApp number, phone number, email address, physical location, Google Maps directions link, operating schedule, or reviews, the live storefront **updates instantly** without requiring manual site re-exports or code rebuilds!
+
+#### Three Ways to Consume Live Store Data:
+
+1. **Zero-Configuration Auto-Hydration**: Contact and location components automatically self-hydrate from the live merchant profile when props are omitted:
+   - `<WhatsAppButton />` automatically connects to the merchant's live registered WhatsApp number with international click-to-chat routing.
+   - `<PhoneButton />` automatically triggers 1-tap phone dialing (`tel:`) to the merchant's live primary business phone.
+   - `<EmailButton />` automatically opens an inquiry mailto directed to the live registered business email.
+   - `<ContactActions />` dynamically displays buttons for whichever channels (WhatsApp, Phone, Email, Maps) the merchant has active.
+   - `<LocationCard />` automatically renders the store's physical street address, city, district, postal code, and clickable Google Maps directions link.
+   - `<MapLink />` / `<MapEmbed />` automatically center and link to the store's live Google Maps location.
+   - `<BusinessHours />` automatically calculates weekly hours with an active **Open Now / Closed** live status indicator based on visitor local time.
+   - `<CustomerReviews />` / `<GoogleFeedback />` / `<TestimonialSection />` automatically display verified customer reviews and Google feedback.
+
+2. **The `useShop()` Hook**: Direct programmatic access to live store details:
+   ```tsx
+   import { useShop } from "@deneb-ui/ui";
+
+   export function HeaderStoreInfo() {
+     const shop = useShop();
+     // shop.name, shop.whatsapp, shop.phone, shop.email, shop.address, shop.city, shop.mapLocation, shop.openingHours
+     return (
+       <div className="flex items-center gap-4 text-sm text-slate-300">
+         <span>{shop?.name}</span>
+         {shop?.whatsapp && <a href={`https://wa.me/${shop.whatsapp}`}>WhatsApp Us</a>}
+         {shop?.address && <span>{shop.address}, {shop.city}</span>}
+       </div>
+     );
+   }
+   ```
+
+3. **The `useReviews()` Hook**: Direct access to verified customer reviews and Google feedback:
+   ```tsx
+   import { useReviews } from "@deneb-ui/ui";
+
+   export function SocialProofCounter() {
+     const reviews = useReviews();
+     return <span>Rated by {reviews.length} verified customers</span>;
+   }
+   ```
+
 ---
 
 ## 2. Complete Installation & Project Setup
@@ -548,26 +592,31 @@ export function StoreContactBar() {
 #### 9. `WhatsAppButton`
 **Import**: `import { WhatsAppButton } from "@deneb-ui/ui";`  
 **Category**: `Smart Commerce Actions`  
-**Description**: High-converting WhatsApp conversion launcher with pre-filled order or inquiry message templates.
+**Description**: High-converting WhatsApp conversion launcher with pre-filled order or inquiry message templates. **Automatically self-hydrates** from live registered store WhatsApp number when `phoneNumber` or `value` is omitted.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `phoneNumber` | `string` | `required` | E.164 formatted telephone number without plus. |
+| `phoneNumber` | `string` | `auto-synced` | Optional. E.164 formatted telephone number. If omitted, automatically self-hydrates from `useShop()?.whatsapp` and live site data. |
+| `value` | `string` | `auto-synced` | Alias for `phoneNumber`. |
 | `message` | `string` | `''` | Pre-filled WhatsApp message text. |
-| `variant` | `'solid' | 'outline' | 'floating'` | `'solid'` | Button visual variant. |
+| `variant` | `'solid' | 'outline' | 'floating' | 'whatsapp'` | `'whatsapp'` | Button visual variant. |
 | `size` | `'sm' | 'md' | 'lg'` | `'md'` | Button sizing tier. |
 | `label` | `string` | `'Chat on WhatsApp'` | Action text. |
 
-##### Copy-Paste Usage Example
+##### Copy-Paste Usage Examples
 ```tsx
-import { WhatsAppButton, useSiteData } from "@deneb-ui/ui";
+import { WhatsAppButton } from "@deneb-ui/ui";
 
+// Option A: Zero-config auto-hydration (uses live registered merchant WhatsApp)
+export function QuickChat() {
+  return <WhatsAppButton label="Order via WhatsApp" />;
+}
+
+// Option B: Contextual product inquiry message
 export function InstantProductOrder({ title, price }: { title: string; price: number }) {
-  const siteData = useSiteData();
   return (
     <WhatsAppButton
-      phoneNumber={siteData?.shop?.whatsapp ?? "94771234567"}
       message={`Hi! I would like to order the ${title} (Rs. ${price}). Is it currently available?`}
       variant="solid"
       size="lg"
@@ -580,12 +629,13 @@ export function InstantProductOrder({ title, price }: { title: string; price: nu
 #### 10. `PhoneButton`
 **Import**: `import { PhoneButton } from "@deneb-ui/ui";`  
 **Category**: `Smart Commerce Actions`  
-**Description**: One-tap telephone dialer with international number formatting.
+**Description**: One-tap telephone dialer with international number formatting. **Automatically self-hydrates** from live registered store phone when `phoneNumber` or `value` is omitted.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `phoneNumber` | `string` | `required` | Telephone number to dial. |
+| `phoneNumber` | `string` | `auto-synced` | Optional. Telephone number to dial. If omitted, automatically self-hydrates from `useShop()?.phone` and live site data. |
+| `value` | `string` | `auto-synced` | Alias for `phoneNumber`. |
 | `label` | `string` | `'Call Now'` | Button label text. |
 | `variant` | `'solid' | 'outline' | 'minimal'` | `'solid'` | Button style. |
 
@@ -593,21 +643,24 @@ export function InstantProductOrder({ title, price }: { title: string; price: nu
 ```tsx
 import { PhoneButton } from "@deneb-ui/ui";
 
-export function TelephoneSupport({ phone }: { phone: string }) {
-  return <PhoneButton phoneNumber={phone} label="Call Atelier: +94 11 234 5678" variant="outline" size="md" />;
+// Zero-config: dials the live registered store telephone
+export function SupportCall() {
+  return <PhoneButton label="Call Us Directly" variant="outline" size="md" />;
 }
 ```
 
 #### 11. `EmailButton`
 **Import**: `import { EmailButton } from "@deneb-ui/ui";`  
 **Category**: `Smart Commerce Actions`  
-**Description**: Pre-filled mailto trigger with automatic subject and body encoding.
+**Description**: Pre-filled mailto trigger with automatic subject and body encoding. **Automatically self-hydrates** from live registered store email when `email` or `value` is omitted.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `email` | `string` | `required` | Inquiry recipient email address. |
+| `email` | `string` | `auto-synced` | Optional. Inquiry recipient email address. If omitted, automatically self-hydrates from `useShop()?.email` and live site data. |
+| `value` | `string` | `auto-synced` | Alias for `email`. |
 | `subject` | `string` | `''` | Pre-filled email subject line. |
+| `label` | `string` | `'Email Us'` | Button label text. |
 | `label` | `string` | `'Email Us'` | Button label text. |
 
 ##### Copy-Paste Usage Example
@@ -664,31 +717,24 @@ export function GlobalSupportWidget() {
 #### 13. `LocationCard`
 **Import**: `import { LocationCard } from "@deneb-ui/ui";`  
 **Category**: `Location & Navigation`  
-**Description**: Flagship store address, city, hours, and direct directions button.
+**Description**: Flagship store address, city, hours, and direct directions button. **Automatically self-hydrates** from live registered store address and Google Maps directions link when props are omitted.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `title` | `string` | `'Flagship Store'` | Location name. |
-| `address` | `string` | `required` | Street address. |
-| `city` | `string` | `''` | City or province name. |
-| `googleMapsUrl` | `string` | `''` | Direct Google Maps URL. |
-| `hours` | `string` | `''` | Operating hours summary. |
+| `title` | `string` | `'Our Location'` | Location name or header. |
+| `address` | `string` | `auto-synced` | Optional. Street address. If omitted, automatically self-hydrates from `useShop()?.address`. |
+| `city` | `string` | `auto-synced` | Optional. City name. If omitted, automatically self-hydrates from `useShop()?.city`. |
+| `mapUrl` | `string` | `auto-synced` | Optional. Direct Google Maps URL. If omitted, automatically self-hydrates from `useShop()?.mapLocation`. |
+| `directionsLabel` | `string` | `'Get Directions →'` | Action link label. |
 
 ##### Copy-Paste Usage Example
 ```tsx
 import { LocationCard } from "@deneb-ui/ui";
 
+// Zero-config: renders live store address and Google Maps routing
 export function StoreAddressCard() {
-  return (
-    <LocationCard
-      title="Colombo Flagship Store"
-      address="42 Heritage Boulevard, Ward Place"
-      city="Colombo 07, Sri Lanka"
-      hours="Mon - Sat: 9:00 AM - 7:00 PM"
-      googleMapsUrl="https://maps.google.com/?q=Colombo"
-    />
-  );
+  return <LocationCard />;
 }
 ```
 
@@ -774,32 +820,23 @@ export function StructuredAddress() {
 #### 17. `BusinessHours`
 **Import**: `import { BusinessHours } from "@deneb-ui/ui";`  
 **Category**: `Social & Business`  
-**Description**: Live open/closed timetable with real-time open status indicators.
+**Description**: Weekly operating schedule with live **Open Now / Closed** calculation based on visitor local time. **Automatically self-hydrates** from live registered store operating hours.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `schedule` | `Array<{ day: string; open: string; close: string }>` | `[]` | Weekly operating schedule. |
-| `showStatus` | `boolean` | `true` | Show live 'Open Now' or 'Closed' tag. |
-| `variant` | `'card' | 'list' | 'compact'` | `'card'` | Display format. |
+| `hours` | `WeeklyHours` | `auto-synced` | Optional. Daily operating hours map. If omitted, automatically self-hydrates from `useShop()?.openingHours`. |
+| `title` | `string` | `'Business Hours'` | Section headline. |
+| `showStatusBadge` | `boolean` | `true` | Show dynamic 'Open Now' or 'Closed' badge based on current local time. |
+| `compact` | `boolean` | `false` | Compact presentation for sidebars and footers. |
 
 ##### Copy-Paste Usage Example
 ```tsx
-import { BusinessHours, useSiteData } from "@deneb-ui/ui";
+import { BusinessHours } from "@deneb-ui/ui";
 
+// Zero-config: renders live store operating hours with dynamic status badge
 export function StoreHoursDisplay() {
-  const siteData = useSiteData();
-  return (
-    <BusinessHours
-      schedule={siteData?.content?.businessHours ?? [
-        { day: "Monday - Friday", open: "09:00 AM", close: "07:00 PM" },
-        { day: "Saturday", open: "10:00 AM", close: "05:00 PM" },
-        { day: "Sunday", open: "Closed", close: "" }
-      ]}
-      showStatus={true}
-      variant="card"
-    />
-  );
+  return <BusinessHours showStatusBadge={true} />;
 }
 ```
 
@@ -2130,6 +2167,11 @@ Before submitting your template or testing in the local studio:
 ---
 
 ## 8. Step-by-Step AI Conversion Workflow
+
+### ⚡ Golden Rule: Never Hardcode Store Contact Numbers or Map URLs
+Always use `@deneb-ui/ui` auto-hydrating smart contact and location components (`WhatsAppButton`, `PhoneButton`, `EmailButton`, `LocationCard`, `MapLink`, `BusinessHours`) or `useShop()`.
+**NEVER** hardcode static phone numbers, WhatsApp URLs (`https://wa.me/9477...`), or static Google Maps iframe embeds into template JSX!
+Using auto-hydrating components guarantees that when the shop owner modifies their phone, WhatsApp, location, or hours in the Fivora Portal, their live website reflects changes instantaneously without requiring any code edits or rebuilds.
 
 When using an AI assistant (ChatGPT, Claude, Cursor, Antigravity) to convert an existing storefront into a Fivora template:
 

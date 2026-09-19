@@ -349,6 +349,53 @@ The Fivora Merchant Studio automatically enables inline visual editing by inspec
 
 ---
 
+## Real-Time Store Profile & Live Contact Synchronization (`useShop`, `useReviews`)
+
+Storefronts built with DENEB UI synchronize automatically in real-time with changes made in the Fivora Merchant Portal.
+When a store owner changes their store name, WhatsApp number, phone number, email address, physical location, Google Maps directions link, operating schedule, or reviews, the live storefront **updates instantly** without requiring manual site re-exports or code rebuilds!
+
+### 1. Zero-Configuration Auto-Hydration
+Contact and location components automatically self-hydrate from the live merchant profile when props are omitted:
+- `<WhatsAppButton />` automatically connects to the merchant's live registered WhatsApp number with international click-to-chat routing.
+- `<PhoneButton />` automatically triggers 1-tap phone dialing (`tel:`) to the merchant's live primary business phone.
+- `<EmailButton />` automatically opens an inquiry mailto directed to the live registered business email.
+- `<ContactActions />` dynamically displays buttons for whichever channels (WhatsApp, Phone, Email, Maps) the merchant has active.
+- `<LocationCard />` automatically renders the store's physical street address, city, district, postal code, and clickable Google Maps directions link.
+- `<MapLink />` / `<MapEmbed />` automatically center and link to the store's live Google Maps location.
+- `<BusinessHours />` automatically calculates weekly hours with an active **Open Now / Closed** live status indicator based on visitor local time.
+- `<CustomerReviews />` / `<GoogleFeedback />` / `<TestimonialSection />` automatically display verified customer reviews and Google feedback.
+
+### 2. The `useShop()` Hook
+Direct programmatic access to live store details:
+```tsx
+import { useShop } from "@deneb-ui/ui";
+
+export function HeaderStoreInfo() {
+  const shop = useShop();
+  // shop.name, shop.whatsapp, shop.phone, shop.email, shop.address, shop.city, shop.mapLocation, shop.openingHours
+  return (
+    <div className="flex items-center gap-4 text-sm text-slate-300">
+      <span>{shop?.name}</span>
+      {shop?.whatsapp && <a href={`https://wa.me/${shop.whatsapp}`}>WhatsApp Us</a>}
+      {shop?.address && <span>{shop.address}, {shop.city}</span>}
+    </div>
+  );
+}
+```
+
+### 3. The `useReviews()` Hook
+Direct access to verified customer reviews and Google feedback:
+```tsx
+import { useReviews } from "@deneb-ui/ui";
+
+export function SocialProofCounter() {
+  const reviews = useReviews();
+  return <span>Rated by {reviews.length} verified customers</span>;
+}
+```
+
+---
+
 ## Master Component Catalog (All 43 Components)
 
 Every single component below is imported directly from `@deneb-ui/ui`:
@@ -638,26 +685,31 @@ export function StoreContactBar() {
 
 **Import**: `import { WhatsAppButton } from "@deneb-ui/ui";`  
 **Category**: `Smart Commerce Actions`  
-**Description**: High-converting WhatsApp conversion launcher with pre-filled order or inquiry message templates.
+**Description**: High-converting WhatsApp conversion launcher with pre-filled order or inquiry message templates. **Automatically self-hydrates** from live registered store WhatsApp number when `phoneNumber` or `value` is omitted.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `phoneNumber` | `string` | `required` | E.164 formatted telephone number without plus. |
+| `phoneNumber` | `string` | `auto-synced` | Optional. E.164 formatted telephone number. If omitted, automatically self-hydrates from `useShop()?.whatsapp` and live site data. |
+| `value` | `string` | `auto-synced` | Alias for `phoneNumber`. |
 | `message` | `string` | `''` | Pre-filled WhatsApp message text. |
-| `variant` | `'solid' | 'outline' | 'floating'` | `'solid'` | Button visual variant. |
+| `variant` | `'solid' | 'outline' | 'floating' | 'whatsapp'` | `'whatsapp'` | Button visual variant. |
 | `size` | `'sm' | 'md' | 'lg'` | `'md'` | Button sizing tier. |
 | `label` | `string` | `'Chat on WhatsApp'` | Action text. |
 
-##### Copy-Paste Usage Example
+##### Copy-Paste Usage Examples
 ```tsx
-import { WhatsAppButton, useSiteData } from "@deneb-ui/ui";
+import { WhatsAppButton } from "@deneb-ui/ui";
 
+// Option A: Zero-config auto-hydration (uses live registered merchant WhatsApp)
+export function QuickChat() {
+  return <WhatsAppButton label="Order via WhatsApp" />;
+}
+
+// Option B: Contextual product inquiry message
 export function InstantProductOrder({ title, price }: { title: string; price: number }) {
-  const siteData = useSiteData();
   return (
     <WhatsAppButton
-      phoneNumber={siteData?.shop?.whatsapp ?? "94771234567"}
       message={`Hi! I would like to order the ${title} (Rs. ${price}). Is it currently available?`}
       variant="solid"
       size="lg"
@@ -671,12 +723,13 @@ export function InstantProductOrder({ title, price }: { title: string; price: nu
 
 **Import**: `import { PhoneButton } from "@deneb-ui/ui";`  
 **Category**: `Smart Commerce Actions`  
-**Description**: One-tap telephone dialer with international number formatting.
+**Description**: One-tap telephone dialer with international number formatting. **Automatically self-hydrates** from live registered store phone when `phoneNumber` or `value` is omitted.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `phoneNumber` | `string` | `required` | Telephone number to dial. |
+| `phoneNumber` | `string` | `auto-synced` | Optional. Telephone number to dial. If omitted, automatically self-hydrates from `useShop()?.phone` and live site data. |
+| `value` | `string` | `auto-synced` | Alias for `phoneNumber`. |
 | `label` | `string` | `'Call Now'` | Button label text. |
 | `variant` | `'solid' | 'outline' | 'minimal'` | `'solid'` | Button style. |
 
@@ -684,8 +737,9 @@ export function InstantProductOrder({ title, price }: { title: string; price: nu
 ```tsx
 import { PhoneButton } from "@deneb-ui/ui";
 
-export function TelephoneSupport({ phone }: { phone: string }) {
-  return <PhoneButton phoneNumber={phone} label="Call Atelier: +94 11 234 5678" variant="outline" size="md" />;
+// Zero-config: dials the live registered store telephone
+export function SupportCall() {
+  return <PhoneButton label="Call Us Directly" variant="outline" size="md" />;
 }
 ```
 

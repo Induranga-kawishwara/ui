@@ -8,10 +8,10 @@ const eslintConfig = defineConfig([
   {
     rules: {
       "@typescript-eslint/no-unused-vars": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
       "react-hooks/set-state-in-effect": "off",
       "react-hooks/exhaustive-deps": "warn",
-      "@next/next/no-img-element": "warn",
+      "@next/next/no-img-element": "off",
       "react-hooks/preserve-manual-memoization": "warn",
       "@typescript-eslint/no-empty-object-type": "warn",
     },

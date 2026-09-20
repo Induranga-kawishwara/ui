@@ -344,9 +344,17 @@ export function SiteDataProvider<T extends SiteData = SiteData>({
         const currentCommon = isRecord(currentContent.common) ? currentContent.common : {};
         const currentContact = isRecord(currentContent.contact) ? currentContent.contact : {};
 
-        const nextProducts = Array.isArray(live.products)
-          ? live.products
-          : currentContent.products;
+        const rawLiveProducts = Array.isArray(live.products) ? live.products : currentContent.products;
+        const nextProducts = Array.isArray(rawLiveProducts)
+          ? rawLiveProducts.map((p: any) => {
+              if (!isRecord(p)) return p;
+              const customData = isRecord(p.customData) ? p.customData : {};
+              return {
+                ...customData,
+                ...p,
+              };
+            })
+          : rawLiveProducts;
         const nextServices = Array.isArray(live.services)
           ? live.services
           : currentContent.services;
@@ -382,12 +390,18 @@ export function SiteDataProvider<T extends SiteData = SiteData>({
                 nextContact.whatsappNumber = cleanWa;
                 nextCommon.whatsappNumber = cleanWa;
 
-                // Dynamically update any hardcoded or static wa.me URLs across home
+                // Dynamically update any hardcoded or static wa.me URLs across home and common
                 const waRegex = /(https?:\/\/(?:wa\.me|api\.whatsapp\.com\/send\?phone=))\d+/gi;
                 for (const key of ['whatsappCtaUrl', 'whatsappOrderUrl', 'whatsappUrl']) {
                   if (typeof nextHome[key] === 'string' && waRegex.test(nextHome[key])) {
                     nextHome[key] = nextHome[key].replace(waRegex, `$1${cleanWa}`);
                   }
+                  if (typeof nextCommon[key] === 'string' && waRegex.test(nextCommon[key])) {
+                    nextCommon[key] = nextCommon[key].replace(waRegex, `$1${cleanWa}`);
+                  }
+                }
+                if (!nextCommon.whatsappUrl || waRegex.test(nextCommon.whatsappUrl)) {
+                  nextCommon.whatsappUrl = `https://wa.me/${cleanWa}`;
                 }
               }
             }
@@ -402,6 +416,7 @@ export function SiteDataProvider<T extends SiteData = SiteData>({
             if (typeof street === 'string' && street.trim()) {
               nextContact.address = street;
               nextCommon.address = street;
+              nextCommon.footerAddress = street;
             }
             if (typeof address.mapLocation === 'string' && address.mapLocation.trim()) {
               nextContact.googleMapLink = address.mapLocation;
@@ -423,89 +438,6 @@ export function SiteDataProvider<T extends SiteData = SiteData>({
 
           if (typeof live.shop.logoUrl === 'string' && live.shop.logoUrl.trim()) {
             nextCommon.logoUrl = live.shop.logoUrl;
-          }
-
-          // ── Social links live synchronization ──────────────────────────────
-          // Syncs to: <SocialLinks />, <SocialButton />, <Footer /> social icons
-          const socialFields: Record<string, string> = {
-            facebookUrl:  'facebook',
-            instagramUrl: 'instagram',
-            tiktokUrl:    'tiktok',
-            youtubeUrl:   'youtube',
-            linkedinUrl:  'linkedin',
-            websiteUrl:   'website',
-          };
-          let hasSocialUpdate = false;
-          const nextSocial: GenericRecord = isRecord((current as GenericRecord).social)
-            ? { ...(current as GenericRecord).social as GenericRecord }
-            : isRecord(nextCommon.social)
-            ? { ...nextCommon.social as GenericRecord }
-            : {};
-          for (const [dbField, platformKey] of Object.entries(socialFields)) {
-            const val = (live.shop as GenericRecord)[dbField];
-            if (typeof val === 'string' && val.trim()) {
-              nextSocial[platformKey] = val.trim();
-              nextSocial[dbField] = val.trim();
-              nextCommon[platformKey + 'Url'] = val.trim();
-              nextCommon[dbField] = val.trim();
-              hasSocialUpdate = true;
-            }
-          }
-          if (hasSocialUpdate) {
-            nextCommon.social = nextSocial;
-            nextCommon.socialLinks = nextSocial;
-          }
-
-          // ── Shop front image live synchronization ──────────────────────────
-          // Syncs to: <Hero /> background, <AnnouncementBar /> banner, about collage
-          if (typeof live.shop.shopFrontImageUrl === 'string' && live.shop.shopFrontImageUrl.trim()) {
-            const imgUrl = live.shop.shopFrontImageUrl.trim();
-            nextCommon.shopFrontImageUrl = imgUrl;
-            nextCommon.coverImageUrl = imgUrl;
-            nextCommon.bannerImageUrl = imgUrl;
-            // Only set hero/home images if not already set by content (non-destructive)
-            if (!nextHome.heroImageUrl)   nextHome.heroImageUrl   = imgUrl;
-            if (!nextHome.heroImage)      nextHome.heroImage      = imgUrl;
-            if (!nextHome.bannerImageUrl) nextHome.bannerImageUrl = imgUrl;
-            if (!nextHome.coverImageUrl)  nextHome.coverImageUrl  = imgUrl;
-          }
-
-          // ── Currency live synchronization ──────────────────────────────────
-          // Syncs to: <ProductCard />, <PricingCard />, <CartDrawer /> price display
-          if (typeof live.shop.currency === 'string' && live.shop.currency.trim()) {
-            nextCommon.currency = live.shop.currency.trim();
-          }
-
-          // ── Business tagline / description live synchronization ────────────
-          // Syncs to: <Hero /> subheadline, <Navbar /> tagline, <Footer /> description
-          if (typeof live.shop.tagline === 'string' && live.shop.tagline.trim()) {
-            nextCommon.tagline = live.shop.tagline.trim();
-            nextCommon.slogan  = live.shop.tagline.trim();
-            if (!nextHome.heroSubtitle) nextHome.heroSubtitle = live.shop.tagline.trim();
-            if (!nextHome.subHeadline)  nextHome.subHeadline  = live.shop.tagline.trim();
-          }
-          if (typeof live.shop.description === 'string' && live.shop.description.trim()) {
-            nextCommon.description = live.shop.description.trim();
-            nextCommon.aboutText   = live.shop.description.trim();
-            if (!nextHome.aboutDescription) nextHome.aboutDescription = live.shop.description.trim();
-          }
-
-          // ── Announcement / promo banner live synchronization ───────────────
-          // Syncs to: <AnnouncementBar /> text and CTA
-          if (isRecord(live.shop.announcement)) {
-            const ann = live.shop.announcement as GenericRecord;
-            if (typeof ann.text === 'string' && ann.text.trim()) {
-              nextCommon.announcementText  = ann.text.trim();
-              nextHome.announcementBarText = ann.text.trim();
-            }
-            if (typeof ann.url === 'string' && ann.url.trim()) {
-              nextCommon.announcementUrl  = ann.url.trim();
-              nextHome.announcementBarUrl = ann.url.trim();
-            }
-            if (typeof ann.enabled === 'boolean') {
-              nextCommon.announcementEnabled  = ann.enabled;
-              nextHome.announcementBarEnabled = ann.enabled;
-            }
           }
         }
 
@@ -872,19 +804,30 @@ export function useProducts(fallback: ProductItem[] = []): ProductItem[] {
   const content = isRecord(siteData?.content) ? siteData.content : null;
   if (!content) return fallback;
 
+  let rawList: ProductItem[] | null = null;
   if (Array.isArray(content.products) && content.products.length > 0) {
-    return content.products as ProductItem[];
-  }
-  const home = isRecord(content.home) ? content.home : null;
-  if (home) {
-    if (Array.isArray(home.products) && home.products.length > 0) {
-      return home.products as ProductItem[];
+    rawList = content.products as ProductItem[];
+  } else {
+    const home = isRecord(content.home) ? content.home : null;
+    if (home) {
+      if (Array.isArray(home.products) && home.products.length > 0) {
+        rawList = home.products as ProductItem[];
+      } else if (Array.isArray(home.featuredProducts) && home.featuredProducts.length > 0) {
+        rawList = home.featuredProducts as ProductItem[];
+      }
     }
-    if (Array.isArray(home.featuredProducts) && home.featuredProducts.length > 0) {
-      return home.featuredProducts as ProductItem[];
-    }
   }
-  return fallback;
+
+  if (!rawList) return fallback;
+
+  return rawList.map((p) => {
+    if (!isRecord(p)) return p;
+    const customData = isRecord(p.customData) ? p.customData : {};
+    return {
+      ...customData,
+      ...p,
+    } as ProductItem;
+  });
 }
 
 /**
@@ -978,86 +921,6 @@ export function useReviews(fallback: GenericRecord[] = []): GenericRecord[] {
   }
   if (Array.isArray((siteData as any)?.reviews) && (siteData as any).reviews.length > 0) {
     return (siteData as any).reviews as GenericRecord[];
-  }
-  return fallback;
-}
-
-/**
- * Hook to retrieve live social media links from the merchant's Fivora Portal profile.
- * Returns an object keyed by platform name, e.g. { facebook, instagram, tiktok, youtube, linkedin, website }.
- * Automatically updates when the shop owner changes their social links in the Fivora Portal.
- *
- * @example
- * const social = useSocial();
- * // social.instagram → "https://instagram.com/mystore"
- * // social.facebook  → "https://facebook.com/mystore"
- */
-export function useSocial(fallback: GenericRecord = {}): GenericRecord {
-  const siteData = useSiteData();
-  const common = isRecord(siteData?.content?.common) ? siteData.content.common as GenericRecord : {};
-  // Prefer the merged social object injected by applyLiveCatalog
-  if (isRecord(common.social) && Object.keys(common.social).length > 0) {
-    return common.social as GenericRecord;
-  }
-  if (isRecord(common.socialLinks) && Object.keys(common.socialLinks).length > 0) {
-    return common.socialLinks as GenericRecord;
-  }
-  // Fallback: reconstruct from individual keys on common
-  const platforms = ['facebook', 'instagram', 'tiktok', 'youtube', 'linkedin', 'website'] as const;
-  const built: GenericRecord = {};
-  for (const p of platforms) {
-    const url = common[p + 'Url'] ?? common[p];
-    if (typeof url === 'string' && url.trim()) built[p] = url.trim();
-  }
-  if (Object.keys(built).length > 0) return built;
-  // Last resort: check top-level shop/merchant
-  const shop = isRecord(siteData?.shop) ? siteData.shop as GenericRecord : {};
-  for (const p of platforms) {
-    const url = shop[p + 'Url'] ?? shop[p];
-    if (typeof url === 'string' && url.trim()) built[p] = url.trim();
-  }
-  return Object.keys(built).length > 0 ? built : fallback;
-}
-
-/**
- * Hook to retrieve the live store currency code from the merchant's Fivora Portal profile.
- * Returns the currency string (e.g. "LKR", "USD", "EUR").
- * Automatically updates when the shop owner changes their currency setting.
- *
- * @example
- * const currency = useCurrency();
- * // → "LKR"
- */
-export function useCurrency(fallback = 'LKR'): string {
-  const siteData = useSiteData();
-  const common = isRecord(siteData?.content?.common) ? siteData.content.common as GenericRecord : {};
-  if (typeof common.currency === 'string' && common.currency.trim()) {
-    return common.currency.trim();
-  }
-  const shop = isRecord(siteData?.shop) ? siteData.shop as GenericRecord : {};
-  if (typeof shop.currency === 'string' && shop.currency.trim()) {
-    return shop.currency.trim();
-  }
-  return fallback;
-}
-
-/**
- * Hook to retrieve the live shop front / cover / banner image URL.
- * Automatically updates when the shop owner changes their storefront photo in the Fivora Portal.
- *
- * @example
- * const shopFrontImage = useShopImage();
- * // → "https://cdn.fivora.com/shops/abc123/front.jpg"
- */
-export function useShopImage(fallback = ''): string {
-  const siteData = useSiteData();
-  const common = isRecord(siteData?.content?.common) ? siteData.content.common as GenericRecord : {};
-  for (const key of ['shopFrontImageUrl', 'coverImageUrl', 'bannerImageUrl']) {
-    if (typeof common[key] === 'string' && common[key].trim()) return common[key].trim() as string;
-  }
-  const shop = isRecord(siteData?.shop) ? siteData.shop as GenericRecord : {};
-  if (typeof shop.shopFrontImageUrl === 'string' && shop.shopFrontImageUrl.trim()) {
-    return shop.shopFrontImageUrl.trim();
   }
   return fallback;
 }

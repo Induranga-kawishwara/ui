@@ -235,6 +235,16 @@ function InteractiveProductDetailDemo() {
     description: 'Lightweight performance runner with responsive dual-density foam midsole and breathable engineered mesh.',
     badge: 'BESTSELLER',
     featuredImage: '/products/vanta-aero-x.jpg',
+    colors: [
+      { name: 'Ivory', hex: '#F0EFEB' },
+      { name: 'Obsidian', hex: '#1C2541' },
+    ],
+    sizes: ['40', '41', '42', '43', '44', '45', '46'],
+    specs: [
+      { label: 'Upper Material', value: 'Engineered breathable mesh' },
+      { label: 'Midsole Technology', value: 'Dual-density responsive foam' },
+      { label: 'Outsole Grip', value: 'High-abrasion tactical rubber' },
+    ],
     addToSelectionLabel: 'Add to Selection',
     specsTitle: 'Specifications',
     shippingTitle: 'Shipping & Returns',
@@ -247,7 +257,7 @@ function InteractiveProductDetailDemo() {
       <ProductDetail
         product={sampleProduct}
         sectionPath="demo-product"
-        onAddToSelection={(p, size, color) => alert(`Selected ${p.name} - Size: ${size}, Color: ${color}`)}
+        onAddToSelection={(p, size, color) => alert(`Selected ${p.name}${size ? ` - Size: ${size}` : ''}${color ? ` - Color: ${color}` : ''}`)}
       />
     </div>
   );

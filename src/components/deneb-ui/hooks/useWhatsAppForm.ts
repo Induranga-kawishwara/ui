@@ -235,7 +235,6 @@ export function useWhatsAppForm(options: UseWhatsAppFormOptions = {}): UseWhatsA
 
       return `https://wa.me/?text=${encodeURIComponent(message)}`;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [resolvedUrl, options.formatMessage, options.formName, resolvedBusinessName]
   );
 

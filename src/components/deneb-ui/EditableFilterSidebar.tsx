@@ -118,6 +118,7 @@ export function EditableFilterSidebar({
   const categoryTitle = getContent('categoryTitle', 'Categories');
   const priceTitle = getContent('priceTitle', 'Price Range');
   const sizeTitle = getContent('sizeTitle', 'Size');
+  const availabilityTitle = getContent('availabilityTitle', 'Availability');
   const inStockLabel = getContent('inStockLabel', 'In Stock Only');
   const clearAllText = getContent('clearAllText', 'Clear All');
 

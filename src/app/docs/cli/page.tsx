@@ -216,7 +216,7 @@ export default function CliReferencePage() {
               </div>
               <p className="text-xs text-slate-900 dark:text-[#CBD5E1] font-semibold">AI-Guided Semantic Analysis</p>
               <p className="text-xs text-slate-600 dark:text-[#94A3B8] leading-relaxed">
-                Interactively asks whether to engage AI refactoring <code className="font-mono text-indigo-600 dark:text-indigo-300">(y/N)</code>. Entering access key (<code className="font-mono text-emerald-600 dark:text-emerald-400">lvuchami</code> or <code className="font-mono">DENEB_AI_KEY</code>) unlocks deep LLM component classification for non-standard UI libraries.
+                Interactively asks whether to engage AI refactoring <code className="font-mono text-indigo-600 dark:text-indigo-300">(y/N)</code>. Entering an authorized access key (or <code className="font-mono">DENEB_AI_KEY</code>) unlocks deep LLM component classification for non-standard UI libraries.
               </p>
               <CodeBlock
                 code="npx @deneb-ui/cli init --ai"
@@ -362,7 +362,7 @@ export default function CliReferencePage() {
             <ul className="list-disc list-inside space-y-1.5 leading-relaxed">
               <li><strong className="text-slate-900 dark:text-white">Project Scanner:</strong> Discovers routes, dependencies, and reachable pages (App Router + Pages Router).</li>
               <li><strong className="text-slate-900 dark:text-white">Semantic AST Transformation:</strong> Rewrites text, images, action links, and product detail URLs with live contracts.</li>
-              <li><strong className="text-slate-900 dark:text-white">Interactive AI Engagement:</strong> If non-standard components exist, prompts whether to engage AI semantic analysis <code className="font-mono text-indigo-600 dark:text-indigo-300">(y/N)</code>. Requires access key (<code className="font-mono text-emerald-600 dark:text-emerald-400">lvuchami</code> or <code className="font-mono">DENEB_AI_KEY</code>).</li>
+              <li><strong className="text-slate-900 dark:text-white">Interactive AI Engagement:</strong> If non-standard components exist, prompts whether to engage AI semantic analysis <code className="font-mono text-indigo-600 dark:text-indigo-300">(y/N)</code>. Requires an authorized access key (or <code className="font-mono">DENEB_AI_KEY</code>).</li>
               <li><strong className="text-slate-900 dark:text-white">Automated Recipe Learning:</strong> Prompts after refactoring: <em>&ldquo;Would you like to learn &amp; save these converted patterns as a reusable storefront recipe?&rdquo;</em> to bank fixes for future projects.</li>
               <li><strong className="text-slate-900 dark:text-white">Static Export Config:</strong> Automatically configures <code className="font-mono">output: &apos;export&apos;</code> in next.config and scaffolds <code className="font-mono">/products/detail/page.tsx</code>.</li>
             </ul>

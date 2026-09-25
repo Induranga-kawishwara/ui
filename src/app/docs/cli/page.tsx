@@ -410,7 +410,7 @@ export default function CliReferencePage() {
             <span>4. deneb validate (Preflight Contract Validator)</span>
           </h2>
           <p className="text-sm text-slate-600 dark:text-[#94A3B8] leading-relaxed">
-            Runs compliance checks against your template to verify data bindings, field paths, static markers, and zero broken links. Also supports the <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded border border-slate-200/60 dark:border-white/10">--zip</code> flag to bundle upon validation:
+            Runs compliance checks against your template to verify data bindings, field paths, static markers, navigation/base-path safety, and zero broken links. It reports source file and line errors before dependency installation when possible. Also supports the <code className="text-slate-800 dark:text-white font-mono bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded border border-slate-200/60 dark:border-white/10">--zip</code> flag to bundle upon validation:
           </p>
 
           <CodeBlock

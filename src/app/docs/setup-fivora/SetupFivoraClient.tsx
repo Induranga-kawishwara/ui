@@ -39,6 +39,7 @@ export function SetupFivoraClient() {
 - Product cards MUST use platformProductDetailHref(product.id), which produces /products/detail/?id=PRODUCT_ID.
 - NEVER link merchant-managed products to /products/\${product.id}; products created after build time will 404.
 - Use PlatformProductDetail.renderProduct or usePlatformProductDetail() when the template needs a custom design.
+- Next.js <Link> and useRouter() apply next.config basePath automatically. Pass logical routes directly, such as router.push(pageRoute(pageKey)). NEVER use router.push(withBasePath(...)), router.replace(withBasePath(...)), or <Link href={withBasePath(...)}>; reserve withBasePath() for local asset URLs and direct window.location navigation.
 
 ${AI_MASTER_PROMPT}`;
 
@@ -338,6 +339,15 @@ ${AI_MASTER_PROMPT}`;
               code={`import type { NextConfig } from "next";\n\nconst basePath = process.env.NEXT_PUBLIC_SITE_BASE_PATH || '';\n\nconst nextConfig: NextConfig = {\n  output: 'export',\n  basePath: basePath ? basePath : undefined,\n  assetPrefix: basePath ? \`\${basePath}/\` : undefined,\n  images: {\n    unoptimized: true,\n  },\n};\n\nexport default nextConfig;`}
               language="typescript"
             />
+            <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-xs sm:text-sm text-amber-100 leading-relaxed">
+              Next.js <code className="font-mono">&lt;Link&gt;</code> and{' '}
+              <code className="font-mono">useRouter()</code> apply{' '}
+              <code className="font-mono">basePath</code> automatically. Use{' '}
+              <code className="font-mono">router.push(pageRoute(pageKey))</code>, never{' '}
+              <code className="font-mono">router.push(withBasePath(...))</code>. Reserve{' '}
+              <code className="font-mono">withBasePath()</code> for local asset URLs and direct{' '}
+              <code className="font-mono">window.location</code> navigation.
+            </div>
           </div>
 
           {/* STEP 4 */}

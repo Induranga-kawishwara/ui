@@ -86,16 +86,32 @@ function resolveCatalogUrl(
   override: string | null | undefined,
 ): string | null {
   if (override === null) return null;
-  if (typeof override === 'string') return override.trim() || null;
-
-  const configured = siteData.api?.catalogUrl;
-  if (typeof configured === 'string' && configured.trim()) {
-    return configured.trim();
-  }
 
   const slug = normalizeId(
     siteData.siteInstance?.slug || siteData.project?.slug || siteData.project?.id,
   );
+  const isPreviewMode =
+    typeof window !== 'undefined' &&
+    (window.location.pathname.includes('/template-preview/') ||
+      window.location.pathname.includes('/preview/'));
+
+  if (isPreviewMode || slug === 'template-validation') {
+    return null;
+  }
+
+  if (typeof override === 'string') {
+    const trimmed = override.trim();
+    if (trimmed.includes('/template-validation/')) return null;
+    return trimmed || null;
+  }
+
+  const configured = siteData.api?.catalogUrl;
+  if (typeof configured === 'string' && configured.trim()) {
+    const trimmed = configured.trim();
+    if (trimmed.includes('/template-validation/')) return null;
+    return trimmed;
+  }
+
   if (!slug) return null;
 
   const baseUrl = siteData.api?.baseUrl;
@@ -145,12 +161,18 @@ function normalizeProductForDetail(
   const name =
     (typeof mergedProduct.name === 'string' && mergedProduct.name) ||
     (typeof mergedProduct.title === 'string' && mergedProduct.title) ||
+    (typeof (mergedProduct as any).productName === 'string' && (mergedProduct as any).productName) ||
+    (typeof (mergedProduct as any).itemTitle === 'string' && (mergedProduct as any).itemTitle) ||
     undefined;
   const image =
     (typeof mergedProduct.featuredImage === 'string' && mergedProduct.featuredImage) ||
     (typeof mergedProduct.imageUrl === 'string' && mergedProduct.imageUrl) ||
     (typeof mergedProduct.image === 'string' && mergedProduct.image) ||
+    (typeof (mergedProduct as any).photo === 'string' && (mergedProduct as any).photo) ||
+    (typeof (mergedProduct as any).thumbnail === 'string' && (mergedProduct as any).thumbnail) ||
     undefined;
+  const price =
+    mergedProduct.price ?? (mergedProduct as any).cost ?? (mergedProduct as any).amount ?? (mergedProduct as any).productPrice;
   const images = Array.isArray(mergedProduct.gallery)
     ? mergedProduct.gallery
     : Array.isArray(mergedProduct.images)
@@ -185,6 +207,7 @@ function normalizeProductForDetail(
     ...(image
       ? { featuredImage: image, imageUrl: image, image }
       : {}),
+    ...(price !== undefined ? { price } : {}),
     ...(images ? { gallery: images, images } : {}),
     ...(compareAtPrice !== undefined
       ? { compareAtPrice, originalPrice: compareAtPrice }

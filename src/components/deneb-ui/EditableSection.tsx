@@ -170,3 +170,6 @@ export function EditableSection({
 }
 
 export default EditableSection;
+
+export { EditableSection as Section };
+export type { EditableSectionProps as SectionProps };

@@ -50,6 +50,7 @@ export const SIDEBAR_NAV: NavSection[] = [
       { title: 'Typography', href: '/docs/components/typography' },
       { title: 'Dialog / Modal', href: '/docs/components/dialog' },
       { title: 'Grid & Box', href: '/docs/components/grid' },
+      { title: 'Section (EditableSection)', href: '/docs/components/section', badge: 'Reorderable', isNew: true },
       { title: 'Image', href: '/docs/components/image' },
     ],
   },

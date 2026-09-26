@@ -546,6 +546,238 @@ function InteractiveContactFormDemo() {
 }
 
 
+
+// ==========================================
+// Section & ProductCard Variant Examples
+// ==========================================
+
+function SectionReorderVariantPreview() {
+  const [orderFlipped, setOrderFlipped] = useState(false);
+  return (
+    <div className="flex flex-col gap-3 w-full max-w-xl">
+      <div className="flex items-center justify-between pb-2 border-b border-white/10 text-xs">
+        <span className="text-neutral-400 font-medium">Click to test CSS order swapping:</span>
+        <button
+          type="button"
+          onClick={() => setOrderFlipped(!orderFlipped)}
+          className="px-3 py-1 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 rounded-lg font-semibold border border-indigo-500/40 transition cursor-pointer"
+        >
+          Swap Section Order ⇄
+        </button>
+      </div>
+      <div className="flex flex-col gap-3 transition-all duration-300">
+        <EditableSection
+          name="hero"
+          order={orderFlipped ? 2 : 1}
+          padding="sm"
+          className="border border-indigo-500/30 bg-indigo-950/30 rounded-xl p-3 text-xs"
+        >
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-indigo-300">1. Hero Section</span>
+            <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-black/40 text-neutral-300 border border-white/10">
+              order: {orderFlipped ? 2 : 1}
+            </span>
+          </div>
+          <p className="text-neutral-400 mt-1">Luxury Sri Lankan Artisan Goods</p>
+        </EditableSection>
+
+        <EditableSection
+          name="products"
+          order={orderFlipped ? 1 : 2}
+          padding="sm"
+          className="border border-emerald-500/30 bg-emerald-950/30 rounded-xl p-3 text-xs"
+        >
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-emerald-300">2. Featured Catalog</span>
+            <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-black/40 text-neutral-300 border border-white/10">
+              order: {orderFlipped ? 1 : 2}
+            </span>
+          </div>
+          <p className="text-neutral-400 mt-1">Single Estate Silver Tips & Gemstones</p>
+        </EditableSection>
+      </div>
+    </div>
+  );
+}
+
+function SectionCenterVariantPreview() {
+  const [isCentered, setIsCentered] = useState(true);
+  return (
+    <div className="flex flex-col gap-3 w-full max-w-xl">
+      <div className="flex justify-end pb-2 border-b border-white/10">
+        <button
+          type="button"
+          onClick={() => setIsCentered(!isCentered)}
+          className="px-3 py-1 bg-white/10 hover:bg-white/20 text-neutral-200 rounded-lg text-xs font-semibold border border-white/15 transition cursor-pointer"
+        >
+          Toggle Alignment ({isCentered ? 'Currently Centered' : 'Currently Left'})
+        </button>
+      </div>
+      <EditableSection
+        name="announcement"
+        centered={isCentered}
+        padding="md"
+        className="border border-purple-500/30 bg-purple-950/30 rounded-xl p-4 transition-all"
+      >
+        <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-950/60 px-2.5 py-0.5 rounded-full border border-purple-500/30">
+          Flagship Announcement
+        </span>
+        <h4 className="text-base font-bold text-white mt-2">New Colombo Flagship Store Opening</h4>
+        <p className="text-xs text-neutral-300 mt-1 max-w-md">
+          Visit our newly unveiled artisanal showroom at Galle Face Green featuring live master gemstone polishing.
+        </p>
+        <button
+          type="button"
+          className="mt-3 px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold cursor-pointer"
+        >
+          Book Showroom Tour
+        </button>
+      </EditableSection>
+    </div>
+  );
+}
+
+function SectionHiddenVariantPreview() {
+  const [hidden, setHidden] = useState(false);
+  return (
+    <div className="flex flex-col gap-3 w-full max-w-xl">
+      {hidden ? (
+        <div className="flex items-center justify-between p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs">
+          <span>⚠️ Seasonal promotion section is hidden (display: none).</span>
+          <button
+            type="button"
+            onClick={() => setHidden(false)}
+            className="text-amber-300 underline font-semibold hover:text-white cursor-pointer"
+          >
+            ↺ Restore Section
+          </button>
+        </div>
+      ) : (
+        <EditableSection
+          name="promo"
+          hidden={false}
+          padding="md"
+          className="border border-amber-500/40 bg-amber-950/30 rounded-xl p-4 text-xs"
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <span className="font-bold text-amber-300 text-sm">Flash Sale: 40% Off Handcrafted Textiles</span>
+              <p className="text-neutral-400 mt-0.5">Use voucher code CEYLONFEST at checkout before midnight.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setHidden(true)}
+              className="px-2.5 py-1 bg-red-600/30 hover:bg-red-600/50 text-red-300 rounded-lg font-semibold border border-red-500/40 transition cursor-pointer text-[11px] whitespace-nowrap"
+            >
+              Hide Section 👁️
+            </button>
+          </div>
+        </EditableSection>
+      )}
+    </div>
+  );
+}
+
+function SectionContainerVariantPreview() {
+  return (
+    <div className="w-full max-w-xl rounded-xl overflow-hidden border border-slate-700/60">
+      <EditableSection
+        name="fullwidth-showcase"
+        container={true}
+        padding="md"
+        bg="linear-gradient(135deg, rgba(30, 27, 75, 0.9), rgba(15, 23, 42, 0.95))"
+      >
+        <div className="text-center py-2">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-400">
+            container=true (100vw Background, Centered Content)
+          </span>
+          <h4 className="text-sm font-bold text-white mt-1">Full-Bleed Visual Blueprint Section</h4>
+          <p className="text-[11px] text-neutral-400 mt-1 max-w-sm mx-auto">
+            Background stretches continuously edge-to-edge while the inner content remains bounded to 1280px with automatic responsive gutters.
+          </p>
+        </div>
+      </EditableSection>
+    </div>
+  );
+}
+
+function ProductCardFixedPricePreview() {
+  const fixedProduct = {
+    id: "spiced-chai-sample",
+    name: "Royal Ceylon Spiced Chai Tea",
+    brand: "Ceylon Organics",
+    price: 2450,
+    originalPrice: "LKR 2,900.00",
+    currency: "LKR",
+    category: "Artisan Tea",
+    badge: "Fixed Price",
+    description: "Single-origin Sri Lankan black tea infused with organic cardamom, cinnamon, and ginger.",
+    imageUrl: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80",
+    whatsappNumber: "94771234567",
+    whatsappButtonText: "Inquire on WhatsApp",
+    addToCartButtonText: "Add to Cart",
+  };
+
+  return (
+    <div className="w-full max-w-sm">
+      <ProductCard
+        itemPath="featured[0]"
+        product={fixedProduct}
+        cardVariant="modern-glass"
+        currency="LKR"
+      />
+    </div>
+  );
+}
+
+function ProductCardRangeSwatchesPreview() {
+  const rangeProduct = {
+    id: "relaxed-linen-sample",
+    name: "Relaxed Linen Resort Shirt",
+    brand: "Colombo Breeze",
+    isPriceRange: true,
+    minPrice: 2800,
+    maxPrice: 4800,
+    priceRange: "LKR 2,800.00 – LKR 4,800.00",
+    currency: "LKR",
+    category: "Resort Wear",
+    badge: "Range + Swatches",
+    description: "Ultra-breathable 100% natural Sri Lankan linen. Click swatches to swap photos live!",
+    imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+    colors: [
+      {
+        name: "Navy Blue",
+        hex: "#1e3a8a",
+        imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        name: "Olive Green",
+        hex: "#3f6212",
+        imageUrl: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        name: "Terracotta",
+        hex: "#c2410c",
+        imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80"
+      }
+    ],
+    whatsappNumber: "94771234567",
+    whatsappButtonText: "Inquire on WhatsApp",
+    addToCartButtonText: "Add to Cart",
+  };
+
+  return (
+    <div className="w-full max-w-sm">
+      <ProductCard
+        itemPath="featured[1]"
+        product={rangeProduct}
+        cardVariant="modern-glass"
+        currency="LKR"
+      />
+    </div>
+  );
+}
+
 function InteractiveEditableSectionDemo() {
   const [sections, setSections] = useState([
     {
@@ -1946,6 +2178,77 @@ export default function Demo() {
       { name: 'aspectRatio', type: '"square" | "16/9" | "4/3" | "portrait"', defaultValue: '"auto"', description: 'Aspect ratio.' },
       { name: 'radius', type: '"none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"', defaultValue: '"md"', description: 'Border radius.' },
     ],
+    variants: [
+      {
+        title: '1. Reorderable Sections with Visual Editor CSS Order',
+        description: 'Wrap sections in a flex column container and pass order to enable drag-and-drop or move up/down section reordering in 1-click.',
+        preview: <SectionReorderVariantPreview />,
+        code: `// Wrap sections in a flexbox container
+<main style={{ display: "flex", flexDirection: "column" }}>
+  <Section
+    name="home-hero"
+    order={siteData?.styles?.["home-hero.section"]?.order ?? 1}
+  >
+    <h1>Hero Section (Order #1)</h1>
+  </Section>
+
+  <Section
+    name="home-products"
+    order={siteData?.styles?.["home-products.section"]?.order ?? 2}
+  >
+    <h2>Featured Products (Order #2)</h2>
+  </Section>
+</main>`,
+      },
+      {
+        title: '2. 1-Click Centered Section Layout',
+        description: 'Set centered={true} or center={true} to automatically align headers, copy, and buttons horizontally in the section container.',
+        preview: <SectionCenterVariantPreview />,
+        code: `<Section
+  name="home-announcement"
+  centered={true}
+  container={true}
+  padding="md"
+  className="bg-indigo-950/30 border border-indigo-500/30 rounded-2xl"
+>
+  <h2 className="text-2xl font-bold">New Colombo Flagship Store Opening</h2>
+  <p className="text-slate-400 mt-2">Visit our newly unveiled artisanal showroom at Galle Face Green.</p>
+  <button className="mt-4 px-6 py-2.5 bg-indigo-600 rounded-xl text-white font-medium">
+    Get Directions
+  </button>
+</Section>`,
+      },
+      {
+        title: '3. Safe Section Deletion & Conditional Hiding',
+        description: 'Bind hidden={siteData?.styles?.["section.section"]?.hidden ?? false}. This applies display: "none" and data-section-visible="false" without removing code or content.',
+        preview: <SectionHiddenVariantPreview />,
+        code: `<Section
+  name="seasonal-promo"
+  hidden={siteData?.styles?.["seasonal-promo.section"]?.hidden ?? false}
+  container={true}
+  padding="lg"
+  className="bg-amber-500/10 border border-amber-500/30 text-amber-200"
+>
+  <h3>Seasonal Clearance — Save up to 40%</h3>
+</Section>`,
+      },
+      {
+        title: '4. Full-Width Background with Constrained Inner Container',
+        description: 'Set container={true} with a background color or gradient to stretch 100vw while keeping content constrained to a centered 1280px container.',
+        preview: <SectionContainerVariantPreview />,
+        code: `<Section
+  name="features"
+  container={true}
+  bg="linear-gradient(to bottom, #0f172a, #020617)"
+  padding="2xl"
+>
+  <h2 className="text-3xl font-bold text-white">Why Shop Ceylon Heritage</h2>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+    {/* 3-column features */}
+  </div>
+</Section>`,
+      },
+    ],
     prevPage: { title: 'Grid & Box', href: '/docs/components/grid' },
     nextPage: { title: 'ContactActions', href: '/docs/components/contact-actions' },
   },
@@ -3199,6 +3502,77 @@ export default function Catalog() {
       { name: 'maxPrice', type: 'number', defaultValue: '300', description: 'Maximum price filter bound.' },
       { name: 'onFilterChange', type: '(filters) => void', description: 'Callback fired on any filter adjustment.' },
     ],
+    variants: [
+      {
+        title: '1. Reorderable Sections with Visual Editor CSS Order',
+        description: 'Wrap sections in a flex column container and pass order to enable drag-and-drop or move up/down section reordering in 1-click.',
+        preview: <SectionReorderVariantPreview />,
+        code: `// Wrap sections in a flexbox container
+<main style={{ display: "flex", flexDirection: "column" }}>
+  <Section
+    name="home-hero"
+    order={siteData?.styles?.["home-hero.section"]?.order ?? 1}
+  >
+    <h1>Hero Section (Order #1)</h1>
+  </Section>
+
+  <Section
+    name="home-products"
+    order={siteData?.styles?.["home-products.section"]?.order ?? 2}
+  >
+    <h2>Featured Products (Order #2)</h2>
+  </Section>
+</main>`,
+      },
+      {
+        title: '2. 1-Click Centered Section Layout',
+        description: 'Set centered={true} or center={true} to automatically align headers, copy, and buttons horizontally in the section container.',
+        preview: <SectionCenterVariantPreview />,
+        code: `<Section
+  name="home-announcement"
+  centered={true}
+  container={true}
+  padding="md"
+  className="bg-indigo-950/30 border border-indigo-500/30 rounded-2xl"
+>
+  <h2 className="text-2xl font-bold">New Colombo Flagship Store Opening</h2>
+  <p className="text-slate-400 mt-2">Visit our newly unveiled artisanal showroom at Galle Face Green.</p>
+  <button className="mt-4 px-6 py-2.5 bg-indigo-600 rounded-xl text-white font-medium">
+    Get Directions
+  </button>
+</Section>`,
+      },
+      {
+        title: '3. Safe Section Deletion & Conditional Hiding',
+        description: 'Bind hidden={siteData?.styles?.["section.section"]?.hidden ?? false}. This applies display: "none" and data-section-visible="false" without removing code or content.',
+        preview: <SectionHiddenVariantPreview />,
+        code: `<Section
+  name="seasonal-promo"
+  hidden={siteData?.styles?.["seasonal-promo.section"]?.hidden ?? false}
+  container={true}
+  padding="lg"
+  className="bg-amber-500/10 border border-amber-500/30 text-amber-200"
+>
+  <h3>Seasonal Clearance — Save up to 40%</h3>
+</Section>`,
+      },
+      {
+        title: '4. Full-Width Background with Constrained Inner Container',
+        description: 'Set container={true} with a background color or gradient to stretch 100vw while keeping content constrained to a centered 1280px container.',
+        preview: <SectionContainerVariantPreview />,
+        code: `<Section
+  name="features"
+  container={true}
+  bg="linear-gradient(to bottom, #0f172a, #020617)"
+  padding="2xl"
+>
+  <h2 className="text-3xl font-bold text-white">Why Shop Ceylon Heritage</h2>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+    {/* 3-column features */}
+  </div>
+</Section>`,
+      },
+    ],
     prevPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
     nextPage: { title: 'GoogleFeedback', href: '/docs/components/google-feedback' },
   },
@@ -3376,6 +3750,73 @@ export default function FeaturedProduct() {
       { name: 'onAddToCart', type: '(product: ProductItem) => void', description: 'Callback triggered when Add to Cart is clicked.' },
       { name: 'onWhatsAppClick', type: '(product: ProductItem, url: string) => void', description: 'Callback triggered when WhatsApp button is clicked.' },
     ],
+    variants: [
+      {
+        title: '1. Fixed Single-Price Commerce Card',
+        description: 'Standard fixed-price commerce card with LKR pricing, compare-at original price, brand pill, and dual actions (WhatsApp + Add to Cart).',
+        preview: <ProductCardFixedPricePreview />,
+        code: `<ProductCard
+  itemPath="products[0]"
+  product={{
+    id: "spiced-chai",
+    name: "Royal Ceylon Spiced Chai Tea",
+    brand: "Ceylon Organics",
+    price: 2450,
+    originalPrice: "LKR 2,900.00",
+    currency: "LKR",
+    category: "Artisan Tea",
+    imageUrl: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80",
+    whatsappNumber: "94771234567",
+    whatsappButtonText: "Inquire on WhatsApp",
+    addToCartButtonText: "Add to Cart",
+  }}
+  cardVariant="modern-glass"
+  currency="LKR"
+/>`,
+      },
+      {
+        title: '2. Dynamic Price Range with Interactive Color Swatches',
+        description: 'For apparel and variant products: set isPriceRange={true}, minPrice, maxPrice, and a colors array. Clicking swatches swaps the active image preview in real time.',
+        preview: <ProductCardRangeSwatchesPreview />,
+        code: `<ProductCard
+  itemPath="products[1]"
+  product={{
+    id: "relaxed-linen-shirt",
+    name: "Relaxed Linen Resort Shirt",
+    brand: "Colombo Breeze",
+    isPriceRange: true,
+    minPrice: 2800,
+    maxPrice: 4800,
+    priceRange: "LKR 2,800.00 – LKR 4,800.00",
+    currency: "LKR",
+    category: "Resort Wear",
+    imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+    colors: [
+      {
+        name: "Navy Blue",
+        hex: "#1e3a8a",
+        imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        name: "Olive Green",
+        hex: "#3f6212",
+        imageUrl: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        name: "Terracotta",
+        hex: "#c2410c",
+        imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80"
+      }
+    ],
+    whatsappNumber: "94771234567",
+    whatsappButtonText: "Inquire on WhatsApp",
+    addToCartButtonText: "Add to Cart",
+  }}
+  cardVariant="modern-glass"
+  currency="LKR"
+/>`,
+      },
+    ],
     prevPage: { title: 'Map', href: '/docs/components/map' },
     nextPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
   },
@@ -3479,8 +3920,206 @@ export default function StorefrontHomePage({ siteData }) {
       { name: 'as', type: 'React.ElementType', defaultValue: "'section'", description: 'Underlying HTML element wrapper.' },
     ],
 
+    variants: [
+      {
+        title: '1. Reorderable Sections with Visual Editor CSS Order',
+        description: 'Wrap sections in a flex column container and pass order to enable drag-and-drop or move up/down section reordering in 1-click.',
+        preview: <SectionReorderVariantPreview />,
+        code: `// Wrap sections in a flexbox container
+<main style={{ display: "flex", flexDirection: "column" }}>
+  <Section
+    name="home-hero"
+    order={siteData?.styles?.["home-hero.section"]?.order ?? 1}
+  >
+    <h1>Hero Section (Order #1)</h1>
+  </Section>
+
+  <Section
+    name="home-products"
+    order={siteData?.styles?.["home-products.section"]?.order ?? 2}
+  >
+    <h2>Featured Products (Order #2)</h2>
+  </Section>
+</main>`,
+      },
+      {
+        title: '2. 1-Click Centered Section Layout',
+        description: 'Set centered={true} or center={true} to automatically align headers, copy, and buttons horizontally in the section container.',
+        preview: <SectionCenterVariantPreview />,
+        code: `<Section
+  name="home-announcement"
+  centered={true}
+  container={true}
+  padding="md"
+  className="bg-indigo-950/30 border border-indigo-500/30 rounded-2xl"
+>
+  <h2 className="text-2xl font-bold">New Colombo Flagship Store Opening</h2>
+  <p className="text-slate-400 mt-2">Visit our newly unveiled artisanal showroom at Galle Face Green.</p>
+  <button className="mt-4 px-6 py-2.5 bg-indigo-600 rounded-xl text-white font-medium">
+    Get Directions
+  </button>
+</Section>`,
+      },
+      {
+        title: '3. Safe Section Deletion & Conditional Hiding',
+        description: 'Bind hidden={siteData?.styles?.["section.section"]?.hidden ?? false}. This applies display: "none" and data-section-visible="false" without removing code or content.',
+        preview: <SectionHiddenVariantPreview />,
+        code: `<Section
+  name="seasonal-promo"
+  hidden={siteData?.styles?.["seasonal-promo.section"]?.hidden ?? false}
+  container={true}
+  padding="lg"
+  className="bg-amber-500/10 border border-amber-500/30 text-amber-200"
+>
+  <h3>Seasonal Clearance — Save up to 40%</h3>
+</Section>`,
+      },
+      {
+        title: '4. Full-Width Background with Constrained Inner Container',
+        description: 'Set container={true} with a background color or gradient to stretch 100vw while keeping content constrained to a centered 1280px container.',
+        preview: <SectionContainerVariantPreview />,
+        code: `<Section
+  name="features"
+  container={true}
+  bg="linear-gradient(to bottom, #0f172a, #020617)"
+  padding="2xl"
+>
+  <h2 className="text-3xl font-bold text-white">Why Shop Ceylon Heritage</h2>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+    {/* 3-column features */}
+  </div>
+</Section>`,
+      },
+    ],
     prevPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
     nextPage: { title: 'Button', href: '/docs/components/button' },
+  },
+  'section': {
+    title: 'Section / EditableSection',
+    description: 'Standardized section container with automatic data-design-section and data-section-id visual blueprint annotations, enabling 1-click move up/down section reordering (via CSS order), instant centering, and section deletion/hiding (display: none).',
+    category: 'Core Primitives',
+    badge: 'Core Primitive + Reorderable',
+    previewComponent: <InteractiveEditableSectionDemo />,
+    previewCode: `import { Section, EditableText } from "@deneb-ui/ui";
+
+export default function StorefrontHomePage({ siteData }) {
+  return (
+    <main style={{ display: "flex", flexDirection: "column" }}>
+      {/* 1. Hero Section (Order #1, Centered) */}
+      <Section
+        name="home-hero"
+        order={siteData?.styles?.["home-hero.section"]?.order ?? 1}
+        centered={true}
+        container={true}
+        padding="xl"
+      >
+        <EditableText as="h1" fieldPath="hero.title" defaultValue="Artisan Ceylon Collection" />
+        <EditableText as="p" fieldPath="hero.subtitle" defaultValue="Handcrafted luxury goods from Sri Lanka" />
+      </Section>
+
+      {/* 2. Products Section (Order #2, Reorderable & Hideable) */}
+      <Section
+        name="home-products"
+        order={siteData?.styles?.["home-products.section"]?.order ?? 2}
+        hidden={siteData?.styles?.["home-products.section"]?.hidden ?? false}
+        container={true}
+        padding="lg"
+      >
+        <EditableText as="h2" fieldPath="products.heading" defaultValue="Featured Catalog" />
+      </Section>
+    </main>
+  );
+}`,
+    usageCode: `import { Section, EditableSection } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add section`,
+    props: [
+      { name: 'name', type: 'string', required: true, description: 'Required Fivora design section identifier (e.g. "home-hero", "products", "services"). Sets data-design-section & data-section-id.' },
+      { name: 'sectionId', type: 'string', description: 'Alias for name.' },
+      { name: 'order', type: 'number | string', description: 'CSS flex/grid order. Powers 1-click move up / move down section reordering.' },
+      { name: 'center / centered', type: 'boolean', defaultValue: 'false', description: 'Quick toggle to center all section text and flex items horizontally.' },
+      { name: 'hidden', type: 'boolean', defaultValue: 'false', description: 'When true, renders display: "none" to hide/delete section without losing code or content.' },
+      { name: 'container', type: 'boolean', defaultValue: 'false', description: 'Whether to wrap children in a responsive centered container (max-w-7xl mx-auto px-4).' },
+      { name: 'containerClassName', type: 'string', description: 'Custom CSS class names for inner container.' },
+      { name: 'padding', type: "'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | string", defaultValue: "'lg'", description: 'Vertical responsive section padding.' },
+      { name: 'bg', type: 'string', description: 'Background color or CSS variable.' },
+      { name: 'color', type: 'string', description: 'Text color for the section.' },
+      { name: 'maxWidth', type: 'string | number', description: 'Max width constraint for the section.' },
+      { name: 'border', type: 'boolean | string', description: 'Bottom border separator style.' },
+      { name: 'as', type: 'React.ElementType', defaultValue: "'section'", description: 'Underlying HTML element wrapper.' },
+    ],
+    variants: [
+      {
+        title: '1. Reorderable Sections with Visual Editor CSS Order',
+        description: 'Wrap sections in a flex column container and pass order to enable drag-and-drop or move up/down section reordering in 1-click.',
+        preview: <SectionReorderVariantPreview />,
+        code: `// Wrap sections in a flexbox container
+<main style={{ display: "flex", flexDirection: "column" }}>
+  <Section
+    name="home-hero"
+    order={siteData?.styles?.["home-hero.section"]?.order ?? 1}
+  >
+    <h1>Hero Section (Order #1)</h1>
+  </Section>
+
+  <Section
+    name="home-products"
+    order={siteData?.styles?.["home-products.section"]?.order ?? 2}
+  >
+    <h2>Featured Products (Order #2)</h2>
+  </Section>
+</main>`,
+      },
+      {
+        title: '2. 1-Click Centered Section Layout',
+        description: 'Set centered={true} or center={true} to automatically align headers, copy, and buttons horizontally in the section container.',
+        preview: <SectionCenterVariantPreview />,
+        code: `<Section
+  name="home-announcement"
+  centered={true}
+  container={true}
+  padding="md"
+  className="bg-indigo-950/30 border border-indigo-500/30 rounded-2xl"
+>
+  <h2 className="text-2xl font-bold">New Colombo Flagship Store Opening</h2>
+  <p className="text-slate-400 mt-2">Visit our newly unveiled artisanal showroom at Galle Face Green.</p>
+  <button className="mt-4 px-6 py-2.5 bg-indigo-600 rounded-xl text-white font-medium">
+    Get Directions
+  </button>
+</Section>`,
+      },
+      {
+        title: '3. Safe Section Deletion & Conditional Hiding',
+        description: 'Bind hidden={siteData?.styles?.["section.section"]?.hidden ?? false}. This applies display: "none" and data-section-visible="false" without removing code or content.',
+        preview: <SectionHiddenVariantPreview />,
+        code: `<Section
+  name="seasonal-promo"
+  hidden={siteData?.styles?.["seasonal-promo.section"]?.hidden ?? false}
+  container={true}
+  padding="lg"
+  className="bg-amber-500/10 border border-amber-500/30 text-amber-200"
+>
+  <h3>Seasonal Clearance — Save up to 40%</h3>
+</Section>`,
+      },
+      {
+        title: '4. Full-Width Background with Constrained Inner Container',
+        description: 'Set container={true} with a background color or gradient to stretch 100vw while keeping content constrained to a centered 1280px container.',
+        preview: <SectionContainerVariantPreview />,
+        code: `<Section
+  name="features"
+  container={true}
+  bg="linear-gradient(to bottom, #0f172a, #020617)"
+  padding="2xl"
+>
+  <h2 className="text-3xl font-bold text-white">Why Shop Ceylon Heritage</h2>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+    {/* 3-column features */}
+  </div>
+</Section>`,
+      },
+    ],
+    prevPage: { title: 'Grid & Box', href: '/docs/components/grid' },
+    nextPage: { title: 'Image', href: '/docs/components/image' },
   },
 };
 

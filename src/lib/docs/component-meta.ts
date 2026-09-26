@@ -56,6 +56,7 @@ export const COMPONENT_SLUGS: string[] = [
   'product-card',
   'cart-drawer',
   'editable-section',
+  'section',
 ];
 
 export const COMPONENT_META: Record<string, ComponentMeta> = {
@@ -394,5 +395,12 @@ export const COMPONENT_META: Record<string, ComponentMeta> = {
     description: "Dynamic layout section container standardizing responsive vertical padding, 1-click move up/down section reordering (order), instant centering, and section deletion/hiding with strict data-design-section compliance.",
     category: "Storefront Sections",
     keywords: ["EditableSection", "section", "reorder", "center", "hidden", "layout", "blueprint", "Fivora", "Deneb UI"],
+  },
+  'section': {
+    slug: 'section',
+    title: "Section",
+    description: "Standardized semantic section container with 1-click move up/down section reordering (CSS order), instant centering, and safe hiding (display: none) with 100% Fivora visual blueprint contract compliance.",
+    category: "Core Primitives",
+    keywords: ["Section", "EditableSection", "layout", "reorder", "center", "hidden", "blueprint", "Fivora", "Deneb UI"],
   },
 };

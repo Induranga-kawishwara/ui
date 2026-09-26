@@ -58,6 +58,7 @@ export const SEARCH_INDEX: SearchItem[] = [
   { title: 'ProductQuickView', category: 'Components', slug: '/docs/components/product-quickview', description: 'Instant lightbox modal product inspection with quantity counter and live editing.' },
   { title: 'ProductGrid', category: 'Components', slug: '/docs/components/product-grid', description: 'Responsive commerce product showcase grid with category filter tabs and quick-view hook.' },
   { title: 'ProductCard', category: 'Components', slug: '/docs/components/product-card', description: 'E-commerce product display with dual pricing (fixed vs range), interactive color swatches, badge, and quick buy.' },
+  { title: 'Section (EditableSection)', category: 'Components', slug: '/docs/components/section', description: 'Semantic section container with 1-click move up/down section reordering (CSS order), instant centering, and safe hiding (display: none).' },
   { title: 'EditableSection', category: 'Components', slug: '/docs/components/editable-section', description: 'Reorderable, centerable, hideable section container with strict data-design-section and data-section-id visual builder contract compliance.' },
   { title: 'CustomerReviews', category: 'Components', slug: '/docs/components/customer-reviews', description: 'Social proof review showcase with aggregate rating and verified buyer authentication.' },
   { title: 'TrustBadges', category: 'Components', slug: '/docs/components/trust-badges', description: 'Security and conversion guarantee strip (SSL, free delivery, returns).' },

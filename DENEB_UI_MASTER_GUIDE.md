@@ -68,6 +68,119 @@ When a store owner changes their store name, WhatsApp number, phone number, emai
    }
    ```
 
+### 1.4 Semantic `<section>` Blueprint Architecture & Live Section Reordering
+
+Every Fivora storefront is structured around **modular semantic sections**. 
+In the Fivora Merchant Studio, Website Agent portal, and Developer Studio, merchants and designers visually manage entire sections with 1-click tools:
+- **1-Click Section Reordering (Move Up / Move Down)**: Merchants can adjust section position on the page (e.g. moving the **Contact** section below **Products** and **Services**, or elevating **Services** above **Featured Products**).
+- **1-Click Centering**: Merchants can center entire section headings, subtext, and content with a single button.
+- **1-Click Hiding / Deletion**: Merchants can toggle off sections they do not need (e.g. hiding the FAQ, Newsletter, or Testimonial section).
+
+#### The Semantic Blueprint Contract:
+1. **Parent Flexbox Container**: The page container (`main` or `[data-preview-page-key]`) MUST declare Flexbox column layout:
+   ```css
+   body > main, main, [data-preview-page-key] {
+     display: flex;
+     flex-direction: column;
+   }
+   ```
+2. **Semantic Section Tagging**: Wrap every top-level module (Hero, Services, Products, About, Reviews, Contact, FAQ, etc.) with a semantic `<section>` element or `<EditableSection>` from `@deneb-ui/ui`.
+3. **Required Section Attributes**:
+   - `data-design-section="<section-id>"` (e.g. `data-design-section="hero"`, `data-design-section="products"`)
+   - `data-section-id="<section-id>"`
+   - `id="<section-id>"`
+4. **How Non-Destructive CSS Reordering Works**:
+   When a user clicks **Move Up** (⬆️) or **Move Down** (⬇️) in the visual editor, the studio adjusts the section's CSS `order` property (`order: 1`, `order: 2`, `order: -1`) and `--deneb-section-order` variable.
+   Because the DOM tree is NOT physically rewritten or mutated, **there is zero risk of React hydration mismatches or broken Next.js static exports**!
+
+```tsx
+import { EditableSection } from "@deneb-ui/ui";
+
+// Option A: Using pre-built <EditableSection>
+export function ServicesModule() {
+  return (
+    <EditableSection sectionId="services" title="Our Specialized Services" className="py-16">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Service cards */}
+      </div>
+    </EditableSection>
+  );
+}
+
+// Option B: Using standard semantic HTML5 <section>
+export function ContactModule() {
+  return (
+    <section
+      id="contact"
+      data-design-section="contact"
+      data-section-id="contact"
+      className="py-16 bg-[#0E1220] transition-all"
+    >
+      <div className="max-w-7xl mx-auto px-4">
+        <h2>Get in Touch</h2>
+        {/* Contact actions */}
+      </div>
+    </section>
+  );
+}
+```
+
+---
+
+### 1.5 Commerce Dual Pricing System: Single Fixed Price vs. Dynamic Price Ranges
+
+Modern commerce catalogs on Fivora support two distinct pricing models: **Single Fixed Price** items and **Dynamic Price Range** items (commonly used for apparel, multi-variant products, customizable goods, and wholesale items).
+
+Templates MUST support both pricing formats gracefully so merchant stores never crash or display broken prices.
+
+#### Two Product Schemas in `site-data.json`:
+
+1. **Single Fixed Price Product**:
+   ```json
+   {
+     "id": "prod-shoes-01",
+     "title": "Classic Oxford Leather Shoes",
+     "description": "Handcrafted full-grain calfskin leather.",
+     "price": 3850,
+     "currency": "LKR",
+     "compareAtPrice": 4500,
+     "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+     "badge": "Bestseller"
+   }
+   ```
+
+2. **Dynamic Price Range Product with Swatches**:
+   ```json
+   {
+     "id": "prod-linen-shirt-02",
+     "title": "Relaxed Linen Resort Shirt",
+     "description": "Pure organic French linen with mother-of-pearl buttons.",
+     "isPriceRange": true,
+     "minPrice": 2800,
+     "maxPrice": 4800,
+     "priceRange": "LKR 2,800 – LKR 4,800",
+     "currency": "LKR",
+     "image": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c",
+     "badge": "New Season",
+     "colors": [
+       { "name": "Midnight Navy", "hex": "#0f2942", "imageUrl": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c" },
+       { "name": "Olive Sage", "hex": "#4d6840", "imageUrl": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf" }
+     ],
+     "sizes": ["S", "M", "L", "XL"]
+   }
+   ```
+
+#### Display Rules for Components:
+- **Price Range Detection**:
+  ```ts
+  const isRange = product.isPriceRange === true || (product.minPrice != null && product.maxPrice != null);
+  const displayPrice = isRange
+    ? (product.priceRange ?? `${product.currency ?? 'LKR'} ${product.minPrice?.toLocaleString()} – ${product.currency ?? 'LKR'} ${product.maxPrice?.toLocaleString()}`)
+    : `${product.currency ?? 'LKR'} ${product.price?.toLocaleString()}`;
+  ```
+- **Interactive Apparel Swatches**:
+  When `product.colors` is present, render round swatch circles. Clicking a swatch updates the active product photo preview immediately.
+
 ---
 
 ## 2. Complete Installation & Project Setup
@@ -308,6 +421,10 @@ export default nextConfig;
 6. **Platform Contract Protection (`controlOnlyPaths`)**:
    - Platform-managed fields like `__fivoraIntake.*` (onboarding questionnaires) and non-visual properties of `additionalPages` are managed by Fivora.
    - Always maintain `node scripts/merge-platform-contract.js` in `package.json` scripts (`validate` and `build`) so these 25 platform-managed paths are automatically excluded from visual editing DOM checks.
+7. **Semantic Section Blueprint Annotation (`data-design-section` & `data-section-id`)**:
+   - Every top-level page module (`<section>` or `<EditableSection>`) MUST have `data-design-section="<key>"` and `data-section-id="<key>"` (e.g. `hero`, `products`, `services`, `about`, `reviews`, `contact`, `faq`).
+   - Never put leaf editing attributes (`data-preview-field-path`) directly on `<section>` elements; section elements represent layout modules, while text/buttons/images inside represent editable content.
+   - The parent page wrapper MUST declare `display: flex; flex-direction: column;` to enable 1-click non-destructive section reordering via CSS `order`.
 
 ---
 
@@ -935,21 +1052,27 @@ export function MainHero() {
 #### 21. `ProductCard`
 **Import**: `import { ProductCard } from "@deneb-ui/ui";`  
 **Category**: `Storefront Sections`  
-**Description**: The primary commerce catalog card with pricing, compare-at discounts, star reviews, stock badges, and WhatsApp checkout.
+**Description**: The primary commerce catalog card with dual pricing support (single fixed price or dynamic price range), compare-at discounts, interactive color swatches, stock badges, and WhatsApp checkout.
 
 ##### Props Table
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `title` | `string` | `required` | Product name. |
-| `price` | `number` | `required` | Current retail price. |
+| `price` | `number` | `undefined` | Single fixed retail price (when not a range). |
+| `isPriceRange` | `boolean` | `false` | Whether product is sold in a dynamic price range. |
+| `minPrice` | `number` | `undefined` | Minimum price for price range products. |
+| `maxPrice` | `number` | `undefined` | Maximum price for price range products. |
+| `priceRange` | `string` | `undefined` | Preformatted price range string (e.g. 'LKR 2,800 – LKR 4,800'). |
 | `compareAtPrice` | `number` | `undefined` | Original price for strike-through discount. |
-| `currency` | `string` | `'$'` | Currency symbol prefix. |
+| `currency` | `string` | `'LKR'` | Currency symbol prefix. |
 | `image` | `string` | `required` | Product photo URL. |
+| `colors` | `Array<{ name: string; hex: string; imageUrl?: string }>` | `[]` | Interactive color swatches that swap the photo preview on click. |
+| `sizes` | `string[]` | `[]` | Available size tags. |
 | `category` | `string` | `''` | Category badge tag. |
 | `whatsappNumber` | `string` | `''` | WhatsApp merchant number for direct order. |
-| `itemPath` | `string` | `''` | Fivora visual editing marker (e.g. 'home.products.0'). |
+| `itemPath` | `string` | `''` | Fivora visual editing marker (e.g. 'content.products.0'). |
 
-##### Copy-Paste Usage Example
+##### Copy-Paste Usage Example (Dual Pricing & Swatches)
 ```tsx
 import { ProductCard, useSiteData } from "@deneb-ui/ui";
 
@@ -957,12 +1080,18 @@ export function ProductItemView({ product, index }: { product: any; index: numbe
   const siteData = useSiteData();
   return (
     <ProductCard
-      itemPath={`home.products.${index}`}
-      title={product.title}
+      itemPath={`content.products.${index}`}
+      title={product.name ?? product.title}
       price={product.price}
+      isPriceRange={product.isPriceRange}
+      minPrice={product.minPrice}
+      maxPrice={product.maxPrice}
+      priceRange={product.priceRange}
       compareAtPrice={product.compareAtPrice}
-      currency={product.currency ?? "Rs."}
-      image={product.image}
+      currency={product.currency ?? "LKR"}
+      image={product.imageUrl ?? product.image}
+      colors={product.colors}
+      sizes={product.sizes}
       category={product.category}
       badge={product.badge}
       whatsappNumber={siteData?.shop?.whatsapp}
@@ -1001,6 +1130,44 @@ export function SingleProductDetail({ product }: { product: any }) {
         }
       />
     </main>
+  );
+}
+```
+
+#### 23. `EditableSection`
+**Import**: `import { EditableSection } from "@deneb-ui/ui";`  
+**Category**: `Storefront Sections`  
+**Description**: The primary semantic section container for Fivora storefront modules. Automatically injects `data-design-section` and `data-section-id`, binds to `--deneb-section-order` for 1-click visual reordering, and handles text alignment and visibility controls.
+
+##### Props Table
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `sectionId` | `string` | `required` | Unique section ID (e.g. `'hero'`, `'services'`, `'products'`, `'contact'`). |
+| `title` | `string` | `undefined` | Optional title rendered at the top of the section. |
+| `centered` | `boolean` | `false` | When true, centers section header and content alignment. |
+| `order` | `number \| string` | `undefined` | CSS Flexbox order for 1-click visual reordering. |
+| `hidden` | `boolean` | `false` | When true, sets `display: none` to hide section from the live storefront. |
+| `className` | `string` | `''` | Tailwind or CSS classes applied to the `<section>`. |
+| `children` | `React.ReactNode` | `required` | Content rendered within the section. |
+
+##### Copy-Paste Usage Example
+```tsx
+import { EditableSection } from "@deneb-ui/ui";
+
+export function ServicesSection() {
+  return (
+    <EditableSection
+      sectionId="services"
+      title="Bespoke Craftsmanship Services"
+      className="py-16 max-w-7xl mx-auto px-4"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+          <h3 className="text-lg font-bold text-white">Custom Sizing</h3>
+          <p className="text-sm text-slate-400 mt-2">Tailored precision fit for all products.</p>
+        </div>
+      </div>
+    </EditableSection>
   );
 }
 ```
@@ -2044,24 +2211,59 @@ export default function HomePage() {
         ]}
       />
 
-      {/* Hero Showcase */}
-      <Hero
-        layout="split"
-        title={content?.hero?.title ?? "Bespoke Footwear Engineered for Distinction"}
-        description={content?.hero?.subtitle ?? "Handcrafted micro-batch leather shoes."}
-        image={content?.hero?.image ?? "https://images.unsplash.com/photo-1542291026-7eec264c27ff"}
-      />
+      {/* Hero Showcase (Section Blueprint) */}
+      <section
+        id="hero"
+        data-design-section="hero"
+        data-section-id="hero"
+        className="w-full transition-all"
+      >
+        <Hero
+          layout="split"
+          title={content?.hero?.title ?? "Bespoke Footwear Engineered for Distinction"}
+          description={content?.hero?.subtitle ?? "Handcrafted micro-batch leather shoes."}
+          image={content?.hero?.image ?? "https://images.unsplash.com/photo-1542291026-7eec264c27ff"}
+        />
+      </section>
+
+      {/* Services Showcase (Section Blueprint - Reorderable via CSS order) */}
+      <section
+        id="services"
+        data-design-section="services"
+        data-section-id="services"
+        className="max-w-7xl mx-auto px-4 py-12 w-full transition-all"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-center md:text-left">
+            <h3 className="text-lg font-bold text-white">Handcrafted Precision</h3>
+            <p className="text-sm text-slate-400 mt-1">Made to measure footwear and apparel.</p>
+          </div>
+          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-center md:text-left">
+            <h3 className="text-lg font-bold text-white">Island-wide Delivery</h3>
+            <p className="text-sm text-slate-400 mt-1">Fast 48-hour delivery across Sri Lanka.</p>
+          </div>
+          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-center md:text-left">
+            <h3 className="text-lg font-bold text-white">Direct WhatsApp Concierge</h3>
+            <p className="text-sm text-slate-400 mt-1">Chat directly with master artisans.</p>
+          </div>
+        </div>
+      </section>
 
       {/* Trust & Guarantee Strip */}
-      <div className="max-w-7xl mx-auto px-4 py-8 w-full">
+      <div className="max-w-7xl mx-auto px-4 py-4 w-full">
         <TrustBadges />
       </div>
 
-      {/* Commerce Catalog with Filter Sidebar */}
-      <section id="products" className="max-w-7xl mx-auto px-4 py-16 w-full space-y-8">
+      {/* Commerce Catalog with Dual Pricing (Single Price & Dynamic Ranges) */}
+      <section
+        id="products"
+        data-design-section="products"
+        data-section-id="products"
+        className="max-w-7xl mx-auto px-4 py-16 w-full space-y-8 transition-all"
+      >
         <div className="text-center space-y-3">
           <h2 className="text-3xl font-bold text-white tracking-tight">Curated Collection</h2>
-          <p className="text-sm text-slate-400">Discover handpicked styles designed to last.</p>
+          <p className="text-sm text-slate-400">Discover handpicked styles with fixed prices and apparel ranges.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
@@ -2075,11 +2277,20 @@ export default function HomePage() {
               {filteredProducts.map((product, idx) => (
                 <ProductCard
                   key={product.id || idx}
-                  title={product.title}
+                  itemPath={`content.products.${idx}`}
+                  title={product.name ?? product.title}
                   price={product.price}
+                  isPriceRange={product.isPriceRange}
+                  minPrice={product.minPrice}
+                  maxPrice={product.maxPrice}
+                  priceRange={product.priceRange}
                   compareAtPrice={product.compareAtPrice}
-                  currency={product.currency ?? "$"}
-                  image={product.image}
+                  currency={product.currency ?? "LKR"}
+                  image={product.imageUrl ?? product.image}
+                  colors={product.colors}
+                  sizes={product.sizes}
+                  category={product.category}
+                  badge={product.badge}
                   whatsappNumber={siteData?.shop?.whatsapp}
                 />
               ))}
@@ -2089,14 +2300,24 @@ export default function HomePage() {
       </section>
 
       {/* Reviews & Social Proof */}
-      <section id="reviews" className="bg-[#0C0F1A] py-16 border-y border-slate-800/60">
+      <section
+        id="reviews"
+        data-design-section="reviews"
+        data-section-id="reviews"
+        className="bg-[#0C0F1A] py-16 border-y border-slate-800/60 transition-all"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <CustomerReviews />
         </div>
       </section>
 
-      {/* Business Hours & Support */}
-      <section id="contact" className="max-w-7xl mx-auto px-4 py-16 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Business Hours & Support (Can be reordered below or above products) */}
+      <section
+        id="contact"
+        data-design-section="contact"
+        data-section-id="contact"
+        className="max-w-7xl mx-auto px-4 py-16 w-full grid grid-cols-1 md:grid-cols-2 gap-8 transition-all"
+      >
         <BusinessHours schedule={content?.businessHours} />
         <div className="p-8 rounded-2xl border border-slate-800 bg-[#0E1220] flex flex-col justify-center space-y-4">
           <h3 className="text-xl font-bold text-white">Instant Concierge Support</h3>
@@ -2142,6 +2363,161 @@ export default function ProductDetailPage() {
 
 Link products with `platformProductDetailHref(product.id)`. Do not use a
 build-time `/products/[id]` route for merchant-managed catalogs.
+
+### 6.4 Custom Dual Pricing & Apparel Swatches Component (`src/components/ProductCard.tsx`)
+
+If building a custom product card from scratch with Tailwind CSS instead of using `<ProductCard />`, follow this verified implementation:
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { MessageCircle, ShoppingBag } from "lucide-react";
+import { platformProductDetailHref } from "@deneb-ui/ui";
+
+export interface ProductColorSwatch {
+  name: string;
+  hex: string;
+  imageUrl?: string;
+}
+
+export interface CustomProduct {
+  id: string;
+  name: string;
+  title?: string;
+  description?: string;
+  price?: number;
+  isPriceRange?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+  priceRange?: string;
+  compareAtPrice?: number;
+  currency?: string;
+  imageUrl?: string;
+  image?: string;
+  badge?: string;
+  colors?: ProductColorSwatch[];
+  sizes?: string[];
+}
+
+export function CustomProductCard({
+  product,
+  itemPath,
+  whatsappNumber,
+}: {
+  product: CustomProduct;
+  itemPath?: string;
+  whatsappNumber?: string;
+}) {
+  const [selectedColor, setSelectedColor] = useState<ProductColorSwatch | null>(
+    product.colors?.[0] ?? null
+  );
+
+  const displayImage = selectedColor?.imageUrl || product.imageUrl || product.image || "/placeholder.jpg";
+  const currency = product.currency ?? "LKR";
+  const isRange = product.isPriceRange === true || (product.minPrice != null && product.maxPrice != null);
+
+  const formattedPrice = isRange
+    ? (product.priceRange ?? `${currency} ${product.minPrice?.toLocaleString()} – ${currency} ${product.maxPrice?.toLocaleString()}`)
+    : `${currency} ${(product.price ?? 0).toLocaleString()}`;
+
+  const detailUrl = platformProductDetailHref(product.id);
+
+  return (
+    <div
+      data-preview-item-path={itemPath}
+      className="group relative rounded-2xl border border-slate-800 bg-[#0E1220] p-4 flex flex-col justify-between transition-all hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10"
+    >
+      <div>
+        {/* Product Photo Showcase */}
+        <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-slate-900 mb-4">
+          <Image
+            src={displayImage}
+            alt={product.name || "Product photo"}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+          {product.badge && (
+            <span className="absolute top-3 left-3 px-2.5 py-1 text-xs font-semibold rounded-full bg-indigo-600 text-white shadow-md">
+              {product.badge}
+            </span>
+          )}
+        </div>
+
+        {/* Color Swatches */}
+        {product.colors && product.colors.length > 0 && (
+          <div className="flex items-center gap-2 mb-3">
+            {product.colors.map((color) => (
+              <button
+                key={color.name}
+                type="button"
+                onClick={() => setSelectedColor(color)}
+                title={color.name}
+                className={`w-5 h-5 rounded-full border-2 transition-all ${
+                  selectedColor?.name === color.name
+                    ? "scale-110 border-indigo-400 ring-2 ring-indigo-400/40"
+                    : "border-transparent opacity-80 hover:opacity-100"
+                }`}
+                style={{ backgroundColor: color.hex }}
+              />
+            ))}
+            <span className="text-xs text-slate-400 ml-1">{selectedColor?.name}</span>
+          </div>
+        )}
+
+        {/* Title */}
+        <a href={detailUrl} className="block">
+          <h3
+            data-preview-field-path={itemPath ? `${itemPath}.name` : undefined}
+            className="text-base font-semibold text-white group-hover:text-indigo-300 transition-colors line-clamp-1"
+          >
+            {product.name ?? product.title}
+          </h3>
+        </a>
+
+        {/* Pricing (Fixed vs Range) */}
+        <div className="flex items-baseline gap-2 mt-2">
+          <span
+            data-preview-field-path={itemPath ? `${itemPath}.price` : undefined}
+            className="text-lg font-bold text-indigo-400"
+          >
+            {formattedPrice}
+          </span>
+          {product.compareAtPrice && !isRange && (
+            <span className="text-xs text-slate-500 line-through">
+              {currency} {product.compareAtPrice.toLocaleString()}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="mt-4 pt-4 border-t border-slate-800/80 flex items-center gap-2">
+        <a
+          href={detailUrl}
+          className="flex-1 py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium text-center flex items-center justify-center gap-1.5 transition-colors"
+        >
+          <ShoppingBag size={14} />
+          View Details
+        </a>
+        {whatsappNumber && (
+          <a
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I want to order ${product.name} (${formattedPrice}).`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 transition-colors"
+            title="Order via WhatsApp"
+          >
+            <MessageCircle size={16} />
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+```
 
 ---
 
@@ -2221,17 +2597,22 @@ When converting an existing storefront into a Fivora template:
 | About / heritage collage | `<HeritageCollage />` |
 | Before/after image comparison | `<BeforeAfterSlider />` |
 | Cookie/GDPR banner | `<CookieConsentBanner />` |
+| Custom top-level section | `<EditableSection sectionId="..." />` or `<section data-design-section="..." data-section-id="..." />` |
+| Custom apparel / range product | `<ProductCard isPriceRange={...} minPrice={...} maxPrice={...} colors={...} />` |
 
 When using an AI assistant (ChatGPT, Claude, Cursor, Antigravity) to convert an existing storefront into a Fivora template:
 
 1. **Step 1: Content Extraction**:
    Extract all static store text, photos, categories, and products into `src/data/site-data.json`.
-2. **Step 2: Component Replacement**:
-   Apply the Component Replacement Checklist above. Replace every custom UI element with the corresponding `@deneb-ui/ui` component. Follow the Golden Rule — never leave raw contact URLs or static hours in JSX.
+2. **Step 2: Component Replacement & Semantic Section Blueprint**:
+   - Apply the Component Replacement Checklist above. Replace every custom UI element with the corresponding `@deneb-ui/ui` component. Follow the Golden Rule — never leave raw contact URLs or static hours in JSX.
+   - **MANDATORY**: Wrap every major module (Hero, Services, Products, About, Reviews, Contact, FAQ) in a semantic `<section>` element or `<EditableSection>` tagged with `data-design-section="<id>"` and `data-section-id="<id>"`.
+   - **MANDATORY**: Ensure the parent container uses `display: flex; flex-direction: column;` (`main className="flex flex-col min-h-screen"`) so merchants can visually reorder sections (Move Up / Move Down) via CSS `order`.
+   - **MANDATORY**: Support Dual Pricing in product catalogs. Always check `product.isPriceRange || product.minPrice != null` to render price ranges alongside single fixed prices.
 3. **Step 3: Wrap with SiteDataProvider & ThemeStyles**:
    Add `<SiteDataProvider>` wrapping the entire app in root layout. Place `<ThemeStyles />` immediately inside it.
 4. **Step 4: Attach Visual Markers**:
-   Add `data-preview-field-path`, `data-preview-list-path`, and `data-preview-item-path` to all editable text and lists.
+   Add `data-preview-field-path`, `data-preview-list-path`, and `data-preview-item-path` to all leaf editable text and lists.
 5. **Step 5: Dynamic State Binding**:
    Replace static hardcoded data with `useProducts()`, `useSiteData()`, or `siteData.content.*`. Use `useShop()` for merchant profile data.
 6. **Step 6: Static Export Validation**:

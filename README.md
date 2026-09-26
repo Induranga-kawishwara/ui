@@ -396,6 +396,99 @@ export function SocialProofCounter() {
 
 ---
 
+## Semantic `<section>` Blueprint & Live Reordering
+
+DENEB UI organizes storefronts into modular semantic sections. In the Fivora Merchant Studio and Website Agent portal, store owners can visually reorder, center, and delete sections without touching code:
+- **1-Click Section Reordering (Move Up / Move Down)**: Move any section higher or lower on the page (e.g. moving the **Contact** section below **Products** and **Services**, or elevating **Services** above **Featured Products**).
+- **1-Click Centering**: Align headings, body copy, and CTA buttons to center or left.
+- **1-Click Hiding / Deletion**: Toggle off sections (e.g. hiding Testimonials or FAQ).
+
+### The Flexbox Column Rule:
+To enable non-destructive reordering, the parent page wrapper MUST declare:
+```css
+body > main, main, [data-preview-page-key] {
+  display: flex;
+  flex-direction: column;
+}
+```
+Sections are positioned via CSS `order: <number>` and `--deneb-section-order`. This ensures **zero DOM mutations**, eliminating React hydration mismatches and preserving Next.js static exports.
+
+### TSX Usage:
+```tsx
+import { EditableSection } from "@deneb-ui/ui";
+
+// Option A: Using <EditableSection>
+export function ServicesSection() {
+  return (
+    <EditableSection sectionId="services" title="Our Services" className="py-16">
+      <div className="max-w-7xl mx-auto px-4">{/* Content */}</div>
+    </EditableSection>
+  );
+}
+
+// Option B: Semantic HTML5 <section>
+export function ContactSection() {
+  return (
+    <section id="contact" data-design-section="contact" data-section-id="contact" className="py-16">
+      <div className="max-w-7xl mx-auto px-4">{/* Content */}</div>
+    </section>
+  );
+}
+```
+
+---
+
+## Commerce Dual Pricing: Fixed Prices & Price Ranges
+
+Fivora storefronts support both **Single Fixed Price** products and **Dynamic Price Range** products (for apparel with size/color options, customizable goods, and tiered products).
+
+### Data Schema (`site-data.json`):
+```json
+{
+  "products": [
+    {
+      "id": "prod-1",
+      "name": "Classic Leather Shoes",
+      "price": 3850,
+      "currency": "LKR"
+    },
+    {
+      "id": "prod-2",
+      "name": "Linen Resort Shirt",
+      "isPriceRange": true,
+      "minPrice": 2800,
+      "maxPrice": 4800,
+      "priceRange": "LKR 2,800 – LKR 4,800",
+      "currency": "LKR",
+      "colors": [
+        { "name": "Navy", "hex": "#0f2942", "imageUrl": "/images/shirt-navy.jpg" },
+        { "name": "Olive", "hex": "#4d6840", "imageUrl": "/images/shirt-olive.jpg" }
+      ],
+      "sizes": ["S", "M", "L", "XL"]
+    }
+  ]
+}
+```
+
+### Displaying in `<ProductCard />`:
+```tsx
+<ProductCard
+  itemPath={`content.products.${idx}`}
+  title={product.name ?? product.title}
+  price={product.price}
+  isPriceRange={product.isPriceRange}
+  minPrice={product.minPrice}
+  maxPrice={product.maxPrice}
+  priceRange={product.priceRange}
+  currency={product.currency ?? "LKR"}
+  image={product.imageUrl ?? product.image}
+  colors={product.colors}
+  sizes={product.sizes}
+/>
+```
+
+---
+
 ## Master Component Catalog (All 43 Components)
 
 Every single component below is imported directly from `@deneb-ui/ui`:

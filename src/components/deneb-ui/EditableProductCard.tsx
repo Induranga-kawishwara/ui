@@ -24,6 +24,12 @@ export interface ProductItem {
   isNew?: boolean;
   isBestSeller?: boolean;
 
+  // Dual Pricing Engine (Fixed vs Price Range)
+  isPriceRange?: boolean;
+  minPrice?: string | number;
+  maxPrice?: string | number;
+  priceRange?: string;
+
   // WhatsApp & CTA custom bindings per product
   whatsappNumber?: string;
   whatsappButtonText?: string;
@@ -39,7 +45,7 @@ export interface ProductItem {
   sizes?: (string | number)[] | string;
   sizesText?: string;
   sizesLabel?: string;
-  colors?: Array<string | { name: string; hex?: string }> | string;
+  colors?: Array<string | { name: string; hex?: string; image?: string; imageUrl?: string }> | string;
   colorsText?: string;
   colorsLabel?: string;
 
@@ -229,18 +235,73 @@ export function EditableProductCard({
 
   const name = String(product?.name || product?.title || 'Untitled Product');
   const brand = String(product?.brand || '');
-  const hasPrice = showPrice && product?.price !== undefined && product?.price !== null && String(product.price).trim() !== '';
+
+  // Dual Pricing Resolution (Fixed Price vs Price Range)
+  const isRange = Boolean(
+    product?.isPriceRange ||
+    (product?.minPrice !== undefined && product?.maxPrice !== undefined) ||
+    product?.priceRange
+  );
 
   const rawPrice = product?.price;
   const priceNum = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice || '').replace(/[^0-9.]/g, '')) || 0;
-  const formattedPrice = hasPrice ? (typeof rawPrice === 'string' && rawPrice.includes('LKR') ? rawPrice : formatCurrency(priceNum, currency)) : '';
+
+  let formattedPrice = '';
+  if (isRange) {
+    if (product?.priceRange) {
+      formattedPrice = String(product.priceRange);
+    } else {
+      const minNum = typeof product?.minPrice === 'number' ? product.minPrice : parseFloat(String(product?.minPrice || '').replace(/[^0-9.]/g, '')) || 0;
+      const maxNum = typeof product?.maxPrice === 'number' ? product.maxPrice : parseFloat(String(product?.maxPrice || '').replace(/[^0-9.]/g, '')) || 0;
+      formattedPrice = `${formatCurrency(minNum, currency)} – ${formatCurrency(maxNum, currency)}`;
+    }
+  } else if (product?.price !== undefined && product?.price !== null && String(product.price).trim() !== '') {
+    formattedPrice = typeof rawPrice === 'string' && rawPrice.includes('LKR') ? rawPrice : formatCurrency(priceNum, currency);
+  }
+
+  const hasPrice = showPrice && Boolean(formattedPrice);
 
   const originalPrice = product?.originalPrice !== undefined ? String(product.originalPrice) : '';
   const description = String(product?.description || '');
   const category = String(product?.category || '');
   const badge = String(product?.badge || '');
   const fallbackImage = imageFallback || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80';
-  const imageUrl = String(product?.imageUrl || product?.image || fallbackImage);
+  const defaultImageUrl = String(product?.imageUrl || product?.image || fallbackImage);
+
+  // Active Image and Interactive Color Swatch State
+  const [activeImage, setActiveImage] = React.useState<string>(defaultImageUrl);
+  const [selectedColor, setSelectedColor] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setActiveImage(String(product?.imageUrl || product?.image || fallbackImage));
+  }, [product?.imageUrl, product?.image, fallbackImage]);
+
+  // Parse color swatches
+  const parsedColors: Array<{ name: string; hex?: string; image?: string; imageUrl?: string }> = React.useMemo(() => {
+    if (!product?.colors) return [];
+    if (Array.isArray(product.colors)) {
+      return product.colors.map((c) => {
+        if (typeof c === 'string') {
+          return { name: c, hex: c.startsWith('#') ? c : undefined };
+        }
+        return {
+          name: c.name,
+          hex: c.hex,
+          image: c.image,
+          imageUrl: c.imageUrl,
+        };
+      });
+    }
+    if (typeof product.colors === 'string') {
+      return product.colors.split(',').map((s) => {
+        const trimmed = s.trim();
+        return { name: trimmed, hex: trimmed.startsWith('#') ? trimmed : undefined };
+      });
+    }
+    return [];
+  }, [product?.colors]);
+
+  const imageUrl = activeImage;
 
   // Resolved phone number for WhatsApp
   const resolvedPhone = String(product?.whatsappNumber || whatsappNumber || '94770000000');
@@ -454,6 +515,58 @@ export function EditableProductCard({
               }}
             />
           ) : null}
+
+          {/* Interactive Color Swatches */}
+          {parsedColors.length > 0 && (
+            <div style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                {parsedColors.map((col, idx) => {
+                  const isSelected = selectedColor === col.name || (!selectedColor && idx === 0);
+                  const swatchHex = col.hex || (
+                    col.name.toLowerCase().includes('navy') ? '#1e3a8a' :
+                    col.name.toLowerCase().includes('olive') ? '#3f6212' :
+                    col.name.toLowerCase().includes('terra') ? '#c2410c' :
+                    col.name.toLowerCase().includes('black') ? '#09090b' :
+                    col.name.toLowerCase().includes('white') ? '#f8fafc' :
+                    '#64748b'
+                  );
+                  return (
+                    <button
+                      key={col.name + idx}
+                      type="button"
+                      title={col.name}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedColor(col.name);
+                        if (col.imageUrl || col.image) {
+                          setActiveImage(col.imageUrl || col.image!);
+                        }
+                      }}
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '9999px',
+                        backgroundColor: swatchHex,
+                        border: isSelected ? '2px solid #ffffff' : '1.5px solid rgba(255,255,255,0.3)',
+                        outline: isSelected ? '2px solid var(--brand-color, #6366f1)' : 'none',
+                        outlineOffset: '2px',
+                        cursor: 'pointer',
+                        padding: 0,
+                        transition: 'transform 0.15s ease, outline 0.15s ease',
+                        transform: isSelected ? 'scale(1.15)' : 'scale(1)',
+                      }}
+                      aria-label={col.name}
+                    />
+                  );
+                })}
+                {selectedColor && (
+                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--muted-text, #94a3b8)', marginLeft: '0.25rem' }}>
+                    {selectedColor}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Pricing and Dual Action Buttons */}

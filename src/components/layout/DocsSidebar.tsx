@@ -88,6 +88,7 @@ export const SIDEBAR_NAV: NavSection[] = [
     title: 'Storefront Sections',
     icon: <LayoutGrid className="w-4 h-4 text-[#818CF8]" />,
     items: [
+      { title: 'EditableSection', href: '/docs/components/editable-section', badge: 'Blueprint', isNew: true },
       { title: 'GoogleFeedback', href: '/docs/components/google-feedback', badge: 'Google', isNew: true },
       { title: 'TestimonialSection', href: '/docs/components/testimonial-section', badge: 'Editorial', isNew: true },
       { title: 'CartDrawer', href: '/docs/components/cart-drawer', badge: 'Hot', isNew: true },

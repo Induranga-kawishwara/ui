@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import {
+  EditableSection,
   ProductCard,
   ProductDetail,
   PlatformProductDetail,
@@ -22,6 +23,12 @@ import {
 import { isDarkColor, getAutoContrastTextColor } from '@deneb-ui/core';
 import { ComponentDocPageProps } from './ComponentDocPage';
 import {
+  ArrowUp,
+  ArrowDown,
+  AlignCenter,
+  Eye,
+  EyeOff,
+  RotateCcw,
   Sparkles,
   Phone,
   MessageSquare,
@@ -538,6 +545,248 @@ function InteractiveContactFormDemo() {
   );
 }
 
+
+function InteractiveEditableSectionDemo() {
+  const [sections, setSections] = useState([
+    {
+      id: 'home-hero',
+      name: 'home-hero',
+      title: 'Hero Showcase: Luxury Ceylon Artisan Goods',
+      subtitle: 'Handcrafted tea, precious gemstones, and organic textiles sourced directly from the central highlands of Sri Lanka.',
+      order: 1,
+      centered: true,
+      hidden: false,
+      color: 'border-indigo-500/40 bg-indigo-950/20 text-indigo-200',
+    },
+    {
+      id: 'home-categories',
+      name: 'home-categories',
+      title: 'Featured Category Grid & Best Sellers',
+      subtitle: 'Explore our catalog with dual pricing, live stock indicators, and instant WhatsApp ordering.',
+      order: 2,
+      centered: false,
+      hidden: false,
+      color: 'border-slate-700/60 bg-slate-900/40 text-slate-200',
+    },
+    {
+      id: 'home-guarantee',
+      name: 'home-guarantee',
+      title: 'Islandwide Verified Delivery & Trust Guarantee',
+      subtitle: 'Free Colombo express delivery within 24 hours, bank transfer & cash on delivery accepted with 100% authenticity guarantee.',
+      order: 3,
+      centered: true,
+      hidden: false,
+      color: 'border-emerald-500/40 bg-emerald-950/20 text-emerald-200',
+    },
+  ]);
+
+  const moveSection = (index: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= sections.length) return;
+
+    setSections((prev) => {
+      const copy = [...prev];
+      const curOrder = copy[index].order;
+      const targetOrder = copy[targetIndex].order;
+      copy[index] = { ...copy[index], order: targetOrder };
+      copy[targetIndex] = { ...copy[targetIndex], order: curOrder };
+      return copy;
+    });
+  };
+
+  const toggleCenter = (index: number) => {
+    setSections((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], centered: !copy[index].centered };
+      return copy;
+    });
+  };
+
+  const toggleHide = (index: number) => {
+    setSections((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], hidden: !copy[index].hidden };
+      return copy;
+    });
+  };
+
+  const resetAll = () => {
+    setSections([
+      {
+        id: 'home-hero',
+        name: 'home-hero',
+        title: 'Hero Showcase: Luxury Ceylon Artisan Goods',
+        subtitle: 'Handcrafted tea, precious gemstones, and organic textiles sourced directly from the central highlands of Sri Lanka.',
+        order: 1,
+        centered: true,
+        hidden: false,
+        color: 'border-indigo-500/40 bg-indigo-950/20 text-indigo-200',
+      },
+      {
+        id: 'home-categories',
+        name: 'home-categories',
+        title: 'Featured Category Grid & Best Sellers',
+        subtitle: 'Explore our catalog with dual pricing, live stock indicators, and instant WhatsApp ordering.',
+        order: 2,
+        centered: false,
+        hidden: false,
+        color: 'border-slate-700/60 bg-slate-900/40 text-slate-200',
+      },
+      {
+        id: 'home-guarantee',
+        name: 'home-guarantee',
+        title: 'Islandwide Verified Delivery & Trust Guarantee',
+        subtitle: 'Free Colombo express delivery within 24 hours, bank transfer & cash on delivery accepted with 100% authenticity guarantee.',
+        order: 3,
+        centered: true,
+        hidden: false,
+        color: 'border-emerald-500/40 bg-emerald-950/20 text-emerald-200',
+      },
+    ]);
+  };
+
+  const anyHidden = sections.some((s) => s.hidden);
+
+  return (
+    <div className="flex flex-col gap-6 w-full p-2">
+      {/* Header controls bar */}
+      <div className="flex items-center justify-between pb-3 border-b border-[#23283B] flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
+          <span className="text-xs font-semibold text-neutral-300">
+            Interactive Section Blueprint (1-Click Reorder, Center &amp; Hide)
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={resetAll}
+          className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-neutral-800 text-neutral-300 hover:text-white hover:bg-neutral-700 text-xs font-medium transition cursor-pointer border border-neutral-700"
+        >
+          <RotateCcw className="w-3 h-3" />
+          <span>Reset Order</span>
+        </button>
+      </div>
+
+      {/* Hidden banner alerts */}
+      {anyHidden && (
+        <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs">
+          <div className="flex items-center gap-2">
+            <EyeOff className="w-4 h-4 text-amber-400" />
+            <span>
+              Hidden section(s): {sections.filter((s) => s.hidden).map((s) => s.name).join(', ')} (display: none via section blueprint)
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSections((prev) => prev.map((s) => ({ ...s, hidden: false })))}
+            className="text-amber-300 underline font-semibold hover:text-amber-100 cursor-pointer"
+          >
+            Restore All
+          </button>
+        </div>
+      )}
+
+      {/* Container showcasing flexbox order reordering */}
+      <div className="flex flex-col gap-4 w-full">
+        {sections.map((sec, idx) => (
+          <EditableSection
+            key={sec.id}
+            name={sec.name}
+            order={sec.order}
+            centered={sec.centered}
+            hidden={sec.hidden}
+            padding="md"
+            className={`border rounded-xl transition-all duration-300 p-5 ${sec.color}`}
+          >
+            <div className="flex flex-col gap-3">
+              {/* Section Header with Controls */}
+              <div className="flex items-center justify-between border-b border-white/10 pb-2.5 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs px-2 py-0.5 rounded bg-black/40 border border-white/10 text-white font-bold">
+                    order: {sec.order}
+                  </span>
+                  <span className="font-mono text-xs text-neutral-400">
+                    &lt;EditableSection name=&quot;{sec.name}&quot;&gt;
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => moveSection(idx, 'up')}
+                    disabled={idx === 0}
+                    title="Move Up (Decrease Order)"
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer border border-white/10"
+                  >
+                    <ArrowUp className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveSection(idx, 'down')}
+                    disabled={idx === sections.length - 1}
+                    title="Move Down (Increase Order)"
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer border border-white/10"
+                  >
+                    <ArrowDown className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleCenter(idx)}
+                    title={sec.centered ? 'Switch to Left Align' : 'Center Content'}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer border ${
+                      sec.centered
+                        ? 'bg-indigo-600/30 text-indigo-300 border-indigo-500/50'
+                        : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
+                    }`}
+                  >
+                    <AlignCenter className="w-3 h-3" />
+                    <span>{sec.centered ? 'Centered' : 'Left'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleHide(idx)}
+                    title={sec.hidden ? 'Show Section' : 'Hide Section'}
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-neutral-300 hover:text-red-400 transition cursor-pointer border border-white/10"
+                  >
+                    {sec.hidden ? <EyeOff className="w-3.5 h-3.5 text-red-400" /> : <Eye className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Section Content */}
+              <div>
+                <h3 className="text-base font-bold text-white mb-1">{sec.title}</h3>
+                <p className="text-xs text-neutral-300 leading-relaxed max-w-xl mx-auto">
+                  {sec.subtitle}
+                </p>
+              </div>
+            </div>
+          </EditableSection>
+        ))}
+      </div>
+
+      {/* Live Generated Code Snippet */}
+      <div className="p-3.5 rounded-xl bg-black/40 border border-neutral-800 text-xs">
+        <div className="font-semibold text-neutral-400 mb-2 flex items-center justify-between">
+          <span>Live Generated Section JSX Tree:</span>
+          <span className="text-[10px] font-mono text-neutral-500">Reflects active order &amp; alignments</span>
+        </div>
+        <pre className="font-mono text-[11px] text-emerald-400 whitespace-pre overflow-x-auto p-2 bg-neutral-950/60 rounded-lg">
+{`<main style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+` + sections.map(s => `  <EditableSection
+    name="${s.name}"
+    order={${s.order}}${s.centered ? '\n    centered={true}' : ''}${s.hidden ? '\n    hidden={true}' : ''}
+    container={true}
+  >
+    {/* Section Content */}
+  </EditableSection>`).join('\n') + `
+</main>`}
+        </pre>
+      </div>
+    </div>
+  );
+}
+
 function InteractiveProductCardDemoInner() {
   const { openCart, totalCount } = useCart();
   const [lastWhatsAppQuery, setLastWhatsAppQuery] = useState<string | null>(null);
@@ -548,10 +797,10 @@ function InteractiveProductCardDemoInner() {
       name: 'Royal Ceylon Spiced Chai Tea',
       brand: 'Ceylon Organics',
       price: 2450,
-      originalPrice: 'LKR 2,900',
+      originalPrice: 'LKR 2,900.00',
       currency: 'LKR',
       category: 'Artisan Tea',
-      badge: 'Best Seller',
+      badge: 'Fixed Price (LKR 2,450)',
       description: 'Handcrafted single-origin black tea infused with organic Sri Lankan cardamom, cinnamon, and ginger.',
       imageUrl: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80',
       whatsappNumber: '94771234567',
@@ -559,17 +808,37 @@ function InteractiveProductCardDemoInner() {
       addToCartButtonText: 'Add to Cart',
     },
     {
-      id: 'nuwara-eliya-pekoe',
-      name: 'Single Estate Silver Tips Pekoe',
-      brand: 'Highland Estate',
-      price: 3800,
+      id: 'relaxed-linen-shirt',
+      name: 'Relaxed Linen Resort Shirt',
+      brand: 'Colombo Breeze',
+      isPriceRange: true,
+      minPrice: 2800,
+      maxPrice: 4800,
+      priceRange: 'LKR 2,800.00 – LKR 4,800.00',
       currency: 'LKR',
-      category: 'High Grown',
-      badge: 'Limited Reserve',
-      description: 'Sun-dried high altitude silver tips harvested from 6,000ft peaks in Nuwara Eliya, Sri Lanka.',
-      imageUrl: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80',
+      category: 'Resort Wear',
+      badge: 'Price Range + Swatches',
+      description: 'Ultra-breathable 100% natural Sri Lankan linen tailored for tropical elegance. Click swatches to swap photos live!',
+      imageUrl: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80',
+      colors: [
+        {
+          name: 'Navy Blue',
+          hex: '#1e3a8a',
+          imageUrl: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80',
+        },
+        {
+          name: 'Olive Green',
+          hex: '#3f6212',
+          imageUrl: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80',
+        },
+        {
+          name: 'Terracotta',
+          hex: '#c2410c',
+          imageUrl: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80',
+        },
+      ],
       whatsappNumber: '94771234567',
-      whatsappButtonText: 'Chat on WhatsApp',
+      whatsappButtonText: 'Inquire on WhatsApp',
       addToCartButtonText: 'Add to Cart',
     },
   ];
@@ -3092,6 +3361,12 @@ export default function FeaturedProduct() {
       { name: 'currency', type: 'string', defaultValue: "'LKR'", description: 'Currency code or symbol for price formatting.' },
       { name: 'showBrand', type: 'boolean', defaultValue: 'true', description: 'Whether to display the editable brand tag.' },
       { name: 'showPrice', type: 'boolean', defaultValue: 'true', description: 'Whether to display the product price.' },
+      { name: 'product.isPriceRange', type: 'boolean', defaultValue: 'false', description: 'When true, renders dynamic price range (minPrice – maxPrice) instead of single price.' },
+      { name: 'product.minPrice', type: 'number | string', description: 'Minimum price bound for variant price range.' },
+      { name: 'product.maxPrice', type: 'number | string', description: 'Maximum price bound for variant price range.' },
+      { name: 'product.priceRange', type: 'string', description: 'Pre-formatted price range string (e.g. "LKR 2,800.00 – LKR 4,800.00").' },
+      { name: 'product.colors', type: 'Array<{ name: string; hex?: string; imageUrl?: string }>', description: 'Color swatches array. Clicking a swatch swaps the active product image preview in real time.' },
+      { name: 'product.sizes', type: 'Array<string | number>', description: 'Available size variations (e.g. ["S", "M", "L", "XL"]).' },
       { name: 'whatsappNumber', type: 'string', defaultValue: "'94770000000'", description: 'Default WhatsApp number for product inquiries.' },
       { name: 'whatsappActionLabel', type: 'string', defaultValue: "'Inquire on WhatsApp'", description: 'Default label for the WhatsApp button.' },
       { name: 'addToCartLabel', type: 'string', defaultValue: "'Add to Cart'", description: 'Default label for the Add to Cart button.' },
@@ -3148,6 +3423,63 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       { name: 'onCheckout', type: '(items: CartItem[], total: number) => void', description: 'Optional checkout callback.' },
     ],
     prevPage: { title: 'ProductCard', href: '/docs/components/product-card' },
+    nextPage: { title: 'EditableSection', href: '/docs/components/editable-section' },
+  },
+  'editable-section': {
+    title: 'EditableSection',
+    description: 'Standardized section container with automatic data-design-section and data-section-id visual blueprint annotations, enabling 1-click move up/down section reordering (via CSS order), instant centering, and section deletion/hiding (display: none).',
+    category: 'Storefront Sections',
+    badge: 'Blueprint + Reorderable',
+    previewComponent: <InteractiveEditableSectionDemo />,
+    previewCode: `import { EditableSection, EditableText } from "@deneb-ui/ui";
+
+export default function StorefrontHomePage({ siteData }) {
+  return (
+    <main style={{ display: "flex", flexDirection: "column" }}>
+      {/* 1. Hero Section (Order #1, Centered) */}
+      <EditableSection
+        name="home-hero"
+        order={siteData?.styles?.["home-hero.section"]?.order ?? 1}
+        centered={true}
+        container={true}
+        padding="xl"
+      >
+        <EditableText as="h1" fieldPath="hero.title" defaultValue="Artisan Ceylon Collection" />
+        <EditableText as="p" fieldPath="hero.subtitle" defaultValue="Handcrafted luxury goods from Sri Lanka" />
+      </EditableSection>
+
+      {/* 2. Products Section (Order #2, Reorderable & Hideable) */}
+      <EditableSection
+        name="home-products"
+        order={siteData?.styles?.["home-products.section"]?.order ?? 2}
+        hidden={siteData?.styles?.["home-products.section"]?.hidden ?? false}
+        container={true}
+        padding="lg"
+      >
+        <EditableText as="h2" fieldPath="products.heading" defaultValue="Featured Catalog" />
+      </EditableSection>
+    </main>
+  );
+}`,
+    usageCode: `import { EditableSection } from "@deneb-ui/ui";`,
+    cliCommand: `npx @deneb-ui/cli add editable-section`,
+    props: [
+      { name: 'name', type: 'string', required: true, description: 'Required Fivora design section identifier (e.g. "home-hero", "products", "services"). Sets data-design-section & data-section-id.' },
+      { name: 'sectionId', type: 'string', description: 'Alias for name.' },
+      { name: 'order', type: 'number | string', description: 'CSS flex/grid order. Powers 1-click move up / move down section reordering.' },
+      { name: 'center / centered', type: 'boolean', defaultValue: 'false', description: 'Quick toggle to center all section text and flex items horizontally.' },
+      { name: 'hidden', type: 'boolean', defaultValue: 'false', description: 'When true, renders display: "none" to hide/delete section without losing code or content.' },
+      { name: 'container', type: 'boolean', defaultValue: 'false', description: 'Whether to wrap children in a responsive centered container (max-w-7xl mx-auto px-4).' },
+      { name: 'containerClassName', type: 'string', description: 'Custom CSS class names for inner container.' },
+      { name: 'padding', type: "'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | string", defaultValue: "'lg'", description: 'Vertical responsive section padding.' },
+      { name: 'bg', type: 'string', description: 'Background color or CSS variable.' },
+      { name: 'color', type: 'string', description: 'Text color for the section.' },
+      { name: 'maxWidth', type: 'string | number', description: 'Max width constraint for the section.' },
+      { name: 'border', type: 'boolean | string', description: 'Bottom border separator style.' },
+      { name: 'as', type: 'React.ElementType', defaultValue: "'section'", description: 'Underlying HTML element wrapper.' },
+    ],
+
+    prevPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
     nextPage: { title: 'Button', href: '/docs/components/button' },
   },
 };

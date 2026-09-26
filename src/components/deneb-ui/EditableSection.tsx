@@ -9,10 +9,46 @@ export interface EditableSectionProps extends React.HTMLAttributes<HTMLElement> 
   as?: React.ElementType;
 
   /**
-   * Required fivora design section identifier (e.g. 'home-hero', 'home-introduction', 'home-features').
-   * Automatically sets `data-design-section` to satisfy strict Fivora validator rules.
+   * Required fivora design section identifier (e.g. 'home-hero', 'home-features', 'products', 'services').
+   * Automatically sets data-design-section and data-section-id to satisfy strict Fivora validator rules.
    */
-  name: string;
+  name?: string;
+
+  /**
+   * Alias for name (e.g. 'hero', 'services', 'contact').
+   */
+  sectionId?: string;
+
+  /**
+   * Visual flex/grid order for 1-click move up / move down section reordering (e.g. 1, 2, 3).
+   */
+  order?: number | string;
+
+  /**
+   * Quick toggle to center all content and text horizontally.
+   */
+  center?: boolean;
+  centered?: boolean;
+
+  /**
+   * Content alignment: 'left' | 'center' | 'right'.
+   */
+  align?: 'left' | 'center' | 'right';
+
+  /**
+   * Whether this section is hidden or deleted (renders display: none).
+   */
+  hidden?: boolean;
+
+  /**
+   * Whether to wrap children in a responsive inner container.
+   */
+  container?: boolean;
+
+  /**
+   * Class name for the inner container if container=true.
+   */
+  containerClassName?: string;
 
   /**
    * Vertical section padding ('none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' or custom CSS).
@@ -42,11 +78,20 @@ export interface EditableSectionProps extends React.HTMLAttributes<HTMLElement> 
 
 /**
  * EditableSection standardizes section spacing and automatically applies the required
- * `data-design-section` marker for 100% fivora contract compliance.
+ * data-design-section and data-section-id markers for 100% Fivora contract compliance,
+ * with first-class support for section reordering (order), deletion/hiding (hidden), and centering (center).
  */
 export function EditableSection({
   as: Component = 'section',
   name,
+  sectionId,
+  order,
+  center,
+  centered,
+  align,
+  hidden = false,
+  container = false,
+  containerClassName = '',
   padding = 'lg',
   bg,
   color,
@@ -54,9 +99,12 @@ export function EditableSection({
   border,
   className = '',
   style,
+  id,
   children,
   ...props
 }: EditableSectionProps) {
+  const resolvedSectionKey = sectionId || name || 'section';
+
   const resolvedPadding =
     padding !== undefined ? (SECTION_PADDING_MAP[String(padding)] || String(padding)) : undefined;
 
@@ -67,29 +115,58 @@ export function EditableSection({
       ? border
       : undefined;
 
-  const stylePath = `${name}.section`;
+  const stylePath = `${resolvedSectionKey}.section`;
   const { cssVars: styleVars } = useComponentStyle(stylePath, 'section');
 
+  const isCentered = centered ?? center;
+  const resolvedAlign = align || (isCentered ? 'center' : undefined);
+
   const sectionStyle: React.CSSProperties = {
+    ...(hidden ? { display: 'none' } : {}),
+    ...(order !== undefined && order !== '' ? { order: Number(order) } : {}),
+    ...(resolvedAlign ? { textAlign: resolvedAlign } : {}),
     ...(resolvedPadding ? { padding: resolvedPadding } : {}),
     ...(bg ? { background: bg } : {}),
     ...(color ? { color } : {}),
-    ...(maxWidth !== undefined ? { maxWidth, marginLeft: 'auto', marginRight: 'auto' } : {}),
+    ...(maxWidth !== undefined && !container ? { maxWidth, marginLeft: 'auto', marginRight: 'auto' } : {}),
     ...(resolvedBorder ? { borderBottom: resolvedBorder } : {}),
     ...styleVars,
     ...style,
   };
 
+  const content = container ? (
+    <div
+      className={`deneb-section-container ${containerClassName}`.trim()}
+      style={{
+        maxWidth: maxWidth !== undefined ? maxWidth : '1280px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
+        ...(resolvedAlign === 'center' ? { display: 'flex', flexDirection: 'column', alignItems: 'center' } : {}),
+      }}
+    >
+      {children}
+    </div>
+  ) : (
+    children
+  );
+
   return (
     <Component
-      data-design-section={name}
+      id={id || resolvedSectionKey}
+      data-design-section={resolvedSectionKey}
+      data-section-id={resolvedSectionKey}
+      data-section-visible={hidden ? 'false' : 'true'}
       data-preview-style-target={stylePath}
       data-preview-style-type="section"
-      className={`deneb-section editable-section ${className}`.trim()}
+      className={`deneb-section editable-section ${isCentered ? 'is-centered' : ''} ${className}`.trim()}
       style={sectionStyle}
       {...(props as any)}
     >
-      {children}
+      {content}
     </Component>
   );
 }
+
+export default EditableSection;

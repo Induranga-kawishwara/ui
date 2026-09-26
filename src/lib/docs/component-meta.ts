@@ -55,6 +55,7 @@ export const COMPONENT_SLUGS: string[] = [
   'map',
   'product-card',
   'cart-drawer',
+  'editable-section',
 ];
 
 export const COMPONENT_META: Record<string, ComponentMeta> = {
@@ -386,5 +387,12 @@ export const COMPONENT_META: Record<string, ComponentMeta> = {
     description: "Interactive slide-over cart drawer with real-time state persistence, LKR currency formatting, quantity controls, and one-click unified WhatsApp checkout compiling all cart products into a single order chat message.",
     category: "E-Commerce & Storefront",
     keywords: ["CartDrawer","CartDrawer component","React component","Tailwind CSS","Deneb UI","E-Commerce & Storefront","visual-first","storefront UI","headless e-commerce"],
+  },
+  'editable-section': {
+    slug: 'editable-section',
+    title: "EditableSection",
+    description: "Dynamic layout section container standardizing responsive vertical padding, 1-click move up/down section reordering (order), instant centering, and section deletion/hiding with strict data-design-section compliance.",
+    category: "Storefront Sections",
+    keywords: ["EditableSection", "section", "reorder", "center", "hidden", "layout", "blueprint", "Fivora", "Deneb UI"],
   },
 };

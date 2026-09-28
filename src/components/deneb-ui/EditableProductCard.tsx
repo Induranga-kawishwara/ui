@@ -1,34 +1,82 @@
-import React from 'react';
-import { EditableText } from './EditableText';
+import { useSiteData } from './SiteDataProvider';
+import React, { useState, useMemo, useEffect } from 'react';
+import { EditableText, EditableBadge } from './EditableText';
 import { EditableImage } from './EditableImage';
-import { EditableBadge } from './EditableText';
-import { MeasurementUnit } from './utils/productOptions';
-import { useOptionalCart, getProductWhatsAppUrl, formatCurrency } from './cart/useCart';
+import { useOptionalCart, formatCurrency, getProductWhatsAppUrl } from './cart/useCart';
+import {
+  resolveProductOptions,
+  resolveVariantPrice,
+  MeasurementUnit,
+  ProductVariant,
+  ProductOptionInput,
+} from './utils/productOptions';
+
+const COLOR_HEX_MAP: Record<string, string> = {
+  black: '#111827',
+  white: '#ffffff',
+  red: '#ef4444',
+  blue: '#3b82f6',
+  green: '#22c55e',
+  yellow: '#eab308',
+  orange: '#f97316',
+  purple: '#a855f7',
+  pink: '#ec4899',
+  navy: '#1e3a8a',
+  grey: '#6b7280',
+  gray: '#6b7280',
+  silver: '#d1d5db',
+  gold: '#f59e0b',
+  brown: '#78350f',
+  beige: '#f5f5dc',
+  maroon: '#800000',
+  olive: '#808000',
+  teal: '#14b8a6',
+  cyan: '#06b6d4',
+  rose: '#f43f5e',
+  emerald: '#10b981',
+  indigo: '#6366f1',
+  violet: '#8b5cf6',
+  sky: '#0ea5e9',
+  amber: '#f59e0b',
+  charcoal: '#374151',
+  cream: '#fffdd0',
+  burgundy: '#800020',
+};
 
 export interface ProductItem {
   id?: string | number;
   name?: string;
   title?: string;
+
+  // Dual Pricing Engine (Fixed vs Price Range)
+  isPriceRange?: boolean;
+  productName?: string;
+  itemTitle?: string;
   brand?: string;
   price?: string | number;
+  cost?: string | number;
+  amount?: string | number;
+  productPrice?: string | number;
+  compareAtPrice?: string | number;
   originalPrice?: string | number;
   currency?: string;
   description?: string;
+  desc?: string;
+  details?: string;
   category?: string;
   imageUrl?: string;
   image?: string;
+  photo?: string;
+  thumbnail?: string;
+  productImage?: string;
+  gallery?: string[];
   images?: string[];
   badge?: string;
+  tag?: string;
   rating?: number | string;
   reviewsCount?: number | string;
   isNew?: boolean;
   isBestSeller?: boolean;
-
-  // Dual Pricing Engine (Fixed vs Price Range)
-  isPriceRange?: boolean;
-  minPrice?: string | number;
-  maxPrice?: string | number;
-  priceRange?: string;
 
   // WhatsApp & CTA custom bindings per product
   whatsappNumber?: string;
@@ -45,9 +93,16 @@ export interface ProductItem {
   sizes?: (string | number)[] | string;
   sizesText?: string;
   sizesLabel?: string;
-  colors?: Array<string | { name: string; hex?: string; image?: string; imageUrl?: string }> | string;
+  colors?: Array<string | { name: string; hex?: string; image?: string }> | string;
   colorsText?: string;
   colorsLabel?: string;
+  variants?: ProductVariant[];
+  variantPrices?: Record<string, number | string>;
+  minPrice?: string | number;
+  maxPrice?: string | number;
+  priceMin?: string | number;
+  priceMax?: string | number;
+  priceRange?: [number | string, number | string] | string;
 
   [key: string]: unknown;
 }
@@ -55,113 +110,33 @@ export interface ProductItem {
 export type ProductCardVariant = 'modern-glass' | 'classic' | 'minimal' | 'horizontal';
 
 export interface EditableProductCardProps extends React.HTMLAttributes<HTMLElement> {
-  /**
-   * The item path for the product, e.g. "products[0]" or "featuredProducts[1]".
-   */
   itemPath: string;
-
-  /**
-   * The product data object.
-   */
-  product: ProductItem;
-
-  /**
-   * Design variant: 'modern-glass' | 'classic' | 'minimal' | 'horizontal'
-   */
+  product?: ProductItem;
+  item?: ProductItem;
   cardVariant?: ProductCardVariant;
-
-  /**
-   * Fallback image URL if product image is empty.
-   */
   imageFallback?: string;
-
-  /**
-   * HTML wrapper tag (default: 'article').
-   */
   as?: React.ElementType;
-
-  /**
-   * Currency code or symbol (default: 'LKR').
-   */
   currency?: string;
-
-  /**
-   * Whether to display the brand tag (default: true).
-   */
   showBrand?: boolean;
-
-  /**
-   * Whether to display the price field (default: true).
-   */
   showPrice?: boolean;
-
-  /**
-   * Whether to display the description field (default: true).
-   */
   showDescription?: boolean;
-
-  /**
-   * Whether to display category pill (default: true if present).
-   */
   showCategory?: boolean;
-
-  /**
-   * Default WhatsApp account number for inquiries (e.g. '94771234567').
-   */
   whatsappNumber?: string;
-
-  /**
-   * Store name for WhatsApp message templates.
-   */
+  whatsappPhone?: string;
   storeName?: string;
-
-  /**
-   * Whether to display the WhatsApp contact button (default: true).
-   */
+  showOptions?: boolean;
+  allowInteractiveSwatches?: boolean;
   showWhatsAppButton?: boolean;
-
-  /**
-   * Whether to display the Add to Cart button (default: true).
-   */
   showAddToCartButton?: boolean;
-
-  /**
-   * Default label for the WhatsApp button (default: 'Inquire on WhatsApp').
-   */
   whatsappActionLabel?: string;
-
-  /**
-   * Default label for the Add to Cart button (default: 'Add to Cart').
-   */
   addToCartLabel?: string;
-
-  /**
-   * Optional custom action slot (overrides dual action buttons).
-   */
   actionSlot?: React.ReactNode;
-
-  /**
-   * Legacy action label fallback.
-   */
   actionLabel?: string;
-
-  /**
-   * Legacy action label path fallback.
-   */
   actionLabelPath?: string;
-
-  /**
-   * Optional callback when Add to Cart is clicked.
-   */
   onAddToCart?: (product: ProductItem) => void;
-
-  /**
-   * Optional callback when WhatsApp button is clicked.
-   */
   onWhatsAppClick?: (product: ProductItem, url: string) => void;
 }
 
-// Clean inline SVG icons for zero external dependencies
 function WhatsAppIcon({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg
@@ -200,14 +175,10 @@ function CartIcon({ className = '', style = {} }: { className?: string; style?: 
   );
 }
 
-/**
- * EditableProductCard is an elite, auto-balancing commerce card featuring
- * Sri Lankan Rupee (LKR) pricing, dual WhatsApp + Add to Cart actions,
- * brand attribution, and strict Fivora visual editing synchronization.
- */
 export function EditableProductCard({
   itemPath,
-  product,
+  product: productProp,
+  item: itemProp,
   cardVariant = 'modern-glass',
   imageFallback,
   as: Component = 'article',
@@ -216,7 +187,10 @@ export function EditableProductCard({
   showPrice = true,
   showDescription = true,
   showCategory = true,
-  whatsappNumber = '94770000000',
+  whatsappNumber: whatsappNumberProp,
+  whatsappPhone: whatsappPhoneProp,
+  showOptions,
+  allowInteractiveSwatches,
   storeName,
   showWhatsAppButton = true,
   showAddToCartButton = true,
@@ -231,89 +205,199 @@ export function EditableProductCard({
   style,
   ...props
 }: EditableProductCardProps) {
+  const product = (productProp || itemProp || {}) as ProductItem;
+  const whatsappNumber = whatsappPhoneProp || whatsappNumberProp || '94770000000';
   const cart = useOptionalCart();
 
-  const name = String(product?.name || product?.title || 'Untitled Product');
+  // Dynamic Options, Measurements & Colors resolution
+  const resolvedOptions = useMemo(
+    () => resolveProductOptions(product as ProductOptionInput),
+    [product]
+  );
+
+  const [selectedColor, setSelectedColor] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [colorImage, setColorImage] = useState<string>('');
+
+  // Sync if selection is no longer present in updated product (e.g. during live visual editing)
+  useEffect(() => {
+    if (selectedColor && !resolvedOptions.colors.some((c) => c.toLowerCase() === selectedColor.toLowerCase())) {
+      setSelectedColor('');
+      setColorImage('');
+    }
+  }, [product, resolvedOptions.colors]);
+
+  useEffect(() => {
+    if (selectedOption && !resolvedOptions.options.some((o) => o.toLowerCase() === selectedOption.toLowerCase())) {
+      setSelectedOption('');
+    }
+  }, [product, resolvedOptions.options]);
+
+  // Variant & Dynamic Price Resolution
+  const resolvedPrice = useMemo(
+    () => resolveVariantPrice(product as ProductOptionInput, selectedOption, selectedColor, currency),
+    [product, selectedOption, selectedColor, currency]
+  );
+
+  const titleKey =
+    'title' in (product || {}) && !('name' in (product || {}) && (product as any).name)
+      ? 'title'
+      : ('productName' in (product || {}) && !('name' in (product || {}) && (product as any).name)
+        ? 'productName'
+        : 'name');
+  const name = String(
+    product?.name || product?.title || (product as any)?.productName || (product as any)?.itemTitle || 'Untitled Product'
+  );
   const brand = String(product?.brand || '');
 
-  // Dual Pricing Resolution (Fixed Price vs Price Range)
+  const rawPriceCandidate =
+    product?.price ?? (product as any)?.cost ?? (product as any)?.amount ?? (product as any)?.productPrice;
+  const basePriceNum =
+    typeof rawPriceCandidate === 'number'
+      ? rawPriceCandidate
+      : parseFloat(String(rawPriceCandidate || '').replace(/[^0-9.]/g, '')) || 0;
   const isRange = Boolean(
     product?.isPriceRange ||
     (product?.minPrice !== undefined && product?.maxPrice !== undefined) ||
     product?.priceRange
   );
 
-  const rawPrice = product?.price;
-  const priceNum = typeof rawPrice === 'number' ? rawPrice : parseFloat(String(rawPrice || '').replace(/[^0-9.]/g, '')) || 0;
-
-  let formattedPrice = '';
+  let rangePriceString = '';
   if (isRange) {
     if (product?.priceRange) {
-      formattedPrice = String(product.priceRange);
+      rangePriceString = String(product.priceRange);
     } else {
       const minNum = typeof product?.minPrice === 'number' ? product.minPrice : parseFloat(String(product?.minPrice || '').replace(/[^0-9.]/g, '')) || 0;
       const maxNum = typeof product?.maxPrice === 'number' ? product.maxPrice : parseFloat(String(product?.maxPrice || '').replace(/[^0-9.]/g, '')) || 0;
-      formattedPrice = `${formatCurrency(minNum, currency)} – ${formatCurrency(maxNum, currency)}`;
+      rangePriceString = `${formatCurrency(minNum, currency)} – ${formatCurrency(maxNum, currency)}`;
     }
-  } else if (product?.price !== undefined && product?.price !== null && String(product.price).trim() !== '') {
-    formattedPrice = typeof rawPrice === 'string' && rawPrice.includes('LKR') ? rawPrice : formatCurrency(priceNum, currency);
   }
 
-  const hasPrice = showPrice && Boolean(formattedPrice);
+  const baseFormattedPrice =
+    rangePriceString || (
+    rawPriceCandidate !== undefined && rawPriceCandidate !== null && String(rawPriceCandidate).trim() !== ''
+      ? typeof rawPriceCandidate === 'string' &&
+        (rawPriceCandidate.includes('LKR') || rawPriceCandidate.includes('-') || rawPriceCandidate.includes('–'))
+        ? rawPriceCandidate
+        : formatCurrency(basePriceNum, currency)
+      : '');
 
-  const originalPrice = product?.originalPrice !== undefined ? String(product.originalPrice) : '';
-  const description = String(product?.description || '');
+  const displayPrice = resolvedPrice.formattedPrice || baseFormattedPrice;
+  const hasPrice = showPrice && Boolean(displayPrice && displayPrice.trim() !== '');
+
+  const priceKey =
+    'cost' in (product || {}) && !('price' in (product || {}) && (product as any).price !== undefined)
+      ? 'cost'
+      : ('amount' in (product || {}) && !('price' in (product || {}) && (product as any).price !== undefined)
+        ? 'amount'
+        : 'price');
+
+  const rawOriginalPrice = product?.originalPrice ?? (product as any)?.compareAtPrice;
+  const baseOriginalPrice =
+    rawOriginalPrice !== undefined && rawOriginalPrice !== null ? String(rawOriginalPrice) : '';
+  const displayOriginalPrice = resolvedPrice.formattedOriginalPrice || baseOriginalPrice;
+
+  const originalPriceKey =
+    'compareAtPrice' in (product || {}) && !('originalPrice' in (product || {}) && (product as any).originalPrice !== undefined)
+      ? 'compareAtPrice'
+      : 'originalPrice';
+
+  const descriptionKey =
+    'desc' in (product || {}) && !('description' in (product || {}) && (product as any).description)
+      ? 'desc'
+      : 'description';
+  const description = String(product?.description || (product as any)?.desc || (product as any)?.details || '');
+
   const category = String(product?.category || '');
-  const badge = String(product?.badge || '');
-  const fallbackImage = imageFallback || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80';
-  const defaultImageUrl = String(product?.imageUrl || product?.image || fallbackImage);
+  const badgeKey =
+    'tag' in (product || {}) && !('badge' in (product || {}) && (product as any).badge) ? 'tag' : 'badge';
+  const badge = String(product?.badge || (product as any)?.tag || '');
 
-  // Active Image and Interactive Color Swatch State
-  const [activeImage, setActiveImage] = React.useState<string>(defaultImageUrl);
-  const [selectedColor, setSelectedColor] = React.useState<string | null>(null);
+  const fallbackImage =
+    imageFallback || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80';
+  const rawImage =
+    product?.imageUrl ||
+    product?.image ||
+    (product as any)?.photo ||
+    (product as any)?.thumbnail ||
+    (product as any)?.productImage ||
+    (Array.isArray(product?.gallery) && product.gallery[0]) ||
+    (Array.isArray(product?.images) && product.images[0]);
+  const baseImageUrl = String(rawImage || fallbackImage);
 
-  React.useEffect(() => {
-    setActiveImage(String(product?.imageUrl || product?.image || fallbackImage));
-  }, [product?.imageUrl, product?.image, fallbackImage]);
+  // Active image: clicked color image -> resolved variant image -> product base image
+  const currentImage = colorImage || resolvedPrice.variantImage || baseImageUrl;
+  const imageKey =
+    'image' in (product || {}) && !('imageUrl' in (product || {}) && (product as any).imageUrl)
+      ? 'image'
+      : ('photo' in (product || {}) && !('imageUrl' in (product || {}) && (product as any).imageUrl)
+        ? 'photo'
+        : 'imageUrl');
 
-  // Parse color swatches
-  const parsedColors: Array<{ name: string; hex?: string; image?: string; imageUrl?: string }> = React.useMemo(() => {
-    if (!product?.colors) return [];
-    if (Array.isArray(product.colors)) {
-      return product.colors.map((c) => {
-        if (typeof c === 'string') {
-          return { name: c, hex: c.startsWith('#') ? c : undefined };
-        }
-        return {
-          name: c.name,
-          hex: c.hex,
-          image: c.image,
-          imageUrl: c.imageUrl,
-        };
-      });
-    }
-    if (typeof product.colors === 'string') {
-      return product.colors.split(',').map((s) => {
-        const trimmed = s.trim();
-        return { name: trimmed, hex: trimmed.startsWith('#') ? trimmed : undefined };
-      });
-    }
-    return [];
-  }, [product?.colors]);
-
-  const imageUrl = activeImage;
-
-  // Resolved phone number for WhatsApp
-  const resolvedPhone = String(product?.whatsappNumber || whatsappNumber || '94770000000');
+  const siteDataCard = useSiteData<any>();
+  const liveShopCard = siteDataCard?.shop;
+  const liveWaCard =
+    liveShopCard?.contact?.whatsapp ||
+    liveShopCard?.businessWhatsapp ||
+    liveShopCard?.whatsappNumber ||
+    liveShopCard?.whatsapp;
+  const resolvedPhone = String(
+    product?.whatsappNumber ||
+    (whatsappPhoneProp || whatsappNumberProp ? whatsappNumber : null) ||
+    liveWaCard ||
+    whatsappNumber ||
+    '94771234567'
+  );
   const resolvedWhatsAppText = String(product?.whatsappButtonText || whatsappActionLabel);
   const resolvedAddToCartText = String(product?.addToCartButtonText || addToCartLabel);
 
   const isHorizontal = cardVariant === 'horizontal';
 
+  const handleColorClick = (c: { name: string; hex?: string; image?: string }, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (selectedColor.toLowerCase() === c.name.toLowerCase()) {
+      setSelectedColor('');
+      setColorImage('');
+    } else {
+      setSelectedColor(c.name);
+      if (c.image) {
+        setColorImage(c.image);
+      } else {
+        const v = (product.variants as any[])?.find(
+          (item) =>
+            String(item.color || '').trim().toLowerCase() === c.name.toLowerCase() &&
+            (item.image || item.imageUrl || item.photo)
+        );
+        if (v) {
+          setColorImage(v.image || v.imageUrl || v.photo);
+        } else {
+          setColorImage('');
+        }
+      }
+    }
+  };
+
+  const handleOptionClick = (opt: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (selectedOption.toLowerCase() === opt.toLowerCase()) {
+      setSelectedOption('');
+    } else {
+      setSelectedOption(opt);
+    }
+  };
+
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     const url = getProductWhatsAppUrl(
-      { ...product, name, brand, price: formattedPrice },
+      {
+        ...product,
+        name,
+        brand,
+        price: displayPrice,
+        size: selectedOption || undefined,
+        color: selectedColor || undefined,
+        option: selectedOption || undefined,
+      },
       resolvedPhone,
       { storeName, currency }
     );
@@ -327,13 +411,20 @@ export function EditableProductCard({
 
   const handleAddToCartClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    const effectivePrice = resolvedPrice.numericPrice || basePriceNum;
+    const variantSuffix = [selectedColor, selectedOption].filter(Boolean).join('-');
     const itemToAdd = {
-      id: String(product?.id || name.toLowerCase().replace(/\s+/g, '-')),
+      id:
+        String(product?.id || name.toLowerCase().replace(/\s+/g, '-')) +
+        (variantSuffix ? `-${variantSuffix}` : ''),
       name,
       brand,
-      price: priceNum,
-      image: imageUrl,
+      price: effectivePrice,
+      image: currentImage,
       quantity: 1,
+      size: selectedOption || undefined,
+      color: selectedColor || undefined,
+      option: selectedOption || undefined,
     };
 
     if (cart) {
@@ -407,9 +498,9 @@ export function EditableProductCard({
         }}
       >
         <EditableImage
-          id={`${itemPath}.imageUrl`}
-          data-preview-field-path={`${itemPath}.imageUrl`}
-          src={imageUrl}
+          id={`${itemPath}.${imageKey}`}
+          data-preview-field-path={`${itemPath}.${imageKey}`}
+          src={currentImage}
           fallbackSrc={imageFallback}
           alt={name}
           aspectRatio={isHorizontal ? 'square' : '4/3'}
@@ -422,8 +513,8 @@ export function EditableProductCard({
         {badge && (
           <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 10 }}>
             <EditableBadge
-              id={`${itemPath}.badge`}
-              data-preview-field-path={`${itemPath}.badge`}
+              id={`${itemPath}.${badgeKey}`}
+              data-preview-field-path={`${itemPath}.${badgeKey}`}
               defaultValue={badge}
               badgeVariant="primary"
             />
@@ -484,8 +575,8 @@ export function EditableProductCard({
           {/* Product Title */}
           <EditableText
             as="h3"
-            id={`${itemPath}.name`}
-            data-preview-field-path={`${itemPath}.name`}
+            id={`${itemPath}.${titleKey}`}
+            data-preview-field-path={`${itemPath}.${titleKey}`}
             defaultValue={name}
             style={{
               fontSize: '1.125rem',
@@ -500,14 +591,14 @@ export function EditableProductCard({
           {showDescription && description ? (
             <EditableText
               as="p"
-              id={`${itemPath}.description`}
-              data-preview-field-path={`${itemPath}.description`}
+              id={`${itemPath}.${descriptionKey}`}
+              data-preview-field-path={`${itemPath}.${descriptionKey}`}
               defaultValue={description}
               style={{
                 fontSize: '0.875rem',
                 color: 'var(--muted-text, #94a3b8)',
                 lineHeight: 1.5,
-                marginBottom: '0.75rem',
+                marginBottom: '0.625rem',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
@@ -516,54 +607,99 @@ export function EditableProductCard({
             />
           ) : null}
 
-          {/* Interactive Color Swatches */}
-          {parsedColors.length > 0 && (
-            <div style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
-                {parsedColors.map((col, idx) => {
-                  const isSelected = selectedColor === col.name || (!selectedColor && idx === 0);
-                  const swatchHex = col.hex || (
-                    col.name.toLowerCase().includes('navy') ? '#1e3a8a' :
-                    col.name.toLowerCase().includes('olive') ? '#3f6212' :
-                    col.name.toLowerCase().includes('terra') ? '#c2410c' :
-                    col.name.toLowerCase().includes('black') ? '#09090b' :
-                    col.name.toLowerCase().includes('white') ? '#f8fafc' :
-                    '#64748b'
-                  );
+          {/* Interactive Color Swatches (Apparel & Multivariant Products) */}
+          {resolvedOptions.detailedColors.length > 0 && (
+            <div style={{ marginTop: '0.5rem', marginBottom: '0.375rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted-text, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  {product.colorsLabel ? String(product.colorsLabel) : 'Color'}
+                </span>
+                {selectedColor ? (
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--brand-accent, #a3e635)' }}>
+                    {selectedColor}
+                  </span>
+                ) : null}
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', alignItems: 'center' }}>
+                {resolvedOptions.detailedColors.map((c) => {
+                  const isSelected = selectedColor.toLowerCase() === c.name.toLowerCase();
+                  const colorHex = c.hex || COLOR_HEX_MAP[c.name.toLowerCase()] || '#64748b';
+                  const isLight = colorHex.toLowerCase() === '#ffffff' || colorHex.toLowerCase() === '#fff' || colorHex.toLowerCase() === '#fffdd0' || colorHex.toLowerCase() === '#f5f5dc';
                   return (
                     <button
-                      key={col.name + idx}
+                      key={c.name}
                       type="button"
-                      title={col.name}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedColor(col.name);
-                        if (col.imageUrl || col.image) {
-                          setActiveImage(col.imageUrl || col.image!);
-                        }
-                      }}
+                      onClick={(e) => handleColorClick(c, e)}
+                      title={c.name}
+                      aria-label={`Select color ${c.name}`}
                       style={{
                         width: '20px',
                         height: '20px',
                         borderRadius: '9999px',
-                        backgroundColor: swatchHex,
-                        border: isSelected ? '2px solid #ffffff' : '1.5px solid rgba(255,255,255,0.3)',
-                        outline: isSelected ? '2px solid var(--brand-color, #6366f1)' : 'none',
+                        backgroundColor: colorHex,
+                        border: isLight ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.2)',
+                        outline: isSelected ? '2px solid var(--brand-accent, #a3e635)' : 'none',
                         outlineOffset: '2px',
                         cursor: 'pointer',
                         padding: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         transition: 'transform 0.15s ease, outline 0.15s ease',
                         transform: isSelected ? 'scale(1.15)' : 'scale(1)',
+                        boxShadow: isSelected ? '0 0 8px rgba(163, 230, 53, 0.4)' : '0 1px 2px rgba(0,0,0,0.1)',
                       }}
-                      aria-label={col.name}
                     />
                   );
                 })}
-                {selectedColor && (
-                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--muted-text, #94a3b8)', marginLeft: '0.25rem' }}>
-                    {selectedColor}
+              </div>
+            </div>
+          )}
+
+          {/* Interactive Size / Option Chips */}
+          {resolvedOptions.options.length > 0 && (
+            <div style={{ marginTop: '0.375rem', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted-text, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  {product.sizesLabel || product.optionsLabel ? String(product.sizesLabel || product.optionsLabel) : resolvedOptions.optionsLabel}
+                </span>
+                {selectedOption ? (
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--brand-accent, #a3e635)' }}>
+                    {resolvedOptions.formatSelectedDisplay(selectedOption)}
                   </span>
-                )}
+                ) : null}
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                {resolvedOptions.options.map((opt) => {
+                  const isSelected = selectedOption.toLowerCase() === opt.toLowerCase();
+                  return (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={(e) => handleOptionClick(opt, e)}
+                      style={{
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.72rem',
+                        fontWeight: isSelected ? 700 : 500,
+                        cursor: 'pointer',
+                        border: isSelected
+                          ? '1px solid var(--brand-accent, #a3e635)'
+                          : '1px solid var(--card-border, rgba(226, 232, 240, 0.4))',
+                        backgroundColor: isSelected
+                          ? 'var(--brand-accent, #a3e635)'
+                          : 'var(--tag-bg, rgba(255, 255, 255, 0.08))',
+                        color: isSelected
+                          ? '#020617'
+                          : 'var(--muted-text, #e2e8f0)',
+                        transition: 'all 0.15s ease',
+                        transform: isSelected ? 'scale(1.03)' : 'scale(1)',
+                      }}
+                    >
+                      {resolvedOptions.formatOption(opt)}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -580,27 +716,27 @@ export function EditableProductCard({
             gap: '0.75rem',
           }}
         >
-          {/* Price Row (in LKR) */}
+          {/* Price Row (in LKR or currency, supporting price ranges and dynamic variant prices) */}
           {hasPrice ? (
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
               <EditableText
                 as="span"
-                id={`${itemPath}.price`}
-                data-preview-field-path={`${itemPath}.price`}
-                defaultValue={formattedPrice}
+                id={`${itemPath}.${priceKey}`}
+                data-preview-field-path={`${itemPath}.${priceKey}`}
+                defaultValue={displayPrice}
                 style={{
-                  fontSize: '1.3rem',
+                  fontSize: '1.25rem',
                   fontWeight: 800,
                   color: 'var(--brand-color, #ffffff)',
                   letterSpacing: '-0.02em',
                 }}
               />
-              {originalPrice ? (
+              {displayOriginalPrice ? (
                 <EditableText
                   as="span"
-                  id={`${itemPath}.originalPrice`}
-                  data-preview-field-path={`${itemPath}.originalPrice`}
-                  defaultValue={originalPrice}
+                  id={`${itemPath}.${originalPriceKey}`}
+                  data-preview-field-path={`${itemPath}.${originalPriceKey}`}
+                  defaultValue={displayOriginalPrice}
                   style={{
                     fontSize: '0.875rem',
                     textDecoration: 'line-through',
@@ -608,7 +744,7 @@ export function EditableProductCard({
                   }}
                 />
               ) : null}
-              {product?.measurement ? (
+              {product?.measurement && !selectedOption ? (
                 <EditableText
                   as="span"
                   id={`${itemPath}.measurement`}

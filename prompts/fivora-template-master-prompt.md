@@ -53,6 +53,13 @@ SELECTED PAGES
 4. Omit a CTA when its target page is unselected. If strict marker coverage requires a non-navigation fallback wrapper, keep the exact data-target-page on that wrapper so Fivora hides it completely. Never leave visible button-styled fallback text, href="#", or a disabled route control.
 5. Keep content genuinely consumed by a selected route. Home-page cards may remain editable even when their dedicated listing page is absent; hide only their controls that navigate to that page. When the page is selected, render those controls again.
 
+ONE-PAGE NAVIGATION
+1. First classify the design: a routed multi-page template uses canonical page routes; a one-page design uses in-document section targets. Never mix the two accidentally.
+2. For a one-page design, give every navbar destination a unique stable semantic section marker: `<section id="about" data-section-id="about" data-design-section="about">` and link to it with the matching `href="#about"`.
+3. Every one-page navigation target must exist in the exported Home document, remain unique, and be visible when its navigation item is visible. Do not use route links such as `/about` for content that only exists as a Home section.
+4. Keep navigation labels short neutral UI copy such as Home, About, Services, Gallery, and Contact. Put them in a `navigation`, `nav`, `navbar`, `navLabels`, or `menuLabels` content container; never replace them with AI marketing sentences.
+5. Verify section navigation in local preview and the production static export, including sticky-header offset, direct `/#section` loading, mobile navigation, and reduced-motion mode.
+
 DENEB UI COMPONENTS — USE THESE, NEVER BUILD FROM SCRATCH
 Install:  npm install @deneb-ui/ui @deneb-ui/core
 Import:   import { ComponentName } from "@deneb-ui/ui";

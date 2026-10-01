@@ -79,6 +79,15 @@
         "Do not delete content paths genuinely rendered on selected routes. Home cards remain editable even when a dedicated listing page is absent; only that page's navigation controls disappear."
       ]
     },
+    "onePageNavigation": {
+      "rules": [
+        "Classify the design as routed multi-page or one-page section navigation; never mix the two accidentally.",
+        "For one-page designs, use unique stable section ids plus matching data-section-id and data-design-section markers, and link with href=#section-id.",
+        "Every visible one-page navigation target must exist in the exported Home document. Do not use /about-style routes for content that exists only as a Home section.",
+        "Keep navigation labels short neutral UI copy in navigation, nav, navbar, navLabels, or menuLabels containers; never generate marketing sentences for them.",
+        "Verify sticky-header offset, direct hash loading, mobile navigation, and reduced-motion behavior in preview and static export."
+      ]
+    },
     "exactMarkers": {
       "attributes": {
         "page": "data-preview-page-key",

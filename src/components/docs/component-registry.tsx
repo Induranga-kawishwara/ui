@@ -744,6 +744,8 @@ function ProductCardRangeSwatchesPreview() {
     badge: "Range + Swatches",
     description: "Ultra-breathable 100% natural Sri Lankan linen. Click swatches to swap photos live!",
     imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+    sizes: ["S", "M", "L", "XL"],
+    sizesLabel: "Size",
     colors: [
       {
         name: "Navy Blue",
@@ -1049,9 +1051,11 @@ function InteractiveProductCardDemoInner() {
       priceRange: 'LKR 2,800.00 – LKR 4,800.00',
       currency: 'LKR',
       category: 'Resort Wear',
-      badge: 'Price Range + Swatches',
-      description: 'Ultra-breathable 100% natural Sri Lankan linen tailored for tropical elegance. Click swatches to swap photos live!',
+      badge: 'Price Range + Sizes + Swatches',
+      description: 'Ultra-breathable 100% natural Sri Lankan linen tailored for tropical elegance. Click sizes & swatches to interact live!',
       imageUrl: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80',
+      sizes: ['S', 'M', 'L', 'XL'],
+      sizesLabel: 'Size',
       colors: [
         {
           name: 'Navy Blue',
@@ -1244,28 +1248,166 @@ function InteractiveCartDrawerDemo() {
 
 function InteractiveFilterSidebarDemo() {
   const [filters, setFilters] = useState({
-    selectedCategories: ['Running'],
-    priceRange: [0, 220] as [number, number],
-    selectedSizes: ['US 10'],
-    inStockOnly: true,
+    selectedCategories: [] as string[],
+    priceRange: [0, 250] as [number, number],
+    selectedSizes: [] as string[],
+    inStockOnly: false,
   });
 
+  const demoProducts = [
+    {
+      id: "shoe-1",
+      name: "AeroGlide Elite Runner",
+      category: "Running",
+      price: 180,
+      currency: "$",
+      sizes: ["US 8", "US 9", "US 10"],
+      inStock: true,
+      imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
+      badge: "Best Seller",
+      whatsappNumber: "94771234567",
+    },
+    {
+      id: "shoe-2",
+      name: "Retro Pulse High-Top",
+      category: "Basketball",
+      price: 210,
+      currency: "$",
+      sizes: ["US 10", "US 11"],
+      inStock: true,
+      imageUrl: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=600&q=80",
+      badge: "Popular",
+      whatsappNumber: "94771234567",
+    },
+    {
+      id: "shoe-3",
+      name: "Urban Minimalist Trainer",
+      category: "Lifestyle",
+      price: 120,
+      currency: "$",
+      sizes: ["US 8", "US 9"],
+      inStock: true,
+      imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80",
+      whatsappNumber: "94771234567",
+    },
+    {
+      id: "shoe-4",
+      name: "Pro Track Sprint Spike",
+      category: "Running",
+      price: 240,
+      currency: "$",
+      sizes: ["US 9", "US 10", "US 11"],
+      inStock: false,
+      imageUrl: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=600&q=80",
+      badge: "Out of Stock",
+      whatsappNumber: "94771234567",
+    },
+  ];
+
+  const filtered = React.useMemo(() => {
+    return demoProducts.filter((p) => {
+      if (filters.selectedCategories.length > 0 && !filters.selectedCategories.some((c) => c.toLowerCase() === p.category.toLowerCase())) return false;
+      if (p.price > filters.priceRange[1]) return false;
+      if (filters.selectedSizes.length > 0 && !p.sizes.some((s) => filters.selectedSizes.includes(s))) return false;
+      if (filters.inStockOnly && !p.inStock) return false;
+      return true;
+    });
+  }, [filters]);
+
   return (
-    <div className="w-full max-w-sm mx-auto p-2">
-      <FilterSidebar
-        categories={['Running', 'Lifestyle', 'Basketball', 'Training']}
-        sizes={['US 8', 'US 9', 'US 10', 'US 11']}
-        maxPrice={250}
-        initialFilters={filters}
-        onFilterChange={(f) =>
-          setFilters({
-            selectedCategories: f.selectedCategories,
-            priceRange: f.priceRange,
-            selectedSizes: f.selectedSizes,
-            inStockOnly: Boolean(f.inStockOnly),
-          })
-        }
+    <div className="flex flex-col lg:flex-row gap-6 w-full p-2 items-start">
+      <div className="w-full lg:w-64 shrink-0">
+        <FilterSidebar
+          categories={["Running", "Lifestyle", "Basketball", "Training"]}
+          sizes={["US 8", "US 9", "US 10", "US 11"]}
+          maxPrice={250}
+          initialFilters={filters}
+          onFilterChange={(f) =>
+            setFilters({
+              selectedCategories: f.selectedCategories,
+              priceRange: f.priceRange,
+              selectedSizes: f.selectedSizes,
+              inStockOnly: Boolean(f.inStockOnly),
+            })
+          }
+        />
+      </div>
+      <div className="flex-1 w-full min-w-0">
+        <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#23283B]">
+          <span className="text-xs font-semibold text-neutral-300">
+            Live Connected Storefront Filter ({filtered.length} of {demoProducts.length} items)
+          </span>
+        </div>
+        {filtered.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {filtered.map((prod: any, idx: number) => (
+              <ProductCard
+                key={prod.id}
+                itemPath={`demoProducts[${idx}]`}
+                product={prod}
+                cardVariant="modern-glass"
+                currency="$"
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 text-center rounded-2xl border border-dashed border-neutral-800 text-neutral-400 text-xs">
+            No products match active sidebar filters.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FilterSidebarAllInOneVariantPreview() {
+  return (
+    <div className="w-full max-w-4xl p-2 bg-slate-950/40 rounded-2xl border border-white/10">
+      <ProductGrid
+        title="Artisanal Footwear"
+        subtitle="Live Catalog"
+        showSearch={true}
+        showFilterSidebar={true}
+        enablePagination={true}
+        pageSize={4}
+        columns={{ mobile: 1, tablet: 2, desktop: 2 }}
+        filterSidebarProps={{
+          categories: ["Running", "Lifestyle", "Training"],
+          maxPrice: 300,
+        }}
+        products={[
+          { id: "v1", title: "AeroGlide Runner", price: 180, category: "Running", inStock: true, image: "/shoes/shoe-1.png", sizes: ["US 8", "US 9"] },
+          { id: "v2", title: "CloudShift Trainer", price: 140, category: "Training", inStock: true, image: "/shoes/shoe-2.png", sizes: ["US 10", "US 11"] },
+          { id: "v3", title: "Veloce Classic", price: 210, category: "Lifestyle", inStock: true, image: "/shoes/shoe-3.png", sizes: ["US 9", "US 10"] },
+          { id: "v4", title: "Apex Elite Low", price: 250, category: "Running", inStock: false, image: "/shoes/shoe-4.png", sizes: ["US 8"] },
+        ]}
       />
+    </div>
+  );
+}
+
+function FilterSidebarServerSyncVariantPreview() {
+  return (
+    <div className="flex flex-col gap-3 p-4 rounded-xl border border-indigo-500/30 bg-indigo-950/20 text-xs w-full">
+      <div className="flex items-center gap-2 text-indigo-400 font-semibold">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Live Backend Sync Query Format (/site-catalog/:slug/live-data)
+      </div>
+      <pre className="p-3 rounded-lg bg-black/60 text-slate-300 font-mono text-[11px] overflow-x-auto">
+{`GET /site-catalog/my-store/live-data?category=Running&minPrice=100&maxPrice=300&inStockOnly=true&page=1&limit=8
+
+Response: {
+  shopName: "My Store",
+  currency: "LKR",
+  categories: ["Lifestyle", "Running", "Training"],
+  totalProducts: 42,
+  pagination: { page: 1, limit: 8, total: 42, totalPages: 6, hasMore: true },
+  products: [...]
+}`}
+      </pre>
+      <p className="text-slate-400">
+        When <code className="text-indigo-300">enableBackendSearch=&#123;true&#125;</code> is enabled on <code className="text-indigo-300">&lt;ProductGrid&gt;</code>, all sidebar filter adjustments and search terms automatically serialize into real-time server queries with debounced network calls and server-side pagination.
+      </p>
     </div>
   );
 }
@@ -3377,6 +3519,15 @@ export default function Catalog() {
       { name: 'enableBackendSearch', type: 'boolean', defaultValue: 'true', description: 'Enables debounced remote catalog querying via siteApi.catalogUrl.' },
       { name: 'onSearchChange', type: '(query: string) => void', description: 'Callback fired whenever search query changes.' },
       { name: 'columns', type: '{ mobile?: number; tablet?: number; desktop?: number }', description: 'Responsive column counts.' },
+      { name: 'filters', type: 'ProductFilters', description: 'Multi-faceted filter state object ({ categories?, priceRange?, maxPrice?, sizes?, inStockOnly? }).' },
+      { name: 'showFilterSidebar', type: 'boolean', defaultValue: 'false', description: 'Renders integrated responsive 2-column sidebar layout on desktop with filter controls.' },
+      { name: 'filterSidebarProps', type: 'FilterSidebarProps', description: 'Custom configuration props passed directly to the integrated FilterSidebar component.' },
+      { name: 'enablePagination', type: 'boolean', defaultValue: 'true', description: 'Enables catalog pagination controls (numbered, load-more, simple, dots).' },
+      { name: 'pageSize', type: 'number', defaultValue: '8', description: 'Number of product cards rendered per page.' },
+      { name: 'paginationVariant', type: "'numbers' | 'load-more' | 'simple' | 'dots'", defaultValue: "'numbers'", description: 'Visual style for pagination interface.' },
+      { name: 'showPageSizeSelector', type: 'boolean', defaultValue: 'false', description: 'Renders dropdown selector to switch between 8, 16, 24, 48 products per page.' },
+      { name: 'totalProducts', type: 'number', description: 'Optional explicit total item count from database for server-side pagination.' },
+      { name: 'onPageChange', type: '(page: number) => void', description: 'Callback triggered when page changes.' },
       { name: 'onQuickView', type: '(product, itemPath) => void', description: 'Callback triggered when user hovers and clicks Quick View.' },
     ],
     prevPage: { title: 'ProductQuickView', href: '/docs/components/product-quickview' },
@@ -3465,33 +3616,39 @@ export default function MobileLayout() {
 
   'filter-sidebar': {
     title: 'FilterSidebar',
-    description: 'Faceted catalog filtering sidebar with category chips, price slider, and size swatches. Collapses behind a mobile toggle below 768px; always visible on tablet and desktop.',
+    description: 'Faceted catalog filtering sidebar with category chips, price slider, and size swatches. Seamlessly connects with ProductGrid and ProductCard for real-time synchronized storefront filtering.',
     category: 'E-Commerce',
     badge: 'Commerce',
     previewComponent: <InteractiveFilterSidebarDemo />,
     previewCode: `import { useState } from "react";
-import { FilterSidebar } from "@deneb-ui/ui";
+import { FilterSidebar, ProductGrid } from "@deneb-ui/ui";
 
 export default function Catalog() {
   const [filters, setFilters] = useState({
-    selectedCategories: ["Running"],
-    priceRange: [0, 200],
-    selectedSizes: ["US 10"],
-    inStockOnly: true,
+    selectedCategories: [],
+    priceRange: [0, 250],
+    selectedSizes: [],
+    inStockOnly: false,
   });
 
   return (
-    <div className="flex gap-8">
+    <div className="flex flex-col lg:flex-row gap-8">
+      {/* 1. Sidebar publishes filter state */}
       <FilterSidebar
-        categories={["Running", "Lifestyle", "Training"]}
+        categories={["Running", "Lifestyle", "Basketball"]}
         sizes={["US 8", "US 9", "US 10", "US 11"]}
-        maxPrice={300}
-        onFilterChange={(f) => setFilters(f)}
+        maxPrice={250}
+        onFilterChange={setFilters}
       />
-      <main>Catalog Products</main>
+
+      {/* 2. ProductGrid filters cards in real time */}
+      <ProductGrid filters={filters} />
     </div>
   );
-}`,
+}
+
+// Or use all-in-one integrated sidebar:
+// <ProductGrid showFilterSidebar={true} />`,
     usageCode: `import { FilterSidebar } from "@deneb-ui/ui";`,
     cliCommand: `npx @deneb-ui/cli add filter-sidebar`,
     props: [
@@ -3504,73 +3661,58 @@ export default function Catalog() {
     ],
     variants: [
       {
-        title: '1. Reorderable Sections with Visual Editor CSS Order',
-        description: 'Wrap sections in a flex column container and pass order to enable drag-and-drop or move up/down section reordering in 1-click.',
-        preview: <SectionReorderVariantPreview />,
-        code: `// Wrap sections in a flexbox container
-<main style={{ display: "flex", flexDirection: "column" }}>
-  <Section
-    name="home-hero"
-    order={siteData?.styles?.["home-hero.section"]?.order ?? 1}
-  >
-    <h1>Hero Section (Order #1)</h1>
-  </Section>
+        title: '1. All-in-One Integrated Filter Sidebar (showFilterSidebar={true})',
+        description: 'Render the complete 2-column faceted storefront with search, category pills, price sliders, in-stock toggles, and responsive cards with 1 prop.',
+        preview: <FilterSidebarAllInOneVariantPreview />,
+        code: `<ProductGrid
+  title="Artisanal Footwear"
+  subtitle="Live Catalog"
+  showSearch={true}
+  showFilterSidebar={true}
+  enablePagination={true}
+  pageSize={8}
+  filterSidebarProps={{
+    categories: ["Running", "Lifestyle", "Training"],
+    maxPrice: 300,
+  }}
+/>`,
+      },
+      {
+        title: '2. Split Layout: Standalone FilterSidebar + Connected ProductGrid',
+        description: 'For bespoke hero sections or custom page layouts, place FilterSidebar in a dedicated desktop sidebar column and pass filters to ProductGrid.',
+        preview: <InteractiveFilterSidebarDemo />,
+        code: `const [filters, setFilters] = useState({
+  selectedCategories: [],
+  priceRange: [0, 300],
+  selectedSizes: [],
+  inStockOnly: false,
+});
 
-  <Section
-    name="home-products"
-    order={siteData?.styles?.["home-products.section"]?.order ?? 2}
-  >
-    <h2>Featured Products (Order #2)</h2>
-  </Section>
-</main>`,
+<div className="flex flex-col lg:flex-row gap-8">
+  <aside className="w-full lg:w-72">
+    <FilterSidebar
+      categories={["Running", "Lifestyle", "Basketball"]}
+      sizes={["US 8", "US 9", "US 10", "US 11"]}
+      maxPrice={300}
+      onFilterChange={setFilters}
+    />
+  </aside>
+  <main className="flex-1">
+    <ProductGrid filters={filters} />
+  </main>
+</div>`,
       },
       {
-        title: '2. 1-Click Centered Section Layout',
-        description: 'Set centered={true} or center={true} to automatically align headers, copy, and buttons horizontally in the section container.',
-        preview: <SectionCenterVariantPreview />,
-        code: `<Section
-  name="home-announcement"
-  centered={true}
-  container={true}
-  padding="md"
-  className="bg-indigo-950/30 border border-indigo-500/30 rounded-2xl"
->
-  <h2 className="text-2xl font-bold">New Colombo Flagship Store Opening</h2>
-  <p className="text-slate-400 mt-2">Visit our newly unveiled artisanal showroom at Galle Face Green.</p>
-  <button className="mt-4 px-6 py-2.5 bg-indigo-600 rounded-xl text-white font-medium">
-    Get Directions
-  </button>
-</Section>`,
-      },
-      {
-        title: '3. Safe Section Deletion & Conditional Hiding',
-        description: 'Bind hidden={siteData?.styles?.["section.section"]?.hidden ?? false}. This applies display: "none" and data-section-visible="false" without removing code or content.',
-        preview: <SectionHiddenVariantPreview />,
-        code: `<Section
-  name="seasonal-promo"
-  hidden={siteData?.styles?.["seasonal-promo.section"]?.hidden ?? false}
-  container={true}
-  padding="lg"
-  className="bg-amber-500/10 border border-amber-500/30 text-amber-200"
->
-  <h3>Seasonal Clearance — Save up to 40%</h3>
-</Section>`,
-      },
-      {
-        title: '4. Full-Width Background with Constrained Inner Container',
-        description: 'Set container={true} with a background color or gradient to stretch 100vw while keeping content constrained to a centered 1280px container.',
-        preview: <SectionContainerVariantPreview />,
-        code: `<Section
-  name="features"
-  container={true}
-  bg="linear-gradient(to bottom, #0f172a, #020617)"
-  padding="2xl"
->
-  <h2 className="text-3xl font-bold text-white">Why Shop Ceylon Heritage</h2>
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-    {/* 3-column features */}
-  </div>
-</Section>`,
+        title: '3. Server-Side Live Database Querying & Pagination',
+        description: 'For stores with large inventories, enableBackendSearch serializes active filter states to /site-catalog/:slug/live-data with debouncing and server pagination.',
+        preview: <FilterSidebarServerSyncVariantPreview />,
+        code: `<ProductGrid
+  showFilterSidebar={true}
+  enableBackendSearch={true}
+  enablePagination={true}
+  pageSize={8}
+  onPageChange={(page) => console.log("Fetched page:", page)}
+/>`,
       },
     ],
     prevPage: { title: 'CartDrawer', href: '/docs/components/cart-drawer' },
@@ -3775,8 +3917,8 @@ export default function FeaturedProduct() {
 />`,
       },
       {
-        title: '2. Dynamic Price Range with Interactive Color Swatches',
-        description: 'For apparel and variant products: set isPriceRange={true}, minPrice, maxPrice, and a colors array. Clicking swatches swaps the active image preview in real time.',
+        title: '2. Dynamic Price Range with Sizes & Interactive Swatches',
+        description: 'For apparel and variant products: set isPriceRange={true}, minPrice, maxPrice, sizes array, and colors array. Clicking swatches swaps active image preview, and sizes provide interactive chip selection.',
         preview: <ProductCardRangeSwatchesPreview />,
         code: `<ProductCard
   itemPath="products[1]"
@@ -3791,6 +3933,8 @@ export default function FeaturedProduct() {
     currency: "LKR",
     category: "Resort Wear",
     imageUrl: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+    sizes: ["S", "M", "L", "XL"],
+    sizesLabel: "Size",
     colors: [
       {
         name: "Navy Blue",

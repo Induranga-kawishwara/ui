@@ -320,6 +320,7 @@ export function EditableProductGrid({
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchingBackend, setIsSearchingBackend] = useState(false);
   const [backendProducts, setBackendProducts] = useState<ProductItem[] | null>(null);
+  const [backendTotalProducts, setBackendTotalProducts] = useState<number | null>(null);
 
   // Pagination internal state
   const [internalPage, setInternalPage] = useState(initialPage);
@@ -335,20 +336,30 @@ export function EditableProductGrid({
   }, [pageSize]);
 
   // Use backend search results if available, else fallback to baseProducts
-  const products = backendProducts && backendProducts.length > 0 ? backendProducts : baseProducts;
+  const products = backendProducts !== null ? backendProducts : baseProducts;
 
-  // Live backend catalog search when query changes
+  // Live backend catalog search & filter when query or filters change
   useEffect(() => {
-    if (!enableBackendSearch || !searchQuery.trim()) {
+    if (!enableBackendSearch) {
       setBackendProducts(null);
+      setBackendTotalProducts(null);
       return;
     }
 
+    const candidateSlug =
+      siteData?.siteInstance?.slug ||
+      siteData?.project?.slug ||
+      siteData?.project?.id;
+
     const catalogUrl =
       siteApi?.catalogUrl ||
-      (siteData?.siteInstance?.slug ? `/site-catalog/${siteData.siteInstance.slug}` : null);
+      (candidateSlug && siteApi?.baseUrl
+        ? `${siteApi.baseUrl.replace(/\/+$/, '')}/site-catalog/${candidateSlug}/live-data`
+        : candidateSlug
+          ? `/site-catalog/${candidateSlug}/live-data`
+          : null);
 
-    const slug = siteData?.siteInstance?.slug;
+    const slug = siteData?.siteInstance?.slug || siteData?.project?.slug;
     const isPreviewMode =
       typeof window !== 'undefined' &&
       (window.location.pathname.includes('/template-preview/') ||
@@ -363,18 +374,72 @@ export function EditableProductGrid({
       return;
     }
 
+    const hasSearch = Boolean(searchQuery.trim());
+    const hasCategories = Boolean(
+      activeFilters.selectedCategories && activeFilters.selectedCategories.length > 0,
+    );
+    const hasMaxPrice = Boolean(
+      activeFilters.maxPrice !== undefined &&
+        activeFilters.maxPrice < effectiveMaxPrice,
+    );
+    const hasSizes = Boolean(
+      activeFilters.selectedSizes && activeFilters.selectedSizes.length > 0,
+    );
+    const hasInStock = Boolean(activeFilters.inStockOnly);
+
+    const hasAnyFilterOrSearch =
+      hasSearch ||
+      hasCategories ||
+      hasMaxPrice ||
+      hasSizes ||
+      hasInStock;
+
+    if (!hasAnyFilterOrSearch) {
+      setBackendProducts(null);
+      setBackendTotalProducts(null);
+      return;
+    }
+
+    const params = new URLSearchParams();
+    if (hasSearch) params.set('q', searchQuery.trim());
+    if (hasCategories && activeFilters.selectedCategories) {
+      params.set('category', activeFilters.selectedCategories.join(','));
+    }
+    if (hasMaxPrice && activeFilters.maxPrice !== undefined) {
+      params.set('maxPrice', String(activeFilters.maxPrice));
+    }
+    if (hasSizes && activeFilters.selectedSizes) {
+      params.set('sizes', activeFilters.selectedSizes.join(','));
+    }
+    if (hasInStock) {
+      params.set('inStockOnly', 'true');
+    }
+    if (enablePagination) {
+      params.set('page', String(activePage));
+      params.set('limit', String(activePageSize));
+    }
+
     let active = true;
     const timer = setTimeout(async () => {
       try {
         setIsSearchingBackend(true);
         const sep = catalogUrl.includes('?') ? '&' : '?';
-        const url = `${catalogUrl}${sep}q=${encodeURIComponent(searchQuery.trim())}`;
+        const url = `${catalogUrl}${sep}${params.toString()}`;
         const res = await fetch(url, { headers: { Accept: 'application/json' } });
         if (res.ok) {
           const data = await res.json();
           const items = Array.isArray(data) ? data : (data.products || data.items || []);
-          if (active && Array.isArray(items) && items.length > 0) {
+          if (active && Array.isArray(items)) {
             setBackendProducts(items);
+            const totalCount =
+              typeof data.totalProducts === 'number'
+                ? data.totalProducts
+                : typeof data.pagination?.total === 'number'
+                  ? data.pagination.total
+                  : null;
+            if (totalCount !== null) {
+              setBackendTotalProducts(totalCount);
+            }
           }
         }
       } catch {
@@ -388,13 +453,17 @@ export function EditableProductGrid({
       active = false;
       clearTimeout(timer);
     };
-  }, [searchQuery, enableBackendSearch, siteApi, siteData]);
+  }, [searchQuery, activeFilters, effectiveMaxPrice, enableBackendSearch, activePage, activePageSize, enablePagination, siteApi, siteData]);
 
   const resolvedCategories = useMemo(() => {
     const rawList: string[] = [];
     if (categories && categories.length > 1) {
       rawList.push(...categories);
     } else {
+      const siteCatList = (siteData as any)?.categories || (siteData as any)?.content?.categories;
+      if (Array.isArray(siteCatList) && siteCatList.length > 0) {
+        rawList.push(...siteCatList);
+      }
       for (const p of products) {
         if (typeof p.category === "string" && p.category.trim().length > 0) {
           rawList.push(p.category);
@@ -527,13 +596,19 @@ export function EditableProductGrid({
     });
   };
 
-  // Total count calculation
-  const totalItems = totalProducts !== undefined ? totalProducts : filteredProducts.length;
+  // Total count calculation: prefers explicit totalProducts prop, then remote backend total, else filtered list length
+  const totalItems = totalProducts !== undefined
+    ? totalProducts
+    : (backendTotalProducts !== null ? backendTotalProducts : filteredProducts.length);
   const totalPages = Math.max(1, Math.ceil(totalItems / activePageSize));
 
   // Products to render based on pagination mode
   const displayedProducts = useMemo(() => {
     if (!enablePagination) {
+      return filteredProducts;
+    }
+    // If backend already returned server-paginated items for this activePage, render directly
+    if (backendProducts !== null && backendTotalProducts !== null) {
       return filteredProducts;
     }
     if (paginationVariant === 'load-more') {
@@ -542,7 +617,7 @@ export function EditableProductGrid({
     const startIndex = (activePage - 1) * activePageSize;
     const endIndex = startIndex + activePageSize;
     return filteredProducts.slice(startIndex, endIndex);
-  }, [filteredProducts, enablePagination, paginationVariant, loadedCount, activePage, activePageSize]);
+  }, [filteredProducts, enablePagination, paginationVariant, loadedCount, activePage, activePageSize, backendProducts, backendTotalProducts]);
 
   // Smart page numbers calculation with ellipsis (e.g. 1 ... 4 5 6 ... 10)
   const visiblePages = useMemo((): Array<number | 'ellipsis'> => {
